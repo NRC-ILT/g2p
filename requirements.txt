@@ -61,7 +61,7 @@ openpyxl==3.1.5
     # via hatch.envs.prod
 packaging==25.0
     # via gunicorn
-ilt-panphon==0.21.3
+ilt-panphon==0.21.4
     # via hatch.envs.prod
 pydantic==2.8.2
     # via
@@ -107,6 +107,3 @@ uvicorn==0.38.0
     # via hatch.envs.prod
 wsproto==1.2.0
     # via simple-websocket
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
