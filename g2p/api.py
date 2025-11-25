@@ -20,7 +20,7 @@ api = FastAPI(
     contact={"email": "readalong.studio@gmail.com"},
     license_info={
         "name": "MIT",
-        "url": "https://github.com/roedoejet/g2p/blob/main/LICENSE",
+        "url": "https://github.com/NRC-ILT/g2p/blob/main/LICENSE",
     },
     openapi_tags=[
         {

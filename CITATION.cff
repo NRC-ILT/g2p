@@ -3,7 +3,7 @@ message: >-
   If you use this work in a project of yours and write about it, please cite
   our ComputEL 2022 paper using the following citation data.
 title: Gi2Pi
-url: https://github.com/roedoejet/g2p
+url: https://github.com/NRC-ILT/g2p
 preferred-citation:
   type: conference-paper
   title: >-

@@ -17,7 +17,7 @@ plugins:
         python:
           paths: [g2p]
 extra:
-  homepage: https://roedoejet.github.io/g2p/
+  homepage: https://nrc-ilt.github.io/g2p/
   version:
     provider: mike
     default: stable

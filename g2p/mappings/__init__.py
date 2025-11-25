@@ -277,7 +277,7 @@ class Mapping(_MappingModelDefinition):
             Pattern: returns a regex pattern (re.Pattern)
             None: if input is null
         """
-        # Prevent null input. See, https://github.com/roedoejet/g2p/issues/24
+        # Prevent null input. See, https://github.com/NRC-ILT/g2p/issues/24
         if isinstance(rule, dict):
             rule = Rule(**rule)
         if not rule.rule_input:

@@ -1,6 +1,6 @@
 # Contributing to g2p
 
-Feel free to dive in! [Open an issue](https://github.com/roedoejet/g2p/issues/new) or submit PRs.
+Feel free to dive in! [Open an issue](https://github.com/NRC-ILT/g2p/issues/new) or submit PRs.
 
 This repo follows the [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/) Code of Conduct.
 

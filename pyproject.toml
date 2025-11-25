@@ -84,7 +84,7 @@ all = ["g2p[dev]", "g2p[docs]", "g2p[neural]"]
 g2p = "g2p.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/roedoejet/g2p"
+Homepage = "https://github.com/NRC-ILT/g2p"
 
 [tool.setuptools]
 packages = ["g2p"]

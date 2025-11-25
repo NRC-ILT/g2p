@@ -160,7 +160,7 @@ def get_arpabet_langs():
     for mapping to ARPABET.
 
     Example uses can be found in https://github.com/ReadAlongs/Studio and
-    https://github.com/roedoejet/EveryVoice
+    https://github.com/EveryVoiceTTS/EveryVoice
 
     Returns:
         LANGS (List[str]), LANG_NAMES (Dict[str,str]):

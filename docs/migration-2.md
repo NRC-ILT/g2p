@@ -13,7 +13,7 @@ with the changes you will need to make to your code and data.
 
 The configurations for mappings (which you'll find in
 `g2p/mappings/langs/*/config-g2p.yaml`) are now validated with a [YAML
-Schema](https://raw.githubusercontent.com/roedoejet/g2p/main/g2p/mappings/.schema/g2p-config-schema-2.0.json).
+Schema](https://raw.githubusercontent.com/NRC-ILT/g2p/main/g2p/mappings/.schema/g2p-config-schema-2.3.json).
 If you use an editor like [Visual Studio
 Code](https://code.visualstudio.com/) with the [YAML
 extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml),

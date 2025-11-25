@@ -13,7 +13,7 @@ pip install g2p
 Or by cloning and installing from source:
 
 ```bash
-git clone https://github.com/roedoejet/g2p.git
+git clone https://github.com/NRC-ILT/g2p.git
 
 cd g2p
 

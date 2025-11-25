@@ -213,7 +213,7 @@ class TransducerTest(TestCase):
         self.assertEqual(self.test_case_insensitive_transducer("'n").output_string, "n̓")
 
     def test_regex_set(self):
-        # https://github.com/roedoejet/g2p/issues/15
+        # https://github.com/NRC-ILT/g2p/issues/15
         self.assertEqual(
             self.test_regex_set_transducer_sanity("ca").output_string, "cb"
         )
