@@ -28,7 +28,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e .[dev]
+pip install -e ".[dev]"
 pre-commit install
 gitlint install-hook
 ```
@@ -81,7 +81,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e .[dev]
+pip install -e ".[dev]"
 pre-commit install
 ```
 
@@ -156,7 +156,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e .[dev]
+pip install -e ".[dev]"
 gitlint install-hook
 ```
 
