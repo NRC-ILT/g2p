@@ -41,7 +41,7 @@ The initial version of this package was developed by [Patrick Littell](https://g
 
 ## Install
 
-The best thing to do is install with pip `pip install g2p`.
+The best thing to do is install with pip `pip install g2p` or `pip install "g2p[neural]"` to install the optional neural dependencies.
 This command will install the latest release published on [PyPI g2p releases](https://pypi.org/project/g2p/).
 
 You can also use [hatch](https://hatch.pypa.io/latest/) (see [hatch
@@ -164,7 +164,7 @@ transducer('cad') # returns "cbd"
 
 ### Neural G2P models
 
-The main functionality of this library is to provide lightweight, index-preserving g2p for many languages. However, we also support some neural g2p models. These can be accessed by first installing the necessary neural packages with `pip install g2p[neural]`. Then, when creating a g2p object, add the neural flag like so:
+The main functionality of this library is to provide lightweight, index-preserving g2p for many languages. However, we also support some neural g2p models. These can be accessed by first installing the necessary neural packages with `pip install "g2p[neural]"`. Then, when creating a g2p object, add the neural flag like so:
 
 ```python
 >>> neural_transducer = make_g2p('str', 'str-ipa', neural=True)
