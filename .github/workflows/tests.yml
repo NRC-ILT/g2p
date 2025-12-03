@@ -138,9 +138,18 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` uv pip install -e .[test]
+          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` uv pip install -e .[all]
+      - name: Get current week number
+        run: echo "WEEK_NUMBER=$(date -u +%Y-%V)" >> $GITHUB_OUTPUT
+        id: weekno
+      - uses: actions/cache@v4
+        with:
+          key: g2p-neural-win-${{ steps.weekno.outputs.WEEK_NUMBER }}
+          path: ~/.cache/huggingface
+      - name: Launch the API
+        run: coverage run run_studio.py &
       - name: Run tests on Windows
-        run: python run_tests.py dev
+        run: python run_tests.py all
       - name: Make sure the CLI outputs utf8 on Windows
         run: |
           # Warning: This is PowerShell syntax, not bash!
