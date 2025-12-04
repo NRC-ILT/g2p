@@ -1,3 +1,7 @@
+# Dockerfile to run g2p studio, production style, in a container
+# Build: docker build -t g2p .
+# Run: docker run -p 8000:8000 g2p
+
 # Base Image
 FROM debian:latest
 
@@ -37,8 +41,7 @@ COPY . /g2p/
 COPY README.md /g2p
 COPY Dockerfile /g2p
 RUN . /g2p/venv/bin/activate \
-    && pip3 install -e /g2p
+    && SETUPTOOLS_SCM_PRETEND_VERSION=$(cat g2p/.SETUPTOOLS_SCM_PRETEND_VERSION) pip3 install -e /g2p
 
 # Comment this out if you just want to install g2p in the container without running the studio.
-SHELL ["/bin/sh", "-c"]
-CMD gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:8000
+CMD . /g2p/venv/bin/activate && gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:8000
