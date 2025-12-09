@@ -35,18 +35,18 @@ class Tokenizer(BaseTokenizer):
     def tokenize_aux(self, text):
         return text
 
-    def is_word_character(self, c):
+    def is_word_character(self, characters):
         if not self.case_sensitive:
-            c = c.lower()
-        inventory_check = re.escape(c) if self.escape_special else c
+            characters = characters.lower()
+        inventory_check = re.escape(characters) if self.escape_special else characters
         if inventory_check in self.inventory:
             return True
-        if self.delim and c == self.delim:
+        if self.delim and characters == self.delim:
             return True
-        assert len(c) <= 1
-        if utils.get_unicode_category(c) in ["letter", "number", "diacritic"]:
-            return True
-        return False
+        return all(
+            utils.get_unicode_category(c) in ["letter", "number", "diacritic"]
+            for c in characters
+        )
 
     def tokenize_text(self, text: str) -> List[Token]:
         matches = self.tokenize_aux(text)
