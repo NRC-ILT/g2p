@@ -147,6 +147,16 @@ class TokenizerTest(TestCase):
             self.assertEqual(tok.get_tokenizer("fra"), tok.make_tokenizer("fra"))
         self.assertIn("deprecated", "".join(cm.output))
 
+    def test_gwi_multichar_grapheme_makeg2p(self):
+        from g2p import make_g2p
+
+        g2p_engine = make_g2p("gwi", "gwi-ipa")
+        _ = g2p_engine("ı̨")  # we're just confirming this does not raise, see #430
+
+    def test_gwi_multichar_grapheme_tok(self):
+        tokd = tok.make_tokenizer("gwi").tokenize_text("ı̨")
+        self.assertEqual("ı̨", tokd[0].text)
+
 
 if __name__ == "__main__":
     main()
