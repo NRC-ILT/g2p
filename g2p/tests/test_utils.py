@@ -4,17 +4,15 @@
 """
 
 import doctest
-import io
 import os
 import re
 from collections import defaultdict
-from contextlib import redirect_stderr
 from pathlib import Path
 from typing import List
 from unittest import TestCase, main
 
 import yaml
-from pep440 import is_canonical
+from pep440.core import is_canonical
 
 import g2p
 import g2p.exceptions
@@ -27,26 +25,6 @@ from g2p.tests.public import PUBLIC_DIR
 
 
 class UtilsTest(TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        gen_mapping = os.path.join(PUBLIC_DIR, "mappings", "test_to_test-out.json")
-        gen_config = os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
-        if os.path.exists(gen_config):
-            os.remove(gen_config)
-        if os.path.exists(gen_mapping):
-            os.remove(gen_mapping)
-        fresh_config = {"language_name": "generated", "mappings": []}
-        with open(
-            os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml"),
-            "w",
-            encoding="utf8",
-        ) as f:
-            yaml.dump(
-                fresh_config, f, Dumper=utils.IndentDumper, default_flow_style=False
-            )
-
     def test_run_doctest(self):
         """Run doctests in g2p.mappings.utils"""
         results = doctest.testmod(utils)
@@ -171,49 +149,66 @@ class UtilsTest(TestCase):
             self.assertEqual(abbs["VOWEL"], ["a", "e", "i", "o", "u"])
 
     def test_generated_mapping(self):
-        # config = utils.generate_config('test', 'test-out', 'Test', 'TestOut')
-        mapping = Mapping(
-            in_lang="test",
-            out_lang="test-out",
-            rule_ordering=RULE_ORDERING_ENUM.apply_longest_first,
-            rules=[Rule(rule_input="a", rule_output="b")],
-        )
-        with self.assertLogs(LOGGER, level="WARNING"):
-            mapping.config_to_file(
+        try:
+            # config = utils.generate_config('test', 'test-out', 'Test', 'TestOut')
+            mapping = Mapping(
+                in_lang="test",
+                out_lang="test-out",
+                rule_ordering=RULE_ORDERING_ENUM.apply_longest_first,
+                rules=[Rule(rule_input="a", rule_output="b")],
+            )
+            with self.assertLogs(LOGGER, level="WARNING"):
+                mapping.config_to_file(
+                    os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
+                )
+            with self.assertLogs(LOGGER, level="WARNING"):
+                mapping.config_to_file(
+                    os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml")
+                )
+            mapping.mapping_to_file(os.path.join(PUBLIC_DIR, "mappings"))
+            test_config = Mapping.load_mapping_from_path(
                 os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
             )
-        with self.assertLogs(LOGGER, level="WARNING"):
-            mapping.config_to_file(
+
+            test_config_added = Mapping.load_mapping_from_path(
                 os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml")
             )
-        mapping.mapping_to_file(os.path.join(PUBLIC_DIR, "mappings"))
-        test_config = Mapping.load_mapping_from_path(
-            os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
-        )
-
-        test_config_added = Mapping.load_mapping_from_path(
-            os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml")
-        )
-        self.assertEqual(
-            test_config.rules[0].export_to_dict(),
-            Rule(
-                **{"in": "a", "out": "b", "context_before": "", "context_after": ""}
-            ).export_to_dict(),
-        )
-        self.assertEqual(test_config.in_lang, "test")
-        self.assertEqual(test_config.out_lang, "test-out")
-        self.assertEqual(test_config.language_name, "test")
-        self.assertEqual(test_config.display_name, "test custom to test-out custom")
-        self.assertEqual(
-            test_config_added.rules[0].export_to_dict(),
-            {"in": "a", "out": "b"},
-        )
-        self.assertEqual(test_config_added.in_lang, "test")
-        self.assertEqual(test_config_added.out_lang, "test-out")
-        self.assertEqual(test_config_added.language_name, "test")
-        self.assertEqual(
-            test_config_added.display_name, "test custom to test-out custom"
-        )
+            self.assertEqual(
+                test_config.rules[0].export_to_dict(),
+                Rule(
+                    **{"in": "a", "out": "b", "context_before": "", "context_after": ""}
+                ).export_to_dict(),
+            )
+            self.assertEqual(test_config.in_lang, "test")
+            self.assertEqual(test_config.out_lang, "test-out")
+            self.assertEqual(test_config.language_name, "test")
+            self.assertEqual(test_config.display_name, "test custom to test-out custom")
+            self.assertEqual(
+                test_config_added.rules[0].export_to_dict(),
+                {"in": "a", "out": "b"},
+            )
+            self.assertEqual(test_config_added.in_lang, "test")
+            self.assertEqual(test_config_added.out_lang, "test-out")
+            self.assertEqual(test_config_added.language_name, "test")
+            self.assertEqual(
+                test_config_added.display_name, "test custom to test-out custom"
+            )
+        finally:
+            gen_mapping = os.path.join(PUBLIC_DIR, "mappings", "test_to_test-out.json")
+            gen_config = os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
+            if os.path.exists(gen_config):
+                os.remove(gen_config)
+            if os.path.exists(gen_mapping):
+                os.remove(gen_mapping)
+            fresh_config = {"language_name": "generated", "mappings": []}
+            with open(
+                os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml"),
+                "w",
+                encoding="utf8",
+            ) as f:
+                yaml.dump(
+                    fresh_config, f, Dumper=utils.IndentDumper, default_flow_style=False
+                )
 
     def test_bad_normalization(self):
         with self.assertRaises(g2p.exceptions.InvalidNormalization):
@@ -350,26 +345,30 @@ class UtilsTest(TestCase):
         t1 = Token("test", True)
         t2 = Token(":", False)
 
-        f = io.StringIO()
-        with redirect_stderr(f):
-            # Current usage and deprecated usage
-            for t in t1, t2:
+        # Current and deprecated usages
+        for t in t1, t2:
+            with self.assertWarns(DeprecationWarning):
                 self.assertEqual(t.text, t["text"])
+            with self.assertWarns(DeprecationWarning):
                 self.assertEqual(t.is_word, t["is_word"])
-            # new way to set
-            t1.text = "test2"
-            t1.is_word = False
-            self.assertEqual(t1.text, "test2")
-            self.assertEqual(t1.is_word, False)
-            # deprecated way to set
+        # new way to set
+        t1.text = "test2"
+        t1.is_word = False
+        self.assertEqual(t1.text, "test2")
+        self.assertEqual(t1.is_word, False)
+        # deprecated way to set
+        with self.assertWarns(DeprecationWarning):
             t1["text"] = "test3"
+        with self.assertWarns(DeprecationWarning):
             t1["is_word"] = True
-            self.assertEqual(t1.text, "test3")
-            self.assertEqual(t1.is_word, True)
+        self.assertEqual(t1.text, "test3")
+        self.assertEqual(t1.is_word, True)
 
-            with self.assertRaises(KeyError):
+        with self.assertRaises(KeyError):
+            with self.assertWarns(DeprecationWarning):
                 t1["bad_key"] = "test"
-            with self.assertRaises(KeyError):
+        with self.assertRaises(KeyError):
+            with self.assertWarns(DeprecationWarning):
                 _ = t2["bad_key"]
 
 
