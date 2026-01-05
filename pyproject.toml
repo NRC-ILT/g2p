@@ -34,6 +34,7 @@ api = [
   "fastapi>=0.109.0",
   "starlette>=0.40.0",
   "python-socketio>=5.9.0",
+  "python-engineio<4.13; python_version < '3.9'",
   "uvicorn",
   "jinja2",
 ]
@@ -69,12 +70,13 @@ docs = [
   "mkdocstrings[python]>=0.22.0",
   "mike>=1.1.2",
 ]
-neural = ["g2p[deep-phonemizer]"]
-
+neural = [
+  "g2p[deep-phonemizer]",
+]
 deep-phonemizer = [
-  "torch>=2.6.0",
-  "huggingface_hub>0.35.0",
-  "ilt-deep-phonemizer>=0.0.23",
+  "torch>=2.6.0; python_version >= '3.9'",
+  "huggingface_hub>0.35.0; python_version >= '3.9'",
+  "ilt-deep-phonemizer>=0.0.23; python_version >= '3.9'",
 ]
 
 # cannot put g2p[prod] here because that would break windows compat
@@ -146,8 +148,12 @@ serve = "gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP 
 [tool.hatch.envs.test]
 features = ["test"]
 
+[tool.hatch.envs.hatch-test]
+default-args = ["g2p/tests"]
+features = ["test", "neural"]
+
 [[tool.hatch.envs.test.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
 serve-cov = "coverage run run_studio.py"
