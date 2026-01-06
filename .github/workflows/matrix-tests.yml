@@ -30,3 +30,22 @@ jobs:
           SETUPTOOLS_SCM_PRETEND_VERSION=$(cat .SETUPTOOLS_SCM_PRETEND_VERSION) pip install -e .[test]
       - name: Run tests
         run: python run_tests.py dev
+
+      # Neural tests, with huggingface models cached
+      - name: Get current week number
+        shell: bash
+        run: echo "WEEK_NUMBER=$(date -u +%Y-%V)" >> $GITHUB_OUTPUT
+        id: weekno
+      - uses: actions/cache@v4
+        with:
+          key: g2p-neural-${{ steps.weekno.outputs.WEEK_NUMBER }}
+          path: ~/.cache/huggingface
+      - run: pip install -e .[neural]
+      - run: python g2p/tests/test_neural.py
+
+      # Studio test
+      - name: Launch the API
+        shell: bash
+        run: python run_studio.py &
+      - name: Run test-studio
+        run: python g2p/tests/test_studio.py
