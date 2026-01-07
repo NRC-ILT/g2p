@@ -9,11 +9,27 @@ description = "Module for creating context-aware, rule-based G2P mappings that p
 readme = "README.md"
 license = "MIT"
 requires-python = ">= 3.8"
-authors = [{ name = "Aidan Pine", email = "hello@aidanpine.ca" }]
+authors = [
+  { name = "Aidan Pine", email = "hello@aidanpine.ca" },
+  { name = "Eric Joanis", email = "eric.joanis@nrc-cnrc.gc.ca" },
+  { name = "David Huggins-Daines", email = "dhd@ecolingui.ca" },
+  { name = "Patrick Littell", email = "patrick.littell@nrc-cnrc.gc.ca" },
+]
+maintainers = [
+  { name = "Aidan Pine", email = "hello@aidanpine.ca" },
+  { name = "Eric Joanis", email = "eric.joanis@nrc-cnrc.gc.ca" },
+]
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "click>=8.0.4,<8.2.0",
