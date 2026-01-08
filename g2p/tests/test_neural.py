@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase, main, SkipTest
 
 from g2p import make_g2p
 from g2p.log import LOGGER
@@ -17,6 +18,8 @@ class NeuralLangTest(TestCase):
     """
 
     def test_io(self):
+        if sys.version_info < (3, 9):
+            raise SkipTest("neural g2p requires python >= 3.9")
         langs_to_test = load_neural_test_data()
 
         # go through each language declared in the test case set up

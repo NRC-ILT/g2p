@@ -9,9 +9,6 @@ from g2p.log import LOGGER
 class TokenizerTest(TestCase):
     """Test suite for tokenizing text in a language-specific way"""
 
-    def setUp(self):
-        pass
-
     def test_tokenize_fra(self):
         input = "ceci était 'un' test."
         tokenizer = tok.make_tokenizer("fra")
@@ -144,6 +141,7 @@ class TokenizerTest(TestCase):
 
     def test_deprecated_warning(self):
         with self.assertLogs(LOGGER, level="WARNING") as cm:
+            tok._deprecated_warning_printed = False
             self.assertEqual(tok.get_tokenizer("fra"), tok.make_tokenizer("fra"))
         self.assertIn("deprecated", "".join(cm.output))
 
