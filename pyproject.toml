@@ -35,7 +35,7 @@ dependencies = [
   "click>=8.0.4,<8.2.0",
   "coloredlogs>=15.0.1",
   "openpyxl",
-  "ilt-panphon>=0.21.2,<0.22",
+  "ilt-panphon>=0.20.1,<0.22",
   "pydantic>=2.4",
   "pyyaml>=5.2",
   "regex",
