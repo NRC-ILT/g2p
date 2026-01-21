@@ -26,4 +26,4 @@ repos:
       - id: mypy
         args: [--check-untyped-defs, --install-types]
         additional_dependencies:
-          [fastapi, pep440, pydantic, starlette, uvicorn]
+          [fastapi, pep440, pydantic, starlette, uvicorn, pip]
