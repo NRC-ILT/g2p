@@ -90,7 +90,7 @@ neural = [
   "g2p[deep-phonemizer]",
 ]
 deep-phonemizer = [
-  "torch>=2.6.0; python_version >= '3.9'",
+  "torch>=2.6.0,<2.10; python_version >= '3.9'",
   "huggingface_hub>0.35.0; python_version >= '3.9'",
   "ilt-deep-phonemizer>=0.0.23; python_version >= '3.9'",
 ]
