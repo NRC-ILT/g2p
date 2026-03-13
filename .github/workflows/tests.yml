@@ -91,7 +91,7 @@ jobs:
           coverage xml
           if git status | grep -E 'static.*json|mapping.*pkl|mapping.*.json.gz'; then echo 'g2p databases out of date, please run "g2p update" and commit the results.'; false; else echo OK; fi
       - name: Upload coverage information
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false # too many upload errors to keep "true"
