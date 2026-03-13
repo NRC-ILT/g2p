@@ -46,7 +46,7 @@ jobs:
         run: echo "WEEK_NUMBER=$(date -u +%Y-%V)" >> $GITHUB_OUTPUT
         id: weekno
       - name: Cache Playwright binaries
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -62,7 +62,7 @@ jobs:
         run: coverage run g2p/tests/test_studio.py
 
       # Neural tests, with huggingface models cached
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: g2p-neural-${{ steps.weekno.outputs.WEEK_NUMBER }}
           path: ~/.cache/huggingface
@@ -173,7 +173,7 @@ jobs:
         run: |
           SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` pip install -e .[test]
       - name: Cache Playwright binaries
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
