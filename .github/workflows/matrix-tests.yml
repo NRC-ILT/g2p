@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: echo "WEEK_NUMBER=$(date -u +%Y-%V)" >> $GITHUB_OUTPUT
         id: weekno
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: g2p-neural-${{ steps.weekno.outputs.WEEK_NUMBER }}
           path: ~/.cache/huggingface
