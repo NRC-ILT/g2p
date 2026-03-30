@@ -39,9 +39,9 @@ dependencies = [
   "pydantic>=2.4",
   "pyyaml>=5.2",
   "regex",
-  "text_unidecode",
+  "text-unidecode",
   "tqdm",
-  "typing_extensions",
+  "typing-extensions",
 ]
 
 [project.optional-dependencies]
@@ -91,7 +91,7 @@ neural = [
 ]
 deep-phonemizer = [
   "torch>=2.6.0,<2.10; python_version >= '3.9'",
-  "huggingface_hub>0.35.0; python_version >= '3.9'",
+  "huggingface-hub>0.35.0; python_version >= '3.9'",
   "ilt-deep-phonemizer>=0.0.23; python_version >= '3.9'",
 ]
 
