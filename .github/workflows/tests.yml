@@ -67,7 +67,10 @@ jobs:
           key: g2p-neural-${{ steps.weekno.outputs.WEEK_NUMBER }}
           path: ~/.cache/huggingface
       - run: uv pip install -e .[neural]
-      - run: coverage run g2p/tests/test_neural.py
+      - name: Run the neural unit tests
+        run: |
+          coverage run g2p/tests/test_neural.py |& tee neural-test.log
+          ! grep -i skip neural-test.log || ! echo "Error: neural test got skipped, something went wrong."
 
       - name: Run generate-mapping
         shell: bash
@@ -79,8 +82,8 @@ jobs:
         shell: bash
         run: |
           uv pip install 'pydantic<2.9'
-          coverage run -m unittest -v g2p.tests.test_cli.CliTest.test_update_schema_with_pydantic_lt29 |& tee schema-test.txt
-          ! grep -i skip schema-test.txt || ! echo "Error: Schema update test got skipped, something went wrong."
+          coverage run -m unittest -v g2p.tests.test_cli.CliTest.test_update_schema_with_pydantic_lt29 |& tee schema-test.log
+          ! grep -i skip schema-test.log || ! echo "Error: Schema update test got skipped, something went wrong."
 
       - name: Post test analyses
         run: |
