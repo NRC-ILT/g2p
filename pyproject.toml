@@ -61,6 +61,7 @@ test = [
   "playwright>=1.26.1; python_version >= '3.9'",
   "jsonschema>=4.17.3",
   "pep440>=0.1.2",
+  "pytest",
   "httpx",
   # Kind of bogus that we need both httpx and aiohttp, but socketio
   # wants this

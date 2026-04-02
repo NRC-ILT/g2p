@@ -17,7 +17,7 @@ from random import sample
 from unittest import IsolatedAsyncioTestCase, main
 
 import socketio  # type: ignore
-from playwright.async_api import async_playwright, expect  # type: ignore
+from playwright.async_api import Error, async_playwright, expect  # type: ignore
 
 from g2p.log import LOGGER
 from g2p.tests.public.data import load_public_test_data
@@ -39,7 +39,12 @@ class StudioTest(IsolatedAsyncioTestCase):
 
     async def test_sanity(self):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(channel="chrome", headless=True)
+            try:  # pragma: no cover
+                browser = await p.chromium.launch(channel="chrome", headless=True)
+                LOGGER.info("Running playwright with chrome channel")
+            except Error:  # pragma: no cover
+                browser = await p.chromium.launch(headless=True)
+                LOGGER.info("Running playwright with default chromium channel")
             page = await browser.new_page()
             await page.goto(f"http://127.0.0.1:{self.port}/docs")
             await page.wait_for_timeout(self.timeout_delay)
@@ -65,7 +70,12 @@ class StudioTest(IsolatedAsyncioTestCase):
 
     async def test_switch_langs(self):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(channel="chrome", headless=True)
+            try:  # pragma: no cover
+                browser = await p.chromium.launch(channel="chrome", headless=True)
+                LOGGER.info("Running playwright with chrome channel")
+            except Error:  # pragma: no cover
+                browser = await p.chromium.launch(headless=True)
+                LOGGER.info("Running playwright with default chromium channel")
             page = await browser.new_page()
             await page.goto(f"http://127.0.0.1:{self.port}")
             await page.wait_for_timeout(self.timeout_delay)
@@ -155,7 +165,12 @@ class StudioTest(IsolatedAsyncioTestCase):
             LOGGER.info("Lauching async_playwright")
             async with async_playwright() as p:
                 LOGGER.info(("L" if block == 0 else "Rel") + "aunching browser")
-                browser = await p.chromium.launch(channel="chrome", headless=True)
+                try:  # pragma: no cover
+                    browser = await p.chromium.launch(channel="chrome", headless=True)
+                    LOGGER.info("Running playwright with chrome channel")
+                except Error:  # pragma: no cover
+                    browser = await p.chromium.launch(headless=True)
+                    LOGGER.info("Running playwright with default chromium channel")
                 LOGGER.info("Loading page")
                 page = await browser.new_page()
                 await page.goto(
