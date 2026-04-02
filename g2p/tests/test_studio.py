@@ -16,17 +16,47 @@ from datetime import datetime
 from random import sample
 from unittest import IsolatedAsyncioTestCase, main
 
+import pytest
 import socketio  # type: ignore
 from playwright.async_api import Error, async_playwright, expect  # type: ignore
 
 from g2p.log import LOGGER
 from g2p.tests.public.data import load_public_test_data
 
+STUDIO_PORT = 5000
+
+
+@pytest.fixture(autouse=True, scope="module")
+def run_studio():
+    """Launch the studio server automatically via this fuxture (pytest only)
+
+    When using unittest, launch run_studio.py in another window first."""
+    import threading
+
+    def start_studio():
+        import uvicorn
+
+        from g2p.app import APP
+
+        host = "127.0.0.1"
+        port = STUDIO_PORT
+        try:
+            uvicorn.run(APP, host=host, port=port)
+        except SystemExit:
+            # SystemExit usually means studio is already running in another process
+            pass
+
+    thread = threading.Thread(target=start_studio)
+    thread.daemon = True
+    thread.start()
+    yield
+
 
 class StudioTest(IsolatedAsyncioTestCase):
     def __init__(self, *args):
         super().__init__(*args)
-        self.port = 5000
+        # self.port = 5000
+        self.port = STUDIO_PORT
         self.debug_convert = True
         self.timeout_delay = 500
 
@@ -290,4 +320,4 @@ class StudioTest(IsolatedAsyncioTestCase):
 
 
 if __name__ == "__main__":
-    main()
+    pytest.main(["-v", "g2p/tests/test_studio.py"])
