@@ -12,9 +12,10 @@ or robust server mode (*nix only, gunicorn does not work on Windows):
     gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:5000 --daemon
 """
 
+import time
 from datetime import datetime
 from random import sample
-from unittest import IsolatedAsyncioTestCase, main
+from unittest import IsolatedAsyncioTestCase
 
 import pytest
 import socketio  # type: ignore
@@ -49,6 +50,8 @@ def run_studio():
     thread = threading.Thread(target=start_studio)
     thread.daemon = True
     thread.start()
+    time.sleep(1)  # Give the server a chance to start
+
     yield
 
 
