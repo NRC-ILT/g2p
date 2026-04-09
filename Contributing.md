@@ -163,3 +163,15 @@ gitlint install-hook
 - Now, next time you make a change and commit it, your commit log will be checked:
   - `git commit -m'non-compliant commit log text'` outputs an error
   - `git commit -m'fix(g2p): fixing a bug in g2p integration'` works
+
+## Testing
+
+Testing requires our "dev" dependencies:
+
+    pip install -e ".[dev]"
+
+Then you can run all the test suites by simply invoking `pytest`:
+
+    pytest
+
+We also support `unittest` if you're familiar with that, and we have a `./run_tests.py` script to run selected parts of the test suites. Run `./run_tests.py -h` for info.
