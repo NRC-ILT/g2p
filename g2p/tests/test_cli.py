@@ -286,7 +286,7 @@ class CliTest(TestCase):
 
         result = self.runner.invoke(doctor, "-m eng-arpabet")
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("No checks implemented", result.stdout)
+        self.assertIn("No checks implemented", result.output)
 
     def test_doctor_lists(self):
         result = self.runner.invoke(doctor, "--list-all")
