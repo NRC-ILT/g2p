@@ -15,8 +15,6 @@
 import datetime as dt
 from typing import Iterable, List, Tuple
 
-from tqdm import tqdm
-
 from g2p.constants import DISTANCE_METRICS
 from g2p.log import LOGGER
 from g2p.mappings import Mapping
@@ -90,7 +88,6 @@ def create_multi_mapping(
     src_mappings: List[Tuple[Mapping, str]],
     tgt_mappings: List[Tuple[Mapping, str]],
     distance: str = "weighted_feature_edit_distance",
-    quiet=False,
 ) -> Mapping:
     """Create a mapping for a set of source mappings to a set of target mappings
 
@@ -145,9 +142,7 @@ def create_multi_mapping(
         tgt_inventory.extend(mapping.inventory(io))
     tgt_inventory = deduplicate(tgt_inventory)
 
-    mapping = align_inventories(
-        src_inventory, tgt_inventory, distance=distance, quiet=quiet
-    )
+    mapping = align_inventories(src_inventory, tgt_inventory, distance=distance)
 
     config = {
         "in_lang": compact_ipa_names(map_1_names),
@@ -172,7 +167,6 @@ def create_mapping(
     mapping_1_io: str = "out",
     mapping_2_io: str = "in",
     distance: str = "weighted_feature_edit_distance",
-    quiet=False,
 ) -> Mapping:
     """Create a mapping from mapping_1's output inventory to mapping_2's input inventory"""
 
@@ -195,7 +189,6 @@ def create_mapping(
         l1_is_xsampa,
         l2_is_xsampa,
         distance=distance,
-        quiet=quiet,
     )
 
     # Initialize mapping with input language parameters (as_is,
@@ -222,7 +215,6 @@ def align_inventories(
     l1_is_xsampa=False,
     l2_is_xsampa=False,
     distance="weighted_feature_edit_distance",
-    quiet=False,
 ):
     """Align inventories by finding a good sequence in inventory_l2 for each
     character in inventory_l1"""
@@ -287,16 +279,9 @@ def align_inventories(
         return "".join(good_match)
 
     mapping = []
-    if not quiet:
-        pbar = tqdm(total=100)
-    step = 1 / len(inventory_l1) * 100
     for i1, p1 in enumerate(process_characters(inventory_l1, l1_is_xsampa)):
         # we enumerate the strings because we want to save the original string
         # (e.g., 'kʷ') to the mapping, not the processed one (e.g. 'kw')
         good_match = find_good_match(p1, inventory_l2)
         mapping.append({"in": inventory_l1[i1], "out": good_match})
-        if not quiet:
-            pbar.update(step)
-    if not quiet:
-        pbar.close()
     return mapping

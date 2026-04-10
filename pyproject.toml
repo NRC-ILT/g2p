@@ -40,7 +40,6 @@ dependencies = [
   "pyyaml>=5.2",
   "regex",
   "text-unidecode",
-  "tqdm",
   "typing-extensions",
 ]
 

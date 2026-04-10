@@ -15,7 +15,6 @@ def align_to_dummy_fallback(
     mapping: Mapping,
     io: str = "in",
     distance: str = "weighted_feature_edit_distance",
-    quiet=False,
 ):
     """Create a mapping from mapping's output inventory to a minimalist dummy inventory"""
     mapping_config = mapping.model_dump()
@@ -27,7 +26,7 @@ def align_to_dummy_fallback(
     default_char = "t"
     if is_ipa(mapping_config[f"{io}_lang"]):
         list_of_rules = align_inventories(
-            mapping.inventory(io), DUMMY_INVENTORY, distance=distance, quiet=quiet
+            mapping.inventory(io), DUMMY_INVENTORY, distance=distance
         )
     else:
         und_g2p = make_g2p("und", "und-ipa", tokenize=False)
@@ -39,10 +38,7 @@ def align_to_dummy_fallback(
             for x in mapping.inventory(io)
         ]
         dummy_list = align_inventories(
-            [x["out"] for x in list_of_rules],
-            DUMMY_INVENTORY,
-            distance=distance,
-            quiet=quiet,
+            [x["out"] for x in list_of_rules], DUMMY_INVENTORY, distance=distance
         )
         dummy_dict = {}
         for x in dummy_list:

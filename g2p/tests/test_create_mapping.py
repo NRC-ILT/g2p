@@ -66,7 +66,7 @@ class MappingCreationTest(TestCase):
             {"in": "ᐊ", "out": "a"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
-        mapping = create_mapping(src_mapping, self.target_mapping, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
         self.assertEqual(transducer("a").output_string, "ɑ")
         self.assertEqual(transducer("i").output_string, "i")
@@ -79,7 +79,7 @@ class MappingCreationTest(TestCase):
             {"in": "ᑭ", "out": "ki"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
-        mapping = create_mapping(src_mapping, self.target_mapping, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
         self.assertEqual(transducer("pi").output_string, "pi")
         self.assertEqual(transducer("ti").output_string, "ti")
@@ -92,7 +92,7 @@ class MappingCreationTest(TestCase):
             {"in": "ᒐ", "out": "t͡ʃa"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
-        mapping = create_mapping(src_mapping, self.target_mapping, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
         self.assertEqual(transducer("t͡ʃi").output_string, "tʃi")
         self.assertEqual(transducer("t͡ʃu").output_string, "tʃu")
@@ -105,7 +105,7 @@ class MappingCreationTest(TestCase):
             {"in": "ᒐ", "out": "tSa"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-xsampa")
-        mapping = create_mapping(src_mapping, self.target_mapping_xsampa, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping_xsampa)
         transducer = Transducer(mapping)
         self.assertEqual(transducer("tSi").output_string, "tSi")
         self.assertEqual(transducer("tSu").output_string, "tSu")
@@ -118,7 +118,7 @@ class MappingCreationTest(TestCase):
             {"in": "ᐧᑫ", "out": "kʷeː"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
-        mapping = create_mapping(src_mapping, self.target_mapping, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
         self.assertEqual(transducer("pʷeː").output_string, "pweː")
         self.assertEqual(transducer("tʷeː").output_string, "tweː")
@@ -130,31 +130,26 @@ class MappingCreationTest(TestCase):
         # Exercise looking up distances in the known list
         with self.assertRaises(ValueError):
             _ = create_mapping(
-                src_mapping, self.target_mapping, distance="not_a_distance", quiet=True
+                src_mapping, self.target_mapping, distance="not_a_distance"
             )
         with self.assertRaises(ValueError):
             _ = create_multi_mapping(
                 [(src_mapping, "out")],
                 [(self.target_mapping, "in")],
                 distance="not_a_distance",
-                quiet=True,
             )
         # White box testing: monkey-patch an invalid distance to validate the
         # second way we make sure distances are supported
         DISTANCE_METRICS.append("not_a_real_distance")
         with self.assertRaises(ValueError), self.assertLogs(LOGGER, level="ERROR"):
             _ = create_mapping(
-                src_mapping,
-                self.target_mapping,
-                distance="not_a_real_distance",
-                quiet=True,
+                src_mapping, self.target_mapping, distance="not_a_real_distance"
             )
         with self.assertRaises(ValueError), self.assertLogs(LOGGER, level="ERROR"):
             _ = create_multi_mapping(
                 [(src_mapping, "out")],
                 [(self.target_mapping, "in")],
                 distance="not_a_real_distance",
-                quiet=True,
             )
         DISTANCE_METRICS.pop()
 
@@ -167,23 +162,20 @@ class MappingCreationTest(TestCase):
             {"in": "ᕃ", "out": "ʁaj"},
         ]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
-        mapping = create_mapping(src_mapping, self.target_mapping, quiet=True)
+        mapping = create_mapping(src_mapping, self.target_mapping)
         # print("mapping", mapping, list(mapping), "distance", "default")
         self.assertTrue(isinstance(mapping, Mapping))
         set_of_mappings = {tuple(rule.rule_output for rule in mapping.rules)}
         for distance in DISTANCE_METRICS:
             mapping = create_mapping(
-                src_mapping, self.target_mapping, distance=distance, quiet=True
+                src_mapping, self.target_mapping, distance=distance
             )
             # print("mapping", mapping, list(mapping), "distance", distance)
             self.assertTrue(isinstance(mapping, Mapping))
             set_of_mappings.add(tuple(rule.rule_output for rule in mapping.rules))
 
             mapping = create_multi_mapping(
-                [(src_mapping, "out")],
-                [(self.target_mapping, "in")],
-                distance=distance,
-                quiet=True,
+                [(src_mapping, "out")], [(self.target_mapping, "in")], distance=distance
             )
             self.assertTrue(isinstance(mapping, Mapping))
             set_of_mappings.add(tuple(rule.rule_output for rule in mapping.rules))
