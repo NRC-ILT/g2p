@@ -44,7 +44,7 @@ class FallbackTest(TestCase):
             in_lang="test",
             out_lang="test-ipa",
         )
-        test_in = align_to_dummy_fallback(mapping, quiet=True)
+        test_in = align_to_dummy_fallback(mapping)
         self.assertEqual(
             test_in.rules,
             [
@@ -58,7 +58,7 @@ class FallbackTest(TestCase):
             ],
         )
 
-        test_out = align_to_dummy_fallback(mapping, "out", quiet=True)
+        test_out = align_to_dummy_fallback(mapping, "out")
         self.assertEqual(
             test_out.rules,
             [
@@ -71,7 +71,7 @@ class FallbackTest(TestCase):
                 Rule(rule_input="ةُ", rule_output="ɑu", match_pattern="ةُ"),
             ],
         )
-        test_ipa = align_to_dummy_fallback(ipa_mapping, "out", quiet=True)
+        test_ipa = align_to_dummy_fallback(ipa_mapping, "out")
         panphon_021_ref = [
             Rule(rule_input="æ", rule_output="ɑ", match_pattern="æ"),
             Rule(rule_input="ɐ", rule_output="i", match_pattern="ɐ"),

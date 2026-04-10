@@ -9,7 +9,6 @@
 # - pyyaml>=5.2
 # - regex
 # - text-unidecode
-# - tqdm
 # - typing-extensions
 # - fastapi>=0.109.0
 # - starlette>=0.40.0
@@ -88,8 +87,6 @@ starlette==1.0.0
     #   hatch.envs.prod
     #   fastapi
 text-unidecode==1.3
-    # via hatch.envs.prod
-tqdm==4.67.3
     # via hatch.envs.prod
 typing-extensions==4.15.0
     # via
