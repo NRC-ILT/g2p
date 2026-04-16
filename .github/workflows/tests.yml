@@ -54,12 +54,10 @@ jobs:
       - name: Ensure browser is installed
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: python -m playwright install --with-deps chromium
-      - name: Launch the API
-        run: coverage run run_studio.py &
-      - name: Run dev suite
-        run: coverage run run_tests.py dev
-      - name: Run test-studio
-        run: coverage run g2p/tests/test_studio.py
+      - name: Run most tests
+        run: |
+          pytest --cov
+          mv .coverage .coverage.pytest
 
       # Neural tests, with huggingface models cached
       - uses: actions/cache@v5
@@ -87,8 +85,6 @@ jobs:
 
       - name: Post test analyses
         run: |
-          pkill -INT coverage
-          sleep 10
           coverage combine
           coverage report
           coverage xml
