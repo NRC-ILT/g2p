@@ -323,4 +323,4 @@ class StudioTest(IsolatedAsyncioTestCase):
 
 
 if __name__ == "__main__":
-    pytest.main(["-v", "g2p/tests/test_studio.py"])
+    pytest.main(["-v", __file__])
