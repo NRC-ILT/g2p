@@ -90,8 +90,9 @@ class MappingTest(TestCase):
         self.assertEqual(normalize(r"\u0061", None), "a")
         self.assertEqual(normalize("\u010d", "NFD"), "\u0063\u030c")
         self.assertEqual(normalize("\u0063\u030c", "NFC"), "\u010d")
-        with self.assertRaises(InvalidNormalization):
+        with self.assertRaises(InvalidNormalization) as cm:
             normalize("FOOBIE", "BLETCH")
+        assert "invalid argument" in str(cm.exception)
 
     def test_json_map(self):
         json_map = Mapping(
@@ -375,8 +376,9 @@ class MappingTest(TestCase):
         )
         tf.write("good-in,good-out\n\ngood-in-no-out\n")
         tf.close()
-        with self.assertRaises(exceptions.IncorrectFileType):
+        with self.assertRaises(exceptions.IncorrectFileType) as cm:
             Mapping(rules_path=tf.name)
+        assert "not a valid mapping filetype" in str(cm.exception)
         os.unlink(tf.name)
 
     def test_extend_and_deduplicate(self):
