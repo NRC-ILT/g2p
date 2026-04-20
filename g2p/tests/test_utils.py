@@ -41,8 +41,9 @@ class UtilsTest(TestCase):
         )  # shouldn't allow self-referential abbreviations
         expanded_plain = utils.expand_abbreviations("test", test_dict)
         expanded_bad_plain = utils.expand_abbreviations("test", bad_dict)
-        with self.assertRaises(g2p.exceptions.RecursionError):
+        with self.assertRaises(g2p.exceptions.RecursionError) as cm:
             utils.expand_abbreviations("HIGH_VOWELS", bad_dict)
+        assert "Too many levels of recursion" in str(cm.exception)
         expanded_non_recursive = utils.expand_abbreviations("HIGH_VOWELS", test_dict)
         expanded_recursive = utils.expand_abbreviations("VOWELS", test_dict)
         self.assertEqual("test", expanded_plain)
