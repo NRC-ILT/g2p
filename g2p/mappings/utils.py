@@ -523,7 +523,7 @@ def load_from_csv(language, delimiter=","):
 
         if len(entry) == 1:
             raise exceptions.MalformedMapping(
-                'Entry {} in mapping {} has no "out" value.'.format(entry, language)
+                f'Entry {entry} in mapping {language} has no "out" value.'
             )
 
         new_io["in"] = entry[0].translate(remove_bom)

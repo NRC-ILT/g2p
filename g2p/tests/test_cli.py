@@ -580,7 +580,7 @@ class CliTest(TestCase):
         results = self.runner.invoke(convert, [input_file, "fra", "fra-ipa", "--file"])
         self.assertEqual(results.exit_code, 0)
         self.assertIn("fʁɑ̃sɛ", results.output)
-        with open(input_file, "r", encoding="utf8") as f:
+        with open(input_file, encoding="utf8") as f:
             lines_in = len(list(f))
         # Make sure there is no resource warning about unclosed files
         self.assertNotIn("ResourceWarning", results.output)
@@ -645,7 +645,7 @@ class CliTest(TestCase):
             )
             self.assertEqual(result.exit_code, 0)
             with open(
-                os.path.join(tmpdir, "fra-ipa_to_eng-ipa.json"), "r", encoding="utf8"
+                os.path.join(tmpdir, "fra-ipa_to_eng-ipa.json"), encoding="utf8"
             ) as f:
                 fra2eng_ipa = json.load(f)
             for s in ("ɛj", "ks", "ɔn"):

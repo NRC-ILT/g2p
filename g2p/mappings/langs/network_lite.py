@@ -151,7 +151,8 @@ class DiGraph(Generic[T]):
         raise ValueError(f"No path from {u} to {v}")
 
 
-NodeDict = TypedDict("NodeDict", {"id": Any})
+class NodeDict(TypedDict):
+    id: Any
 
 
 class NodeLinkDict(TypedDict, Generic[T]):
