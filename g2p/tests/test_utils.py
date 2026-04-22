@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-""" Test Mapping utility functions
-"""
+"""Test Mapping utility functions"""
 
 import doctest
 import os
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import List
 from unittest import TestCase, main
 
 import yaml
@@ -55,9 +53,7 @@ class UtilsTest(TestCase):
         default_dict = defaultdict(list)
         default_dict["VOWEL"].extend(["a", "e", "i", "o", "u"])
         default_dict["OTHER"].extend(["t", "e", "s", "t"])
-        empty_rows: List[List[str]] = []
-        while len(empty_rows) < 10:
-            empty_rows.append(["", "", "", "", "", ""])
+        empty_rows = [["", "", "", "", "", ""] for _ in range(10)]
         self.assertEqual(utils.flatten_abbreviations_format(test_rows), default_dict)
         self.assertEqual(utils.expand_abbreviations_format(default_dict), test_rows)
         self.assertEqual(utils.expand_abbreviations_format({}), empty_rows)
@@ -68,7 +64,7 @@ class UtilsTest(TestCase):
         """
         self.assertEqual("\u0000", utils.unicode_escape("\\u0000"))
         self.assertEqual("\u0331", utils.unicode_escape("\\u0331"))
-        self.assertEqual("\u26F0", utils.unicode_escape("\\u26F0"))
+        self.assertEqual("\u26f0", utils.unicode_escape("\\u26F0"))
 
     def test_fixed_width(self):
         test_dict = defaultdict(list)
@@ -291,7 +287,7 @@ class UtilsTest(TestCase):
         )
         self.assertEqual(
             utils.normalize_with_indices("o\u0300\u0317", "NFC"),
-            ("\u00F2\u0317", [(0, 0), (1, 0), (2, 1)]),
+            ("\u00f2\u0317", [(0, 0), (1, 0), (2, 1)]),
         )
 
     def test_normalize_to_NFK_with_indices(self):
