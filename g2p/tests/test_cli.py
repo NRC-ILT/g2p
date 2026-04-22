@@ -4,15 +4,17 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from unittest import TestCase, main, mock
+from unittest import TestCase, mock
 
 import jsonschema
 import pydantic
 import yaml
 from click.testing import CliRunner
+from pytest import main
 
 import g2p._version
 from g2p.cli import (
@@ -662,4 +664,4 @@ class CliTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

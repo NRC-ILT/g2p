@@ -5,8 +5,11 @@ Test all Mappings
 """
 
 import io
+import sys
 from contextlib import redirect_stderr
-from unittest import TestCase, main
+from unittest import TestCase
+
+from pytest import main
 
 from g2p.log import LOGGER
 from g2p.mappings import Mapping
@@ -201,4 +204,4 @@ class MappingCreationTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

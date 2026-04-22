@@ -12,14 +12,15 @@ or robust server mode (*nix only, gunicorn does not work on Windows):
     gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:5000 --daemon
 """
 
+import sys
 import time
 from datetime import datetime
 from random import sample
 from unittest import IsolatedAsyncioTestCase
 
-import pytest
 import socketio  # type: ignore
 from playwright.async_api import Error, async_playwright, expect  # type: ignore
+from pytest import fixture, main
 
 from g2p.log import LOGGER
 from g2p.tests.public.data import load_public_test_data
@@ -27,7 +28,7 @@ from g2p.tests.public.data import load_public_test_data
 STUDIO_PORT = 5000
 
 
-@pytest.fixture(autouse=True, scope="module")
+@fixture(autouse=True, scope="module")
 def run_studio():
     """Launch the studio server automatically via this fuxture (pytest only)
 
@@ -323,4 +324,4 @@ class StudioTest(IsolatedAsyncioTestCase):
 
 
 if __name__ == "__main__":
-    pytest.main(["-v", __file__])
+    main([__file__, *sys.argv])

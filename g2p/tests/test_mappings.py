@@ -4,14 +4,16 @@ import io
 import json
 import os
 import re
+import sys
 import unicodedata as ud
 from contextlib import redirect_stderr
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List
-from unittest import TestCase, main, mock
+from unittest import TestCase, mock
 
 from pydantic import ValidationError
+from pytest import main
 
 from g2p import exceptions, make_g2p
 from g2p.exceptions import InvalidNormalization, NeuralDependencyError
@@ -456,4 +458,4 @@ class MappingTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

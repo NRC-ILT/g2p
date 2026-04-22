@@ -16,12 +16,14 @@ We accomplish that in two ways:
 
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
-from unittest import TestCase, main
+from unittest import TestCase
 
 import yaml
 from click.testing import CliRunner
+from pytest import main
 
 from g2p import exceptions
 from g2p.cli import convert, generate_mapping
@@ -340,4 +342,4 @@ class LocalConfigTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

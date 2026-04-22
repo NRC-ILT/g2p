@@ -3,7 +3,7 @@
 import sys
 from unittest import SkipTest, TestCase
 
-import pytest
+from pytest import main
 
 from g2p import make_g2p
 from g2p.log import LOGGER
@@ -50,4 +50,4 @@ class NeuralLangTest(TestCase):
 
 
 if __name__ == "__main__":
-    pytest.main(["-v", __file__])
+    main([__file__, *sys.argv])

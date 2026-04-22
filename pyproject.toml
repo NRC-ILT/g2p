@@ -227,3 +227,8 @@ disable = [
   # I find the "unnecessary" else makes code more readable
   "no-else-return",
 ]
+
+[tool.pytest]
+filterwarnings = [
+    "ignore:.*Module already imported so cannot be rewritten; anyio.*",
+]

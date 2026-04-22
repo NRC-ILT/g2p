@@ -5,12 +5,14 @@
 import doctest
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
-from unittest import TestCase, main
+from unittest import TestCase
 
 import yaml
 from pep440.core import is_canonical
+from pytest import main
 
 import g2p
 import g2p.exceptions
@@ -370,4 +372,4 @@ class UtilsTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])
