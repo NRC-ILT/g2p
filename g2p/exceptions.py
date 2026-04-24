@@ -34,12 +34,10 @@ class MappingMissing(CommandLineError):
 
     def __str__(self):
         return self.render(
-            (
-                "\n"
-                'There is no mapping between the languages "%(in_lang)s" and "%(out_lang)s", \n'
-                "please make sure you spelled the name correctly or go to\n"
-                "https://g2p-studio.herokuapp.com/api/v1/langs for a list of mappings"
-            )
+            "\n"
+            'There is no mapping between the languages "%(in_lang)s" and "%(out_lang)s", \n'
+            "please make sure you spelled the name correctly or go to\n"
+            "https://g2p-studio.herokuapp.com/api/v1/langs for a list of mappings"
         )
 
 
@@ -51,12 +49,10 @@ class NoPath(CommandLineError):
 
     def __str__(self):
         return self.render(
-            (
-                "\n"
-                'There is no g2p path between the languages "%(in_lang)s" and "%(out_lang)s", \n'
-                "please make sure you spelled the name correctly or go to\n"
-                "https://g2p-studio.herokuapp.com/api/v1/langs for a list of mappings"
-            )
+            "\n"
+            'There is no g2p path between the languages "%(in_lang)s" and "%(out_lang)s", \n'
+            "please make sure you spelled the name correctly or go to\n"
+            "https://g2p-studio.herokuapp.com/api/v1/langs for a list of mappings"
         )
 
 
@@ -67,11 +63,9 @@ class InvalidNormalization(CommandLineError):
 
     def __str__(self):
         return self.render(
-            (
-                "\n"
-                'You provided an invalid argument "%(norm)s" to normalize with. \n'
-                'Please use "none" or "NFC", "NFKC", "NFD", or "NFKD"\n'
-            )
+            "\n"
+            'You provided an invalid argument "%(norm)s" to normalize with. \n'
+            'Please use "none" or "NFC", "NFKC", "NFD", or "NFKD"\n'
         )
 
 
@@ -85,14 +79,12 @@ class MalformedMapping(CommandLineError):
 
     def __str__(self):
         return self.render(
-            (
-                "\n"
-                "There is something wrong with your mapping. \n"
-                "You might be missing some keywords or \n"
-                'Not all of the input and output pairs in your mapping have values for "in" and "out"\n'
-                'You may need to rerun "g2p update" after resolving this problem.\n'
-                "Please refer to the documentation and fix your mapping." + self.message
-            )
+            "\n"
+            "There is something wrong with your mapping. \n"
+            "You might be missing some keywords or \n"
+            'Not all of the input and output pairs in your mapping have values for "in" and "out"\n'
+            'You may need to rerun "g2p update" after resolving this problem.\n'
+            "Please refer to the documentation and fix your mapping." + self.message
         )
 
 

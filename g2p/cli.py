@@ -832,7 +832,7 @@ def scan(lang, path) -> None:
     pattern = f"[^{mapped_string}{filter_chars}.]"
     prog = re.compile(pattern)
 
-    with open(path, "r", encoding="utf8") as file:
+    with open(path, encoding="utf8") as file:
         data = normalize(file.read(), "NFD")
         if not case_sensitive:
             data = data.lower()

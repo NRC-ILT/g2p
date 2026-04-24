@@ -90,15 +90,13 @@ APP = Starlette(
 
 
 def shade_colour(colour, percent, r=0, g=0, b=0):
-    R = hex(min(255, int((int(colour[1:3], 16) * (100 + percent + r) / 100)))).lstrip(
+    R = hex(min(255, int(int(colour[1:3], 16) * (100 + percent + r) / 100))).lstrip(
         "0x"
     )
-    G = hex(min(255, int((int(colour[3:5], 16) * (100 + percent + g) / 100)))).lstrip(
+    G = hex(min(255, int(int(colour[3:5], 16) * (100 + percent + g) / 100))).lstrip(
         "0x"
     )
-    B = hex(min(255, int((int(colour[5:], 16) * (100 + percent + b) / 100)))).lstrip(
-        "0x"
-    )
+    B = hex(min(255, int(int(colour[5:], 16) * (100 + percent + b) / 100))).lstrip("0x")
     return "#" + str(R) + str(G) + str(B)
 
 

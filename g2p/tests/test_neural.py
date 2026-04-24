@@ -36,15 +36,7 @@ class NeuralLangTest(TestCase):
             output_string = transducer(test[2]).output_string.strip()
             if output_string != test[3].strip():
                 LOGGER.error(
-                    "{} for {}: {} from {} to {} should be {}, got {}".format(
-                        error_prefix,
-                        test[-1],
-                        test[2],
-                        test[0],
-                        test[1],
-                        test[3],
-                        output_string,
-                    )
+                    f"{error_prefix} for {test[-1]}: {test[2]} from {test[0]} to {test[1]} should be {test[3]}, got {output_string}"
                 )
                 error_count += 1
 

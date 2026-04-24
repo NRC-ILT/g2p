@@ -120,7 +120,7 @@ class LocalConfigTest(TestCase):
         """Nice error messages when the mapping file or abbreviations file are missing"""
         with tempfile.TemporaryDirectory() as tmpdir:
             config_file = os.path.join(tmpdir, "mapping-file-not-found.yaml")
-            with open(config_file, "wt", encoding="utf8") as f:
+            with open(config_file, "w", encoding="utf8") as f:
                 yaml.dump({"mappings": [{"rules_path": "no-such-file.csv"}]}, f)
             results = self.runner.invoke(
                 convert, ["--config", config_file, "a", "b", "c"]
@@ -132,9 +132,9 @@ class LocalConfigTest(TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             config_file = os.path.join(tmpdir, "abbrev-file-not-found.yaml")
-            with open(os.path.join(tmpdir, "tiny.csv"), "wt", encoding="utf8") as f:
+            with open(os.path.join(tmpdir, "tiny.csv"), "w", encoding="utf8") as f:
                 f.write("a,b\n")
-            with open(config_file, "wt", encoding="utf8") as f:
+            with open(config_file, "w", encoding="utf8") as f:
                 yaml.dump(
                     {
                         "mappings": [
@@ -158,9 +158,9 @@ class LocalConfigTest(TestCase):
     def test_empty_rules(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             config_file = os.path.join(tmpdir, "empty-rules-file.yaml")
-            with open(os.path.join(tmpdir, "empty.csv"), "wt", encoding="utf8") as f:
+            with open(os.path.join(tmpdir, "empty.csv"), "w", encoding="utf8") as f:
                 pass
-            with open(config_file, "wt", encoding="utf8") as f:
+            with open(config_file, "w", encoding="utf8") as f:
                 yaml.dump({"mappings": [{"rules_path": "empty.csv"}]}, f)
             with self.assertRaises(exceptions.MalformedMapping) as e:
                 # This is a deep pydantic exception, we should raise MalformedMapping
@@ -212,9 +212,9 @@ class LocalConfigTest(TestCase):
                 ["--from", "gm1", "--to", "gm2", "--out-dir", output_dir_s],
             )
             self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm1-ipa_to_gm2-ipa.json", "r") as f:
+            with open(self.mappings_dir / "gm1-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
-            with open(output_dir / "gm1-ipa_to_gm2-ipa.json", "r") as f:
+            with open(output_dir / "gm1-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
             self.assertEqual(output, ref)
 
@@ -224,9 +224,9 @@ class LocalConfigTest(TestCase):
                 ["--from", "gm3", "--to", "gm2", "--out-dir", output_dir_s],
             )
             self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm3-ipa_to_gm2-ipa.json", "r") as f:
+            with open(self.mappings_dir / "gm3-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
-            with open(output_dir / "gm3-ipa_to_gm2-ipa.json", "r") as f:
+            with open(output_dir / "gm3-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
             self.assertEqual(output, ref)
 
@@ -236,9 +236,9 @@ class LocalConfigTest(TestCase):
                 ["--from", "gm2", "--to", "gm3", "--out-dir", output_dir_s],
             )
             self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm2-ipa_to_gm3-ipa.json", "r") as f:
+            with open(self.mappings_dir / "gm2-ipa_to_gm3-ipa.json") as f:
                 ref = json.load(f)
-            with open(output_dir / "gm2-ipa_to_gm3-ipa.json", "r") as f:
+            with open(output_dir / "gm2-ipa_to_gm3-ipa.json") as f:
                 output = json.load(f)
             self.assertEqual(output, ref)
 

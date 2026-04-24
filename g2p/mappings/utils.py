@@ -234,7 +234,7 @@ def expand_abbreviations(data: str, abbs: Dict[str, List[str]], recursion_depth=
     return data
 
 
-def flatten_abbreviations_format(data):
+def flatten_abbreviations_format(data) -> defaultdict:
     """Turn a CSV-sourced list of lists into a flattened DefaultDict"""
     default_dict = defaultdict(list)
     for line in data:
@@ -245,19 +245,12 @@ def flatten_abbreviations_format(data):
     return default_dict
 
 
-def expand_abbreviations_format(data):
+def expand_abbreviations_format(data: dict):
     """Expand a flattened DefaultDict into a CSV-formatted list of lists"""
-    lines = []
     if data:
-        for key in data.keys():
-            line = [key]
-            for col in data[key]:
-                line.append(col)
-            lines.append(line)
-    if not lines:
-        while len(lines) < 10:
-            lines.append(["", "", "", "", "", ""])
-    return lines
+        return [[key, *values] for key, values in data.items()]
+    else:
+        return [["", "", "", "", "", ""] for _ in range(10)]
 
 
 def normalize(inp: str, norm_form: Union[str, None]):
@@ -523,7 +516,7 @@ def load_from_csv(language, delimiter=","):
 
         if len(entry) == 1:
             raise exceptions.MalformedMapping(
-                'Entry {} in mapping {} has no "out" value.'.format(entry, language)
+                f'Entry {entry} in mapping {language} has no "out" value.'
             )
 
         new_io["in"] = entry[0].translate(remove_bom)
@@ -595,21 +588,18 @@ def escape_special_characters(to_escape: Union[Rule, Dict[str, str]]) -> Rule:
     return to_escape
 
 
-def load_abbreviations_from_file(path: Union[str, Path]):
+def load_abbreviations_from_file(path: Union[str, Path]) -> defaultdict:
     """Helper method to load abbreviations from file."""
     path = str(path)
     if path.endswith("csv"):
-        abbs = []
         with open(path, encoding="utf8") as f:
             reader = csv.reader(f, delimiter=",")
             abbs = flatten_abbreviations_format(reader)
     elif path.endswith("tsv"):
-        abbs = []
         with open(path, encoding="utf8") as f:
             reader = csv.reader(f, delimiter="\t")
             abbs = flatten_abbreviations_format(reader)
     elif path.endswith("psv"):
-        abbs = []
         with open(path, encoding="utf8") as f:
             reader = csv.reader(f, delimiter="|")
             abbs = flatten_abbreviations_format(reader)
