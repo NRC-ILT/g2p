@@ -202,9 +202,10 @@ def network_to_echart(outfile: Optional[str] = None, layout: bool = False):
             ),
         )
         size = round(size, 2)
-        node = {"name": node, "symbolSize": size, "id": node, "category": lang_name}
-        nodes.append(node)
-    nodes.sort(key=lambda x: x["name"])
+        nodes.append(
+            {"name": node, "symbolSize": size, "id": node, "category": lang_name}
+        )
+    nodes.sort(key=lambda x: x["name"])  # type: ignore
     edges = []
     for edge in LANGS_NETWORK.edges:
         edges.append({"source": edge[0], "target": edge[1]})

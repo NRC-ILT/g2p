@@ -1,6 +1,7 @@
 from collections import deque
 from typing import (
     Any,
+    Collection,
     Deque,
     Dict,
     Generic,
@@ -58,7 +59,7 @@ class DiGraph(Generic[T]):
             self.add_edge(u, v)
 
     @property  # read-only
-    def nodes(self):
+    def nodes(self) -> Collection[T]:
         """Return the nodes"""
         return self._edges.keys()
 
