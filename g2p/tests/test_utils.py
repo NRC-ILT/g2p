@@ -5,12 +5,14 @@
 import doctest
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
-from unittest import TestCase, main
+from unittest import TestCase
 
 import yaml
 from pep440.core import is_canonical
+from pytest import main
 
 import g2p
 import g2p.exceptions
@@ -39,8 +41,9 @@ class UtilsTest(TestCase):
         )  # shouldn't allow self-referential abbreviations
         expanded_plain = utils.expand_abbreviations("test", test_dict)
         expanded_bad_plain = utils.expand_abbreviations("test", bad_dict)
-        with self.assertRaises(g2p.exceptions.RecursionError):
+        with self.assertRaises(g2p.exceptions.RecursionError) as cm:
             utils.expand_abbreviations("HIGH_VOWELS", bad_dict)
+        assert "Too many levels of recursion" in str(cm.exception)
         expanded_non_recursive = utils.expand_abbreviations("HIGH_VOWELS", test_dict)
         expanded_recursive = utils.expand_abbreviations("VOWELS", test_dict)
         self.assertEqual("test", expanded_plain)
@@ -369,4 +372,4 @@ class UtilsTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

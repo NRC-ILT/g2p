@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
+
+from pytest import main
 
 import g2p
 
@@ -193,4 +196,4 @@ class TokenizeAndMapTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

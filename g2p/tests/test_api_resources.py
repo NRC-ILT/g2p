@@ -6,10 +6,12 @@
 import json
 import os
 import re
+import sys
 from typing import Dict, Union
-from unittest import TestCase, main
+from unittest import TestCase
 
 from fastapi.testclient import TestClient
+from pytest import main
 
 from g2p.app import APP
 from g2p.log import LOGGER
@@ -179,4 +181,4 @@ class ResourceIntegrationTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import os
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
+
+from pytest import main
 
 from g2p import make_g2p
 from g2p.log import LOGGER
@@ -276,4 +279,4 @@ class LexiconTransducerTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

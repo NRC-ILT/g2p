@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
+
+from pytest import main
 
 import g2p.mappings.tokenizer as tok
 from g2p.log import LOGGER
@@ -157,4 +160,4 @@ class TokenizerTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

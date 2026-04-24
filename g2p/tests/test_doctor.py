@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
+
+from pytest import main
 
 from g2p.log import LOGGER
 from g2p.mappings.langs.utils import check_ipa_known_segs
@@ -39,4 +42,4 @@ class DoctorTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

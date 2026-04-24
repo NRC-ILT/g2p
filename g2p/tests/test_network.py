@@ -2,8 +2,11 @@
 
 import gzip
 import json
+import sys
 from typing import Any
-from unittest import TestCase, main
+from unittest import TestCase
+
+from pytest import main
 
 from g2p import make_g2p
 from g2p.exceptions import InvalidLanguageCode, NoPath
@@ -202,4 +205,4 @@ class NetworkLiteTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

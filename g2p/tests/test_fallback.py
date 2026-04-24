@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
+
+from pytest import main
 
 from g2p.mappings import Mapping, Rule
 from g2p.mappings.create_fallback_mapping import align_to_dummy_fallback
@@ -89,4 +92,4 @@ class FallbackTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

@@ -4,15 +4,17 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from unittest import TestCase, main, mock
+from unittest import TestCase, mock
 
 import jsonschema
 import pydantic
 import yaml
 from click.testing import CliRunner
+from pytest import main
 
 import g2p._version
 from g2p.cli import (
@@ -651,6 +653,15 @@ class CliTest(TestCase):
             for s in ("ɛj", "ks", "ɔn"):
                 self.assertIn({"in": s, "out": s}, fra2eng_ipa)
 
+    def test_generate_mapping_dummy(self):
+        """Create a dummy mapping in a specified outdir"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            result = self.runner.invoke(
+                generate_mapping, ["--dummy", "--out-dir", tmpdir, "fra"]
+            )
+            assert result.exit_code == 0
+            assert (Path(tmpdir) / "fra_to_dummy.json").exists()
+
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])

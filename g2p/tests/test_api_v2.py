@@ -1,15 +1,18 @@
-import unittest
+#!/usr/bin/env python
+import sys
 from contextlib import redirect_stderr
 from io import StringIO
+from unittest import TestCase
 
 from fastapi.testclient import TestClient
+from pytest import main
 
 from g2p.api_v2 import api
 
 API_CLIENT = TestClient(api)
 
 
-class TestAPIV2(unittest.TestCase):
+class TestAPIV2(TestCase):
     def test_langs(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/langs")
@@ -422,4 +425,4 @@ class TestAPIV2(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    main([__file__, *sys.argv])

@@ -174,4 +174,4 @@ Then you can run all the test suites by simply invoking `pytest`:
 
     pytest
 
-We also support `unittest` if you're familiar with that, and we have a `./run_tests.py` script to run selected parts of the test suites. Run `./run_tests.py -h` for info.
+We also have a `./run_tests.py` script to run selected parts of the test suites. Run `./run_tests.py -h` for info.

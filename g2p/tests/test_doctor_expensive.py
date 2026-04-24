@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from unittest import TestCase, main
+import sys
+from unittest import TestCase
 
 from click.testing import CliRunner
+from pytest import main
 
 from g2p.cli import doctor
 from g2p.log import LOGGER
@@ -43,4 +45,4 @@ class ExpensiveDoctorTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    main([__file__, *sys.argv])
