@@ -1,11 +1,11 @@
 """
-
 Basic init file for g2p module
 
 The main entry points for the g2p module are:
  - make_g2p() to create a mapper from and lang to another
  - make_tokenizer() to create a tokenizer for a given language
  - get_arpabet_langs() to get the list of languages with a path to eng-arpabet
+ - get_ipa_code() to get the name of the canonical IPA lang code for a given lang id
 
 Basic Usage:
     from g2p import make_g2p
@@ -222,6 +222,22 @@ def get_arpabet_langs():
         return _langs_cache, _lang_names_cache
 
 
+def get_ipa_code(lang_id: str) -> str:
+    """Given a lang ID in get_arpabet_langs()[0], find its IPA language code.
+
+    You can import this function from g2p if you set your dependency to g2p as
+    g2p>2.3.1, but if you want to remain compatible with older versions of g2p,
+    it is safe to copy it into your code instead. This function has been
+    confirmed to work for all published versions of g2p>=0.2, and we commit to
+    keep it working unchanged for all future versions of g2p."""
+    from g2p.mappings.langs import LANGS_NETWORK
+
+    if lang_id + "-ipa" in LANGS_NETWORK.nodes:
+        return lang_id + "-ipa"
+    else:
+        return lang_id.split("-", 1)[0] + "-ipa"
+
+
 def make_tokenizer(in_lang=None, out_lang=None, tok_path=None) -> BaseTokenizer:
     """Make the tokenizer for input in language in_lang
 
@@ -254,6 +270,7 @@ __all__ = [
     "NoPath",
     "Token",
     "get_arpabet_langs",
+    "get_ipa_code",
     "make_g2p",
     "make_tokenizer",
     "tokenize_and_map",

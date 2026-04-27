@@ -5,7 +5,7 @@ from typing import Collection
 
 from pytest import main
 
-from g2p import get_arpabet_langs, make_g2p
+from g2p import get_arpabet_langs, get_ipa_code, make_g2p
 from g2p.log import LOGGER
 from g2p.mappings.langs import LANGS_NETWORK
 from g2p.tests.public.data import load_public_test_data
@@ -41,24 +41,6 @@ def test_io() -> None:
     ), f'g2p mapping errors found, look for "{error_prefix}" above for detail.'
 
 
-def get_ipa_lang_code(lang_id: str) -> str:
-    """Given a lang ID in get_arpabet_langs()[0], find its IPA language code.
-
-    Copy-paste this function into your code to find the correct IPA language code
-    for a given language found in get_aprabet_langs()[0].
-
-    ***Do not import this function from here; copy it!***.
-
-    This function works with new and old versions of g2p. It exists here with
-    the unit test below to make sure it does not break in future versions of g2p."""
-    from g2p.mappings.langs import LANGS_NETWORK
-
-    if lang_id + "-ipa" in LANGS_NETWORK.nodes:
-        return lang_id + "-ipa"
-    else:
-        return lang_id[:3] + "-ipa"
-
-
 def test_ipa_heuristic(subtests) -> None:
     """Make sure we have a reliable heuristic for finding the IPA code for all langs.
 
@@ -68,12 +50,23 @@ def test_ipa_heuristic(subtests) -> None:
 
     The first heuristic was lang_id + "-ipa" was the IPA code, but that breaks with
     sal-apa -> sal-ipa and oji-syl -> oji-ipa.
-    A mostly correct heuristic is lang_id[:3] + "-ipa", but it fails for iku-sro ->
-    iku-sro-ipa, since iku-ipa exists but there is path from iku-sro to iku-ipa.
-    The only correct heuristic is:
+    A mostly correct heuristic is lang_id.split("-",1)[0]+"-ipa", but this fails for
+    iku-sro -> iku-sro-ipa, since iku-ipa exists but there is no path from iku-sro
+    to iku-ipa.
+    So the correct heuristic is:
         1) try lang_id + "-ipa" and use it if it is in LANGS_NETWORK.nodes
-        2) otherwise use lang_id[:3] + "-ipa"
+        2) otherwise use lang_id.split("-",1)[0] + "-ipa"
     Sigh..."""
+
+    def locked_get_ipa_code(lang_id: str) -> str:
+        # Prevent inadvertent changes to g2p.get_ipa_code with this locked test copy,
+        # including this deep import which we promise will keep working.
+        from g2p.mappings.langs import LANGS_NETWORK
+
+        if lang_id + "-ipa" in LANGS_NETWORK.nodes:
+            return lang_id + "-ipa"
+        else:
+            return lang_id.split("-", 1)[0] + "-ipa"
 
     # Make sure client code can assume "lang_id in nodes" will work
     nodes: Collection[str] = LANGS_NETWORK.nodes
@@ -83,9 +76,20 @@ def test_ipa_heuristic(subtests) -> None:
 
     for lang in langs:
         with subtests.test(lang=lang):
-            ipa_code = get_ipa_lang_code(lang)
+            ipa_code = get_ipa_code(lang)
+            assert ipa_code == locked_get_ipa_code(lang)
             assert ipa_code in LANGS_NETWORK.nodes
             assert LANGS_NETWORK.has_path(lang, ipa_code)
+
+    for hypothetical_lang, ref_ipa_code in (
+        ("ll-foo", "ll-ipa"),
+        ("lll-bar", "lll-ipa"),
+        ("lang-foo", "lang-ipa"),
+        ("language-bar", "language-ipa"),
+        ("lang", "lang-ipa"),
+        ("lll-foo-bar-baz", "lll-ipa"),
+    ):
+        assert get_ipa_code(hypothetical_lang) == ref_ipa_code
 
 
 if __name__ == "__main__":
