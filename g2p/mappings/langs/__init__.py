@@ -56,6 +56,10 @@ def get_available_mappings(langs: dict) -> list:
     return mappings_available
 
 
+# Inadvertently part of the g2p programmatic API because this is not available for
+# import elsewhere. Don't change this! The following code must always work:
+#     from g2p.mappings.langs import LANGS_NETWORK
+#     nodes: Collection[str] = LANGS_NETWORK.nodes
 LANGS_NETWORK = load_network()
 # Making private because it should be imported from g2p.mappings instead
 _LANGS = load_langs()

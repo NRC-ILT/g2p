@@ -61,6 +61,7 @@ test = [
   "jsonschema>=4.17.3",
   "pep440>=0.1.2",
   "pytest",
+  "pytest-subtests; python_version < '3.10'",
   "httpx",
   # Kind of bogus that we need both httpx and aiohttp, but socketio
   # wants this
