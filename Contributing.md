@@ -29,14 +29,14 @@ install the required packages with `pip`:
 
 ```sh
 pip install -e ".[dev]"
-pre-commit install
+prek install
 gitlint install-hook
 ```
 
 ## Pre-commit hooks
 
 The g2p team has agreed to systematically use a number of pre-commit hooks to
-normalize formatting of code. You can install and enable pre-commit to have these used
+normalize formatting of code. You can install and enable prek or pre-commit to have these used
 automatically when you do your own commits.
 
 Pre-commit hooks enabled:
@@ -56,15 +56,15 @@ Pre-commit hooks enabled:
 
 ### Enabling pre-commit hooks
 
-All the pre-commit hooks are executed using a tool called
-[pre-commit](https://pre-commit.com/). Once you enable pre-commit, it will run all the
+All the pre-commit hooks are executed using either [prek](https://prek.j178.dev/) (recommended), or
+[pre-commit](https://pre-commit.com/) (equivalent but slower). Once you enable either, it will run all the
 hooks each time you try to commit anything in this repo.
 
 We've added all the developer dependencies for the project to the
 `dev` environment to make them easy to install with `hatch`.  In
-addition, `pre-commit` and `gitlint` hooks will be installed on
+addition, `prek` and `gitlint` hooks will be installed on
 creation of this environment.  Note that you will have to use the
-`dev` environment when committing since pre-commit is installed there.
+`dev` environment when committing since prek is installed there.
 You can either start a shell:
 
 ```sh
@@ -82,7 +82,7 @@ install the required packages with `pip`:
 
 ```sh
 pip install -e ".[dev]"
-pre-commit install
+prek install
 ```
 
 ## commitlint
@@ -134,12 +134,12 @@ These rules are inspired by these commit formatting guides:
 
 ### Enabling commitlint
 
-We run commitlint on each commit message that you write by enabling the commit-msg hook in
+We run gitlint on each commit message that you write by enabling the commit-msg hook in
 Git.
 
 The commit-msg hook is enabled on creation of the `dev` environment
 with `hatch`.  Note that you will have to use the `dev` environment
-when committing since pre-commit is installed there.  You can either
+when committing since gitlint is installed there.  You can either
 start a shell:
 
 ```sh
