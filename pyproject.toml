@@ -71,7 +71,7 @@ dev = [
   "g2p[test]",
   "gitlint-core>=0.17.0",
   "mypy>=1.8.0",
-  "pre-commit>=3.2.0",
+  "prek",
 ]
 # This one is a bit special and cannot depend on other features,
 # because if it depends on `g2p[api]` then we end up with
@@ -182,7 +182,7 @@ cov = ["test-cov", "cov-report"]
 
 [tool.hatch.envs.dev]
 features = ["dev"]
-post-install-commands = ["pre-commit install", "gitlint install-hook || true"]
+post-install-commands = ["prek install", "gitlint install-hook || true"]
 
 [tool.hatch.envs.dev.scripts]
 check = "mypy {args:g2p}"
