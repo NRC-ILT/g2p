@@ -155,7 +155,7 @@ serve = "uvicorn g2p.app:APP --reload --port 5000"
 template = "api"
 features = ["api", "prod"]
 type = "pip-compile"
-python = "3.12"
+python = "3.14"
 lock-filename = "requirements.txt"
 pip-compile-verbose = false
 
