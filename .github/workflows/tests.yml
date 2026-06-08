@@ -131,8 +131,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          # Note: this is where we also test that the g2p library still works on 3.8
-          python-version: "3.8"
+          python-version: "3.9"
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true

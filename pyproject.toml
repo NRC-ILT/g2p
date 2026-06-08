@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "Module for creating context-aware, rule-based G2P mappings that preserve indices"
 readme = "README.md"
 license = "MIT"
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 authors = [
   { name = "Aidan Pine", email = "hello@aidanpine.ca" },
   { name = "Eric Joanis", email = "eric.joanis@nrc-cnrc.gc.ca" },
@@ -23,7 +23,6 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -49,15 +48,13 @@ api = [
   "fastapi>=0.109.0",
   "starlette>=0.40.0",
   "python-socketio>=5.9.0",
-  "python-engineio<4.13; python_version < '3.9'",
   "uvicorn",
   "jinja2",
 ]
 test = [
   "g2p[api]",
   "coverage[toml]>=6.5",
-  "playwright>=1.26.1,<1.46; python_version < '3.9'",
-  "playwright>=1.26.1; python_version >= '3.9'",
+  "playwright>=1.26.1",
   "jsonschema>=4.17.3",
   "pep440>=0.1.2",
   "pytest",
@@ -91,9 +88,9 @@ neural = [
   "g2p[deep-phonemizer]",
 ]
 deep-phonemizer = [
-  "torch>=2.6.0,<2.10; python_version >= '3.9'",
-  "huggingface-hub>0.35.0; python_version >= '3.9'",
-  "ilt-deep-phonemizer>=0.0.23; python_version >= '3.9'",
+  "torch>=2.6.0,<2.10",
+  "huggingface-hub>0.35.0",
+  "ilt-deep-phonemizer>=0.0.23",
 ]
 
 # cannot put g2p[prod] here because that would break windows compat
@@ -170,7 +167,7 @@ default-args = ["g2p/tests"]
 features = ["test", "neural"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+python = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
 serve-cov = "coverage run run_studio.py"
