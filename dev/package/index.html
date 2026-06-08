@@ -902,7 +902,15 @@
 
 
 
-  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
 
 
 
@@ -915,7 +923,7 @@
 
 
 <h4 id="g2p.mappings.Rule.rule_input" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">rule_input</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">rule_input</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -928,6 +936,7 @@
     <div class="doc doc-contents ">
 
         <p>The character(s) to convert</p>
+
     </div>
 
 </div>
@@ -937,7 +946,7 @@
 
 
 <h4 id="g2p.mappings.Rule.rule_output" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">rule_output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">rule_output</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -950,6 +959,7 @@
     <div class="doc doc-contents ">
 
         <p>What to convert the 'in' characters to</p>
+
     </div>
 
 </div>
@@ -959,7 +969,7 @@
 
 
 <h4 id="g2p.mappings.Rule.context_before" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">context_before</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
+            <code class="highlight language-python"><span class="n">context_before</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -972,6 +982,7 @@
     <div class="doc doc-contents ">
 
         <p>The context before 'in' required for the rule to apply</p>
+
     </div>
 
 </div>
@@ -981,7 +992,7 @@
 
 
 <h4 id="g2p.mappings.Rule.context_after" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">context_after</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
+            <code class="highlight language-python"><span class="n">context_after</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -994,6 +1005,7 @@
     <div class="doc doc-contents ">
 
         <p>The context after 'in' required for the rule to apply</p>
+
     </div>
 
 </div>
@@ -1003,7 +1015,7 @@
 
 
 <h4 id="g2p.mappings.Rule.prevent_feeding" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">prevent_feeding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></code>
+            <code class="highlight language-python"><span class="n">prevent_feeding</span> <span class="o">=</span> <span class="kc">False</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -1016,6 +1028,7 @@
     <div class="doc doc-contents ">
 
         <p>Whether to prevent the rule from feeding other rules</p>
+
     </div>
 
 </div>
@@ -1025,7 +1038,7 @@
 
 
 <h4 id="g2p.mappings.Rule.comment" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></code>
+            <code class="highlight language-python"><span class="n">comment</span> <span class="o">=</span> <span class="kc">None</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -1038,9 +1051,11 @@
     <div class="doc doc-contents ">
 
         <p>An optional comment about the rule.</p>
+
     </div>
 
 </div>
+
 
 
 
@@ -1056,6 +1071,7 @@
     <div class="doc doc-contents ">
 
         <p>All the options for exporting are tedious to keep track of so this is a helper function</p>
+
 
     </div>
 

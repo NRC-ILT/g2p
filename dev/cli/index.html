@@ -546,8 +546,8 @@
 <div class="highlight"><pre><span></span><code>g2p [OPTIONS] COMMAND [ARGS]...
 </code></pre></div>
 <p><strong>Options:</strong></p>
-<div class="highlight"><pre><span></span><code>  --version  Show the version and exit.
-  --help     Show this message and exit.
+<div class="highlight"><pre><span></span><code>  --version   Show the version and exit.
+  -h, --help  Show this message and exit.
 </code></pre></div>
 <h2 id="convert">convert<a class="headerlink" href="#convert" title="Permanent link">&para;</a></h2>
 <p>Convert INPUT_TEXT through g2p mapping(s) from IN_LANG to OUT_LANG.</p>
@@ -577,7 +577,7 @@ fra-&gt;fra-ipa, fra-ipa-&gt;eng-ipa and eng-ipa-&gt;eng-arpabet.</p>
                                   plain-text format.
   -a, --substring-alignments      Show the minimal monotonic substring
                                   alignments.
-  --help                          Show this message and exit.
+  -h, --help                      Show this message and exit.
 </code></pre></div>
 <h2 id="doctor">doctor<a class="headerlink" href="#doctor" title="Permanent link">&para;</a></h2>
 <p>Check for common errors in mappings.</p>
@@ -595,7 +595,7 @@ http://g2p-studio.herokuapp.com/api/v1/langs .</p>
                       mappings).
   --list-ipa          List IPA mappings that can be specified
   --list-all          List all mappings that can be specified
-  --help              Show this message and exit.
+  -h, --help          Show this message and exit.
 </code></pre></div>
 <h2 id="generate-mapping">generate-mapping<a class="headerlink" href="#generate-mapping" title="Permanent link">&para;</a></h2>
 <p>Generate a new mapping from existing mappings in the g2p system.</p>
@@ -690,7 +690,7 @@ visiting http://g2p-studio.herokuapp.com/api/v1/langs .</p>
                                   languages in from/to mode
   --out-dir DIRECTORY             Output results in DIRECTORY instead of the
                                   global &quot;generated&quot; directory.
-  --help                          Show this message and exit.
+  -h, --help                      Show this message and exit.
 </code></pre></div>
 <h2 id="scan">scan<a class="headerlink" href="#scan" title="Permanent link">&para;</a></h2>
 <p>Scan a document for non target language characters.</p>
@@ -700,7 +700,7 @@ Accounts for case sensitivity in the configuration.</p>
 <div class="highlight"><pre><span></span><code>g2p scan [OPTIONS] LANG PATH
 </code></pre></div>
 <p><strong>Options:</strong></p>
-<div class="highlight"><pre><span></span><code>  --help  Show this message and exit.
+<div class="highlight"><pre><span></span><code>  -h, --help  Show this message and exit.
 </code></pre></div>
 <h2 id="show-mappings">show-mappings<a class="headerlink" href="#show-mappings" title="Permanent link">&para;</a></h2>
 <p>Show cached mappings, as last updated by "g2p update".</p>
@@ -713,7 +713,7 @@ With no LANG, all cached mappings are included.</p>
 <p><strong>Options:</strong></p>
 <div class="highlight"><pre><span></span><code>  -v, --verbose  Display mapping configs and all rules too.
   --csv          Output mappings in CSV format.
-  --help         Show this message and exit.
+  -h, --help     Show this message and exit.
 </code></pre></div>
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>Update cached language files.</p>
@@ -727,7 +727,7 @@ With no LANG, all cached mappings are included.</p>
   -i, --in-dir DIRECTORY   Scan DIRECTORY for mappings instead of the
                            installed directory
                            (/home/runner/work/g2p/g2p/g2p/mappings/langs).
-  --help                   Show this message and exit.
+  -h, --help               Show this message and exit.
 </code></pre></div>
 <h2 id="update-schema">update-schema<a class="headerlink" href="#update-schema" title="Permanent link">&para;</a></h2>
 <p>Generate a schema for the model configuration.</p>
@@ -741,7 +741,7 @@ But not every minor or major version bump requires a schema update.</p>
 <div class="highlight"><pre><span></span><code>  -o, --out-dir DIRECTORY  Output results in DIRECTORY instead of the
                            installed directory (/home/runner/work/g2p/g2p/g2p/
                            mappings/langs/../.schema).
-  --help                   Show this message and exit.
+  -h, --help               Show this message and exit.
 </code></pre></div>
 
 
