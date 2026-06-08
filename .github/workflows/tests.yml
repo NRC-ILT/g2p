@@ -1,8 +1,13 @@
 name: Run all tests
 on:
-  - pull_request
-  - push
-  - workflow_call
+  pull_request:
+  push:
+  workflow_call:
+  schedule:
+    # Every Monday at 1am UTC, so the weekly caches are refreshed and we exercise
+    # the effect of newly published versions of our dependencies
+    # 0:minute 12:noon-UTC *:any-day-of-month *:any-month 1:Monday
+    - cron: '0 12 * * 1'
 
 # Since we don't checkout the full history, we use a default version so certain tests
 # (pep440, update_schema) will still function. The fake version is set in file
