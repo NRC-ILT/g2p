@@ -59,10 +59,9 @@ test = [
   "pep440>=0.1.2",
   "pytest",
   "pytest-subtests; python_version < '3.10'",
-  "httpx",
-  # Kind of bogus that we need both httpx and aiohttp, but socketio
-  # wants this
-  "aiohttp",
+  "httpx",  # for testing with starlette<1.2
+  "httpx2",  # for testing with starlette>=1.2
+  "aiohttp",  # required by socketio used in test_studio.py
 ]
 dev = [
   "g2p[test]",
