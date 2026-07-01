@@ -1,0 +1,14 @@
+<<: &shared
+  language_name: Polish
+mappings:
+  - display_name: Polish to IPA
+    in_lang: pol
+    out_lang: pol-ipa
+    type: mapping
+    authors:
+      - Wojciech Chodyń
+    rules_path: pol_to_ipa.json
+    rule_ordering: as-written
+    case_sensitive: false
+    norm_form: NFC
+    <<: *shared

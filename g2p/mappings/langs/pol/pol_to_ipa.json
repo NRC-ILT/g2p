@@ -1,0 +1,122 @@
+[
+  { "in": "trz", "out": "t͡ʃ", "comment": "trz -> t͡ʃ" },
+  { "in": "drz", "out": "d͡ʒ", "comment": "drz -> d͡ʒ" },
+  { "in": "dsz", "out": "t͡ʃ", "comment": "dsz -> t͡ʃ" },
+  { "in": "tsz", "out": "t͡ʃ", "comment": "tsz -> t͡ʃ"},
+
+  { "in": "ci",  "out": "t͡ɕ", "context_after": "[aeouąęó]", "comment": "" },
+  { "in": "ci",  "out": "t͡ɕi","context_after": "(?![aeouąęó])" },
+  { "in": "si",  "out": "ɕ",  "context_after": "[aeouąęó]", "comment": "" },
+  { "in": "zi",  "out": "ʑ",  "context_after": "[aeouąęó]", "comment": "" },
+  { "in": "zi",  "out": "ʑi", "comment": "" },
+  { "in": "dzi", "out": "d͡ʑ", "context_after": "[aeouąęó]", "comment": "" },
+
+  { "in": "rz",  "out": "ʃ",  "context_before": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h",  "comment": "rz -> ʃ after voiceless" },
+  
+  { "in": "pi",  "out": "pʲ", "context_after": "[aeouąęó]", "comment": "palatalization piV -> pʲV" },
+  { "in": "bi",  "out": "bʲ", "context_after": "[aeouąęó]", "comment": "palatalization biV -> bʲV" },
+  { "in": "mi",  "out": "mʲ", "context_after": "[aeouąęó]", "comment": "palatalization miV -> mʲV" },
+  { "in": "fi",  "out": "fʲ", "context_after": "[aeouąęó]", "comment": "palatalization fiV -> fʲV" },
+  { "in": "wi",  "out": "fʲ", "context_before": "c|ć|cz|f|h|k|p|s|ś|sz|t|ch", "context_after": "[aeouąęó]", "comment": "devoiced palatalization: wi -> fʲ after voiceless" },
+  { "in": "wi",  "out": "vʲ", "context_after": "[aeouąęó]", "comment": "palatalization wiV -> vʲV" },
+  { "in": "wi", "out": "vi",  "context_after": "ć|ś|ź|dź|cz|sz", "comment": "no palatalized v before already-palatal consonants" },
+
+  { "in": "ti",  "out": "tʲ", "context_after": "[aeouąęó]", "comment": "palatalization tiV -> tʲV" },
+  { "in": "di",  "out": "dʲ", "context_after": "[aeouąęó]", "comment": "palatalization diV -> dʲV" },
+  { "in": "ni",  "out": "ɲʲ", "context_after": "[aeouąęó]", "comment": "palatalization niV -> ɲV" },
+  { "in": "li",  "out": "lʲ", "context_after": "[aeouąęó]", "comment": "palatalization liV -> lʲV" },
+
+  { "in": "ni",  "out": "ɲi", "comment": "palatal nasal" },
+
+  { "in": "ki",  "out": "kʲ", "context_after": "[aeouąęó]", "comment": "palatalization kiV -> kʲV" },
+  { "in": "gi",  "out": "ɡʲ", "context_after": "[aeouąęó]", "comment": "palatalization giV -> ɡʲV" },
+  { "in": "chi", "out": "xj", "context_after": "[aeouąęó]", "comment": "glide insertion" },
+  { "in": "chi", "out": "xʲ", "context_after": "[aeouąęó]", "comment": "palatalization chiV -> xʲV" },
+  { "in": "hi", "out": "xj", "context_after": "[aeouąęó]", "comment": "glide insertion" },
+  { "in": "hi",  "out": "xʲ", "context_after": "[aeouąęó]", "comment": "palatalization hiV -> xʲV" },
+  { "in": "ri", "out": "rj", "context_after": "[aeouąęó]", "comment": "i after r before vowel becomes glide" },
+
+  { "in": "dz",  "out": "d͡ʑ", "context_after": "[ieęyąó]", "comment": "dz palatalization before front vowels" },
+
+  { "in": "ę",   "out":"ɛm",  "context_after":"p|b", "comment": "nasal vowels" },
+  { "in": "ę",   "out":"ɛn",  "context_after":"t|d(?!z)|c|dz", "comment": "nasal vowels" },
+  { "in": "ę",   "out":"ɛ̃",   "context_after":"s|z|sz|rz|ż", "comment": "nasal vowels" },
+  { "in": "ę",   "out":"ɛɲ",  "context_after":"ć|dź|ś|ź", "comment": "nasal vowels"},
+  { "in": "ę",   "out":"ɛŋ",  "context_after":"k|g", "comment": "nasal vowels"},
+  { "in": "ę",   "out":"ɛ̃",   "context_after":"k|g", "comment": "nasal vowels"},
+  { "in": "ę",   "out": "ɛ",  "context_after": "$", "comment": "word-final denasalization" },
+
+  { "in":"ni",   "out":"ɲʲ",  "context_after":"e", "comment": "" },
+
+  { "in": "d", "out": "t", "context_after": "ł$" },
+  { "in": "ł", "out": "", "context_before": "t", "context_after": "$" },
+
+  { "in": "n",   "out":"ŋ",   "context_after":"k|g", "comment": "" },
+
+  { "in": "w",   "out": "f",  "context_before": "c|ć|cz|f|h|k|p|s|ś|sz|t", "comment": "" },
+  { "in": "w",   "out": "f",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "w -> f before voiceless" },
+  { "in": "rz",  "out":"ʃ",   "context_before": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "" },
+  { "in": "rz",  "out": "ʃ",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "dz",  "out": "t͡s", "context_after": "$", "comment": "final devoicing" },
+  { "in": "dź",  "out": "t͡ɕ",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "dż",  "out": "t͡ʃ",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "w", "out": "f", "context_after": "$", "comment": "final devoicing" },
+
+  { "in": "cz",  "out": "t͡ʃ", "comment": "digraphs" },
+  { "in": "sz",  "out": "ʃ",  "comment": "digraphs" },
+  { "in": "rz",  "out": "ʒ",  "comment": "digraphs" },
+  { "in": "dz",  "out": "d͡z", "comment": "digraphs" },
+  { "in": "dź",  "out": "d͡ʑ", "comment": "digraphs" },
+  { "in": "dż",  "out": "d͡ʒ", "comment": "digraphs" },
+  { "in": "ch",  "out": "x",  "comment": "digraphs" },
+
+  { "in": "e",   "out": "ɛ",  "comment": "basic" },
+  { "in": "o",   "out": "ɔ",  "comment": "basic" },
+  { "in": "ó",   "out": "u",  "comment": "basic" },
+  { "in": "y",   "out": "ɨ",  "comment": "basic" },
+  { "in": "ą",   "out": "ɔn", "context_after": "dz", "comment": "ą before dz" },
+  { "in": "ą",   "out": "ɔɲ", "context_after": "ć|dź|ś|ź|cz|sz|c|t|d(?!z)|p", "comment": "ą before palatoalveolars / alveolars" },
+  { "in": "ą",   "out": "ɔŋ", "context_after": "k|g", "comment": "ą before velars" },
+  { "in": "ą",   "out": "ɔm", "context_after": "p|b|f|v", "comment": "basic" },
+  { "in": "ą",   "out": "ɔ̃",  "comment": "basic" },
+
+  { "in":"ą", "out":"ɔm", "context_after":"p|b|f|w", "comment": "" },
+  { "in":"ą", "out":"ɔn", "context_after":"t|d(?!z)|c|dz|s|z|sz|rz|ż|cz", "comment": "" },
+  { "in":"ą", "out":"ɔɲ", "context_after":"ć|dź|ś|ź", "comment": "" },
+  { "in":"ą", "out":"ɔŋ", "context_after":"k|g", "comment": "ą before velars" },
+  { "in":"ą", "out":"ɔ̃", "comment": "basic" },
+  { "in": "ę",   "out": "ɛ̃",  "comment": "basic" },
+
+  { "in": "b",   "out": "p",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "d",   "out": "t",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "g",   "out": "k",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "z",   "out": "s",  "context_after": "$", "comment": "final devoicing" },
+  { "in": "ż",   "out": "ʃ",  "context_after": "$", "comment": "final devoicing" },
+
+  { "in": "x", "out": "ɣ", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "voicing assimilation" },
+
+  { "in": "k",   "out": "ɡ",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "t",   "out": "d",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "p",   "out": "b",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "s",   "out": "z",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "f",   "out": "v",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "c",   "out": "d͡z", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "cz",  "out": "d͡ʒ", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+  { "in": "sz",  "out": "ʒ",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "" },
+
+  { "in": "b",   "out": "p",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "devoicing" },
+  { "in": "d",   "out": "t",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "devoicing" },
+  { "in": "g",   "out": "k",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "devoicing" },
+  { "in": "z",   "out": "s",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "devoicing" },
+
+  { "in": "c",   "out": "t͡s", "comment": "basic" },
+  { "in": "ć",   "out": "t͡ɕ", "comment": "basic" },
+  { "in": "g",   "out": "ɡ",  "comment": "basic" },
+  { "in": "h",   "out": "x",  "comment": "basic" },
+  { "in": "w",   "out": "v",  "comment": "basic" },
+  { "in": "ł",   "out": "w",  "comment": "basic" },
+  { "in": "ń",   "out": "ɲ",  "comment": "basic" },
+  { "in": "ś",   "out": "ɕ",  "comment": "basic" },
+  { "in": "ź",   "out": "ʑ",  "comment": "basic" },
+  { "in": "ż",   "out": "ʒ",  "comment": "basic" }
+]
