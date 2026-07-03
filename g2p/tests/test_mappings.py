@@ -74,7 +74,7 @@ class MappingTest(TestCase):
 
         # calling has_neural_support should return a Bool without raising any exception,
         # but we can't assert the value since we don't know if neural deps are installed
-        self.assertTrue(isinstance(has_neural_support(), bool))
+        assert isinstance(has_neural_support(), bool)
 
     def test_normalization(self):
         self.assertEqual(
@@ -103,7 +103,7 @@ class MappingTest(TestCase):
         )
         self.assertEqual(len(json_map.rules), 34)
         # This is a very old version of the config, I'm not even sure these tests should be in here at all.
-        # self.assertTrue(json_map.kwargs["in_metadata"]["case_insensitive"])
+        # assert json_map.kwargs["in_metadata"]["case_insensitive"]
 
     def test_no_mappings_key(self):
         with self.assertRaises(ValidationError):
@@ -304,9 +304,9 @@ class MappingTest(TestCase):
             mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
         )
         self.assertFalse(mapping.case_sensitive)
-        self.assertTrue(mapping.escape_special)
+        assert mapping.escape_special
         self.assertEqual(mapping.norm_form, NORM_FORM_ENUM.NFD)
-        self.assertTrue(mapping.reverse)
+        assert mapping.reverse
 
     def test_abbreviations(self):
         mapping = Mapping.load_mapping_from_path(
@@ -330,12 +330,12 @@ class MappingTest(TestCase):
         transducer = Transducer(mapping)
         self.assertEqual(transducer("abb").output_string, "aaa")
         self.assertEqual(transducer("a").output_string, "a")
-        self.assertTrue(mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first)
+        assert mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
         self.assertEqual(mapping.rule_ordering, RULE_ORDERING_ENUM.apply_longest_first)
         self.assertFalse(mapping.case_sensitive)
-        self.assertTrue(mapping.escape_special)
+        assert mapping.escape_special
         self.assertEqual(mapping.norm_form, NORM_FORM_ENUM.NFD)
-        self.assertTrue(mapping.reverse)
+        assert mapping.reverse
 
     def test_null_input(self):
         with self.assertLogs(LOGGER, "WARNING"):

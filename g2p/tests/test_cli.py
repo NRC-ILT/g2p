@@ -100,8 +100,8 @@ class CliTest(TestCase):
             result = self.runner.invoke(update, ["-i", tmpdir])
             langs_json = os.path.join(tmpdir, LANGS_FILE_NAME)
             network_pkl = os.path.join(tmpdir, NETWORK_FILE_NAME)
-            self.assertTrue(os.path.exists(langs_json))
-            self.assertTrue(os.path.exists(network_pkl))
+            assert os.path.exists(langs_json)
+            assert os.path.exists(network_pkl)
 
         # Make sure it produces output
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -109,12 +109,12 @@ class CliTest(TestCase):
             self.assertEqual(result.exit_code, 0)
             langs_json = os.path.join(tmpdir, LANGS_FILE_NAME)
             network_pkl = os.path.join(tmpdir, NETWORK_FILE_NAME)
-            self.assertTrue(os.path.exists(langs_json))
-            self.assertTrue(os.path.exists(network_pkl))
+            assert os.path.exists(langs_json)
+            assert os.path.exists(network_pkl)
             langs = load_langs(langs_json)
-            self.assertTrue(langs is not None)
+            assert langs is not None
             network = load_network(network_pkl)
-            self.assertTrue(network is not None)
+            assert network is not None
             # Corrupt the output and make sure we still can run
             with open(langs_json, "wb") as fh:
                 fh.write(b"spam spam spam")
@@ -122,10 +122,10 @@ class CliTest(TestCase):
                 fh.write(b"eggs bacon spam")
             with self.assertLogs(LOGGER, "WARNING"):
                 langs = load_langs(langs_json)
-            self.assertTrue(langs is not None)
+            assert langs is not None
             with self.assertLogs(LOGGER, "WARNING"):
                 network = load_network(network_pkl)
-            self.assertTrue(network is not None)
+            assert network is not None
         # Make sure it fails meaningfully on invalid input
         with tempfile.TemporaryDirectory() as tmpdir:
             bad_langs_dir = os.path.join(DATA_DIR, "..", "mappings", "bad_langs")
@@ -399,7 +399,7 @@ class CliTest(TestCase):
             )
             self.assertEqual(results.exit_code, 0)
             rulespath = os.path.join(tmpdir, "atj-ipa_to_eng-ipa.json")
-            self.assertTrue(os.path.exists(rulespath))
+            assert os.path.exists(rulespath)
             confpath = os.path.join(tmpdir, "config-g2p.yaml")
             config = MappingConfig.load_mapping_config_from_path(confpath)
             self.assertEqual(len(config.mappings), 1)

@@ -25,23 +25,23 @@ class CheckIpaArpabetTest(TestCase):
     def test_is_arpabet(self):
         arpabet_string = "S AH S IY  EH  AO N  T EH"
         non_arpabet_string = "sometext"
-        self.assertTrue(utils.is_arpabet(arpabet_string))
+        assert utils.is_arpabet(arpabet_string)
         self.assertFalse(utils.is_arpabet(non_arpabet_string))
 
     def test_check_arpabet(self):
         transducer = make_g2p("eng-ipa", "eng-arpabet")
-        self.assertTrue(transducer.check(transducer("jŋeːi")))
+        assert transducer.check(transducer("jŋeːi"))
         self.assertFalse(transducer.check(transducer("gaŋi")))
-        self.assertTrue(transducer.check(transducer("ɡɑŋi")))
+        assert transducer.check(transducer("ɡɑŋi"))
         self.assertFalse(transducer.check(transducer("ñ")))
 
     def test_check_ipa(self):
         transducer = make_g2p("fra", "fra-ipa", tokenize=False)
-        self.assertTrue(transducer.check(transducer("ceci")))
+        assert transducer.check(transducer("ceci"))
         self.assertFalse(transducer.check(transducer("ñ")))
         with self.assertLogs(LOGGER, level="WARNING"):
             self.assertFalse(transducer.check(transducer("ñ"), display_warnings=True))
-        self.assertTrue(transducer.check(transducer("ceci est un test été à")))
+        assert transducer.check(transducer("ceci est un test été à"))
 
         transducer = make_g2p("fra-ipa", "eng-ipa")
         self.assertFalse(transducer.check(transducer("ñ")))
@@ -49,16 +49,16 @@ class CheckIpaArpabetTest(TestCase):
     def test_is_ipa_with_panphon_preprocessor(self):
         # panphon doesn't like these directly, but our panphon proprocessor "patches" them
         # because they are valid IPA phonetic constructs that panphon is a bit too picky about.
-        self.assertTrue(utils.is_panphon("ɻ̊j̊ oⁿk oᵐp"))
+        assert utils.is_panphon("ɻ̊j̊ oⁿk oᵐp")
 
     def test_check_composite_transducer(self):
         transducer = make_g2p("fra", "eng-arpabet", tokenize=False)
-        self.assertTrue(transducer.check(transducer("ceci est un test été à")))
+        assert transducer.check(transducer("ceci est un test été à"))
         self.assertFalse(transducer.check(transducer("ñ")))
 
     def test_check_tokenizing_transducer(self):
         transducer = make_g2p("fra", "fra-ipa")
-        self.assertTrue(transducer.check(transducer("ceci est un test été à")))
+        assert transducer.check(transducer("ceci est un test été à"))
         self.assertFalse(transducer.check(transducer("ñ oǹ")))
         self.assertTrue(
             transducer.check(transducer("ceci, cela; c'est tokenizé: alors c'est bon!"))
@@ -69,7 +69,7 @@ class CheckIpaArpabetTest(TestCase):
 
     def test_check_tokenizing_composite_transducer(self):
         transducer = make_g2p("fra", "eng-arpabet")
-        self.assertTrue(transducer.check(transducer("ceci est un test été à")))
+        assert transducer.check(transducer("ceci est un test été à"))
         self.assertFalse(transducer.check(transducer("ñ oǹ")))
         self.assertTrue(
             transducer.check(transducer("ceci, cela; c'est tokenizé: alors c'est bon!"))
@@ -91,23 +91,23 @@ class CheckIpaArpabetTest(TestCase):
         # instead of ː
         # EJJ 2022-06-16 With #100 fixed, this check is no longer failing.
         # self.assertFalse(transducer.check(transducer("uu")))
-        self.assertTrue(transducer.check(transducer("uu")))
-        self.assertTrue(transducer.check(transducer("uu"), shallow=True))
+        assert transducer.check(transducer("uu"))
+        assert transducer.check(transducer("uu"), shallow=True)
 
     def test_check_with_equiv(self):
         transducer = make_g2p("tau", "eng-arpabet")
         tau_ipa = make_g2p("tau", "tau-ipa")(
             "sh'oo Jign maasee' do'eent'aa shyyyh"
         ).output_string
-        self.assertTrue(utils.is_panphon(tau_ipa))
+        assert utils.is_panphon(tau_ipa)
         eng_ipa = make_g2p("tau", "eng-ipa")(
             "sh'oo Jign maasee' do'eent'aa shyyyh"
         ).output_string
-        self.assertTrue(utils.is_panphon(eng_ipa))
+        assert utils.is_panphon(eng_ipa)
         eng_arpabet = make_g2p("tau", "eng-arpabet")(
             "sh'oo Jign maasee' do'eent'aa shyyyh"
         ).output_string
-        self.assertTrue(utils.is_arpabet(eng_arpabet))
+        assert utils.is_arpabet(eng_arpabet)
         # LOGGER.warning(
         #     f"tau-ipa {tau_ipa}\neng-ipa {eng_ipa}\n eng-arpabet {eng_arpabet}"
         # )

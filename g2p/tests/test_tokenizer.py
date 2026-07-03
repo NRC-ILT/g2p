@@ -17,19 +17,19 @@ class TokenizerTest(TestCase):
         tokenizer = tok.make_tokenizer("fra")
         tokens = tokenizer.tokenize_text(input)
         self.assertEqual(len(tokens), 8)
-        self.assertTrue(tokens[0].is_word)
+        assert tokens[0].is_word
         self.assertEqual(tokens[0].text, "ceci")
         self.assertFalse(tokens[1].is_word)
         self.assertEqual(tokens[1].text, " ")
-        self.assertTrue(tokens[2].is_word)
+        assert tokens[2].is_word
         self.assertEqual(tokens[2].text, "était")
         self.assertFalse(tokens[3].is_word)
         self.assertEqual(tokens[3].text, " '")
-        self.assertTrue(tokens[4].is_word)
+        assert tokens[4].is_word
         self.assertEqual(tokens[4].text, "un")
         self.assertFalse(tokens[5].is_word)
         self.assertEqual(tokens[5].text, "' ")
-        self.assertTrue(tokens[6].is_word)
+        assert tokens[6].is_word
         self.assertEqual(tokens[6].text, "test")
         self.assertFalse(tokens[7].is_word)
         self.assertEqual(tokens[7].text, ".")
@@ -39,7 +39,7 @@ class TokenizerTest(TestCase):
         tokenizer = tok.make_tokenizer("eng")
         tokens = tokenizer.tokenize_text(input)
         self.assertEqual(len(tokens), 8)
-        self.assertTrue(tokens[0].is_word)
+        assert tokens[0].is_word
         self.assertEqual(tokens[0].text, "This")
         self.assertFalse(tokens[1].is_word)
         self.assertEqual(tokens[1].text, " ")
@@ -70,7 +70,7 @@ class TokenizerTest(TestCase):
         tokenizer = tok.make_tokenizer("win")
         tokens = tokenizer.tokenize_text(input)
         self.assertEqual(len(tokens), 1)
-        self.assertTrue(tokens[0].is_word)
+        assert tokens[0].is_word
         self.assertEqual(tokens[0].text, "p'ōį̄ą")
 
     def test_tokenize_tce(self):
@@ -89,7 +89,7 @@ class TokenizerTest(TestCase):
         tokenizer = tok.make_tokenizer("tce")
         tokens = tokenizer.tokenize_text(input)
         self.assertEqual(len(tokens), 1)
-        self.assertTrue(tokens[0].is_word)
+        assert tokens[0].is_word
         self.assertEqual(tokens[0].text, "ts'nj")
 
     def test_tokenize_tce_equiv(self):

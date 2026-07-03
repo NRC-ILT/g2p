@@ -22,7 +22,7 @@ class DoctorTest(TestCase):
         self.assertGreaterEqual(len(cm.output), 2)
 
     def test_ipa_known_segs_fra_fixed(self):
-        self.assertTrue(check_ipa_known_segs(["fra-ipa"]))
+        assert check_ipa_known_segs(["fra-ipa"])
 
     def test_ipa_known_segs_alq(self):
         with self.assertLogs(LOGGER, level="WARNING") as cm:

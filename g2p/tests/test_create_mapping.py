@@ -167,20 +167,20 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         mapping = create_mapping(src_mapping, self.target_mapping)
         # print("mapping", mapping, list(mapping), "distance", "default")
-        self.assertTrue(isinstance(mapping, Mapping))
+        assert isinstance(mapping, Mapping)
         set_of_mappings = {tuple(rule.rule_output for rule in mapping.rules)}
         for distance in DISTANCE_METRICS:
             mapping = create_mapping(
                 src_mapping, self.target_mapping, distance=distance
             )
             # print("mapping", mapping, list(mapping), "distance", distance)
-            self.assertTrue(isinstance(mapping, Mapping))
+            assert isinstance(mapping, Mapping)
             set_of_mappings.add(tuple(rule.rule_output for rule in mapping.rules))
 
             mapping = create_multi_mapping(
                 [(src_mapping, "out")], [(self.target_mapping, "in")], distance=distance
             )
-            self.assertTrue(isinstance(mapping, Mapping))
+            assert isinstance(mapping, Mapping)
             set_of_mappings.add(tuple(rule.rule_output for rule in mapping.rules))
         self.assertGreater(len(set_of_mappings), 3)
 

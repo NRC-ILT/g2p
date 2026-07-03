@@ -144,7 +144,7 @@ class UtilsTest(TestCase):
             abbs = utils.load_abbreviations_from_file(
                 os.path.join(PUBLIC_DIR, "mappings", abb)
             )
-            self.assertTrue("VOWEL" in abbs)
+            assert "VOWEL" in abbs
             self.assertEqual(abbs["VOWEL"], ["a", "e", "i", "o", "u"])
 
     def test_generated_mapping(self):
@@ -309,8 +309,8 @@ class UtilsTest(TestCase):
         self.assertEqual(LANGS, sorted(LANGS))
         self.assertEqual(list(LANG_NAMES.keys()), sorted(LANG_NAMES.keys()))
         self.assertEqual(LANGS, list(LANG_NAMES.keys()))
-        self.assertTrue("kwk-umista" in LANG_NAMES)
-        self.assertTrue("str" in LANG_NAMES)
+        assert "kwk-umista" in LANG_NAMES
+        assert "str" in LANG_NAMES
         self.assertGreater(len(LANGS), 40)
         LANGS2, LANG_NAMES2 = get_arpabet_langs()
         self.assertIs(LANGS2, LANGS)
@@ -319,7 +319,7 @@ class UtilsTest(TestCase):
     def test_version_is_pep440_compliant(self):
         """We test for almost PEP 440 compliance: hatch adds +local_sha1, which is not compliant."""
         main_version, _, _ = VERSION.partition("+")
-        self.assertTrue(is_canonical(main_version))
+        assert is_canonical(main_version)
 
     def test_scm_pretend_version_is_up_to_date(self):
         """.SETUPTOOLS_SCM_PRETEND_VERSION is set to the version in pyproject.toml"""

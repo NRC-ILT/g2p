@@ -18,36 +18,36 @@ class TestAPIV2(TestCase):
             response = API_CLIENT.get("/langs")
         self.assertEqual(response.status_code, 200)
         codes = {x["code"] for x in response.json()}
-        self.assertTrue("fin" in codes)
-        self.assertTrue("atj" in codes)
+        assert "fin" in codes
+        assert "atj" in codes
         self.assertFalse("generated" in codes)
         self.assertFalse("atj-ipa" in codes)
         names = {x["name"] for x in response.json()}
-        self.assertTrue("Finnish" in names)
+        assert "Finnish" in names
 
     def test_langs_allcodes(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/nodes")
         self.assertEqual(response.status_code, 200)
         codes = {x["code"] for x in response.json()}
-        self.assertTrue("eng-arpabet" in codes)
-        self.assertTrue("eng-ipa" in codes)
-        self.assertTrue("atj" in codes)
+        assert "eng-arpabet" in codes
+        assert "eng-ipa" in codes
+        assert "atj" in codes
         self.assertFalse("generated" in codes)
 
     def test_outputs_for(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/outputs_for/fin")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("eng-arpabet" in response.json())
-        self.assertTrue("eng-ipa" in response.json())
+        assert "eng-arpabet" in response.json()
+        assert "eng-ipa" in response.json()
 
     def test_inputs_for(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/inputs_for/eng-arpabet")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("fin" in response.json())
-        self.assertTrue("eng-ipa" in response.json())
+        assert "fin" in response.json()
+        assert "eng-ipa" in response.json()
 
     def test_convert(self):
         with redirect_stderr(StringIO()):

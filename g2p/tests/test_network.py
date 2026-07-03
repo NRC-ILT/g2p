@@ -36,12 +36,12 @@ class NetworkTest(TestCase):
 
     def test_valid_composite(self):
         transducer = make_g2p("atj", "eng-ipa", tokenize=False)
-        self.assertTrue(isinstance(transducer, CompositeTransducer))
+        assert isinstance(transducer, CompositeTransducer)
         self.assertEqual("niɡiɡw", transducer("nikikw").output_string)
 
     def test_valid_transducer(self):
         transducer = make_g2p("atj", "atj-ipa", tokenize=False)
-        self.assertTrue(isinstance(transducer, Transducer))
+        assert isinstance(transducer, Transducer)
         self.assertEqual("niɡiɡw", transducer("nikikw").output_string)
 
 
@@ -60,9 +60,9 @@ class NetworkLiteTest(TestCase):
         graph.add_edge("a", "c")
         graph.add_edge("c", "d")
         graph.add_edge("e", "f")
-        self.assertTrue(graph.has_path("a", "c"))
-        self.assertTrue(graph.has_path("a", "d"))
-        self.assertTrue(graph.has_path("b", "a"))
+        assert graph.has_path("a", "c")
+        assert graph.has_path("a", "d")
+        assert graph.has_path("b", "a")
         self.assertFalse(graph.has_path("a", "e"))
         self.assertFalse(graph.has_path("a", "f"))
         self.assertFalse(graph.has_path("c", "a"))
@@ -73,8 +73,8 @@ class NetworkLiteTest(TestCase):
 
     def test_g2p_path(self):
         graph = node_link_graph(self.data)
-        self.assertTrue(graph.has_path("atj", "eng-ipa"))
-        self.assertTrue(graph.has_path("atj", "atj-ipa"))
+        assert graph.has_path("atj", "eng-ipa")
+        assert graph.has_path("atj", "atj-ipa")
         self.assertFalse(graph.has_path("hei", "git"))
 
     def test_successors(self):
@@ -165,8 +165,8 @@ class NetworkLiteTest(TestCase):
     def test_contains(self):
         graph: DiGraph = DiGraph()
         graph.add_edge("a", "b")
-        self.assertTrue("a" in graph)
-        self.assertTrue("b" in graph)
+        assert "a" in graph
+        assert "b" in graph
         self.assertFalse("c" in graph)
 
     def test_node_link_data(self):
