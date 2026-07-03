@@ -146,7 +146,7 @@ class TokenizerTest(TestCase):
         with self.assertLogs(LOGGER, level="WARNING") as cm:
             tok._deprecated_warning_printed = False
             self.assertEqual(tok.get_tokenizer("fra"), tok.make_tokenizer("fra"))
-        self.assertIn("deprecated", "".join(cm.output))
+        assert "deprecated" in "".join(cm.output)
 
     def test_gwi_multichar_grapheme_makeg2p(self):
         from g2p import make_g2p

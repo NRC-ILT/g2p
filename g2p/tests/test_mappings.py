@@ -355,7 +355,7 @@ class MappingTest(TestCase):
         with self.assertLogs(LOGGER, level="ERROR"):
             with self.assertRaises(exceptions.MalformedMapping) as cm:
                 _ = Mapping(rules=rules)
-        self.assertIn("regex", cm.exception.message)
+        assert "regex" in cm.exception.message
 
     def test_invalid_rules_json(self):
         rules = [{"in": "a"}, {"out": "c"}]

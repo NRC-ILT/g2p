@@ -49,7 +49,7 @@ class LocalConfigTest(TestCase):
                 config_path,
             ],
         )
-        self.assertIn("aaaa", result.stdout)
+        assert "aaaa" in result.stdout
         result = self.runner.invoke(
             convert,
             [
@@ -60,7 +60,7 @@ class LocalConfigTest(TestCase):
                 config_path,
             ],
         )
-        self.assertIn("ɑ", result.stdout)
+        assert "ɑ" in result.stdout
 
     def test_case_insensitive_tokenizer(self) -> None:
         # Unit testing for https://github.com/ReadAlongs/Studio/issues/40
@@ -75,7 +75,7 @@ class LocalConfigTest(TestCase):
             convert, ["--tok", "--config", tok_config, "AAA-BBB", "tok-in", "tok-out"]
         )
         self.assertEqual(results.exit_code, 0)
-        self.assertIn("aac_dbb", results.output)
+        assert "aac_dbb" in results.output
 
         # While "AAA-BBB" gets tokenized as [word("AAA-BBB")], since "A-B" is
         # in the inventory, "D-C" gets tokenized as [word("D"), non-word("-"),
@@ -85,7 +85,7 @@ class LocalConfigTest(TestCase):
             convert, ["--tok", "--config", tok_config, "D-C", "tok-in", "tok-out"]
         )
         self.assertEqual(results.exit_code, 0)
-        self.assertIn("d_end-c", results.output)
+        assert "d_end-c" in results.output
 
     def test_null_mapping(self) -> None:
         """Empty lines in a mapping should just get ignored"""
@@ -98,7 +98,7 @@ class LocalConfigTest(TestCase):
             convert, ["--config", null_config, "x-ad-x", "null-in", "null-out"]
         )
         self.assertEqual(results.exit_code, 0)
-        self.assertIn("x-be-x", results.output)
+        assert "x-be-x" in results.output
 
     def test_case_feeding_mapping(self) -> None:
         """Exercise the mapping using case to prevent feeding on in/out but not context"""
@@ -116,7 +116,7 @@ class LocalConfigTest(TestCase):
         )
         # print(results.output)
         self.assertEqual(results.exit_code, 0)
-        self.assertIn("ke-antinetin", results.output)
+        assert "ke-antinetin" in results.output
 
     def test_missing_files(self) -> None:
         """Nice error messages when the mapping file or abbreviations file are missing"""
@@ -167,7 +167,7 @@ class LocalConfigTest(TestCase):
             with self.assertRaises(exceptions.MalformedMapping) as e:
                 # This is a deep pydantic exception, we should raise MalformedMapping
                 Mapping.load_mapping_from_path(config_file)
-            self.assertIn("empty.csv does not contain any rules", str(e.exception))
+            assert "empty.csv does not contain any rules" in str(e.exception)
             results = self.runner.invoke(
                 convert, ["--config", config_file, "a", "b", "c"]
             )
@@ -197,10 +197,10 @@ class LocalConfigTest(TestCase):
         result = self.runner.invoke(
             convert, ["uyoesnmklbdt", "gm2", "gm2-ipa", "--config", config_path]
         )
-        self.assertIn("uyɔɛsnmklbdt", result.stdout)
+        assert "uyɔɛsnmklbdt" in result.stdout
         # This second case confirms that gen-map_config-g2p.yaml is still loaded
         result = self.runner.invoke(convert, ["uyoesnmklbdt", "gm3a", "gm3-ipa"])
-        self.assertIn("uyoesnmklbdt", result.stdout)
+        assert "uyoesnmklbdt" in result.stdout
 
         # Now we do the real tests
         with tempfile.TemporaryDirectory() as output_dir_s:
@@ -286,13 +286,13 @@ class LocalConfigTest(TestCase):
         config_path = str(self.mappings_dir / "nofeed-indices.yaml")
         args = ("nofeed-indices-in", "nofeed-indices-out")
         result = self.runner.invoke(convert, ["ab", *args, "--config", config_path])
-        self.assertIn("ced", result.stdout)
+        assert "ced" in result.stdout
         result = self.runner.invoke(convert, ["abft", *args, "-d"])
-        self.assertIn("cedft", result.stdout)
+        assert "cedft" in result.stdout
         result = self.runner.invoke(convert, ["deft", *args, "-d"])
-        self.assertIn("ghit", result.stdout)
+        assert "ghit" in result.stdout
         result = self.runner.invoke(convert, ["aātaāabtaā", *args, "-e"])
-        self.assertIn("aʼataʼacedtaʼa", result.stdout)
+        assert "aʼataʼacedtaʼa" in result.stdout
 
     def test_invalid_abbrev_path(self) -> None:
         config = """

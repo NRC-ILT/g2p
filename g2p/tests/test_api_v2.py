@@ -408,7 +408,7 @@ class TestAPIV2(TestCase):
                 },
             )
         self.assertEqual(response.status_code, 422)
-        self.assertIn("Input should be", response.json()["detail"][0]["msg"])
+        assert "Input should be" in response.json()["detail"][0]["msg"]
 
     def test_path(self):
         with redirect_stderr(StringIO()):
@@ -421,7 +421,7 @@ class TestAPIV2(TestCase):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/path/fin/fra")
         self.assertEqual(response.status_code, 400)
-        self.assertIn("No path", response.json()["detail"])
+        assert "No path" in response.json()["detail"]
 
 
 if __name__ == "__main__":
