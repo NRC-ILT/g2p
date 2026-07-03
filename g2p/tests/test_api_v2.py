@@ -16,7 +16,7 @@ class TestAPIV2(TestCase):
     def test_langs(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/langs")
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         codes = {x["code"] for x in response.json()}
         assert "fin" in codes
         assert "atj" in codes
@@ -28,7 +28,7 @@ class TestAPIV2(TestCase):
     def test_langs_allcodes(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/nodes")
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         codes = {x["code"] for x in response.json()}
         assert "eng-arpabet" in codes
         assert "eng-ipa" in codes
@@ -38,14 +38,14 @@ class TestAPIV2(TestCase):
     def test_outputs_for(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/outputs_for/fin")
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         assert "eng-arpabet" in response.json()
         assert "eng-ipa" in response.json()
 
     def test_inputs_for(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/inputs_for/eng-arpabet")
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         assert "fin" in response.json()
         assert "eng-ipa" in response.json()
 
@@ -59,7 +59,7 @@ class TestAPIV2(TestCase):
                     "text": "hyvää yötä",
                 },
             )
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         self.assertEqual(
             response.json(),
             [
@@ -176,7 +176,7 @@ class TestAPIV2(TestCase):
                     "compose_from": "fin",
                 },
             )
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         self.assertEqual(
             response.json(),
             [
@@ -240,7 +240,7 @@ class TestAPIV2(TestCase):
                     "compose_from": "fin-ipa",
                 },
             )
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         self.assertEqual(
             response.json(),
             [
@@ -332,7 +332,7 @@ class TestAPIV2(TestCase):
                     "tokenize": False,
                 },
             )
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         self.assertEqual(
             response.json(),
             [
@@ -395,7 +395,7 @@ class TestAPIV2(TestCase):
                     "text": "hyvää yötä",
                 },
             )
-        self.assertEqual(response.status_code, 400)
+        assert response.status_code == 400
 
     def test_convert_invalid(self):
         with redirect_stderr(StringIO()):
@@ -407,20 +407,20 @@ class TestAPIV2(TestCase):
                     "text": "hyvää yötä",
                 },
             )
-        self.assertEqual(response.status_code, 422)
+        assert response.status_code == 422
         assert "Input should be" in response.json()["detail"][0]["msg"]
 
     def test_path(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/path/fin/eng-arpabet")
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         path = response.json()
         self.assertEqual(path, ["fin", "fin-ipa", "eng-ipa", "eng-arpabet"])
 
     def test_no_path(self):
         with redirect_stderr(StringIO()):
             response = API_CLIENT.get("/path/fin/fra")
-        self.assertEqual(response.status_code, 400)
+        assert response.status_code == 400
         assert "No path" in response.json()["detail"]
 
 

@@ -106,7 +106,7 @@ class CliTest(TestCase):
         # Make sure it produces output
         with tempfile.TemporaryDirectory() as tmpdir:
             result = self.runner.invoke(update, ["-o", tmpdir])
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             langs_json = os.path.join(tmpdir, LANGS_FILE_NAME)
             network_pkl = os.path.join(tmpdir, NETWORK_FILE_NAME)
             assert os.path.exists(langs_json)
@@ -135,7 +135,7 @@ class CliTest(TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             bad_langs_dir = os.path.join(DATA_DIR, "..", "mappings", "bad_langs2")
             result = self.runner.invoke(update, ["-i", bad_langs_dir, "-o", tmpdir])
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
 
     def test_update_schema_with_pydantic_lt29(self):
         """Make sure schema update works (requires Pydantic<2.9)"""
@@ -146,7 +146,7 @@ class CliTest(TestCase):
             # With Pydantic>=2.9, we cannot update the schemas, instead we
             # expect an error message telling us to use an older version
             result = self.runner.invoke(update_schema)
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             assert "Please use Pydantic" in result.output
             LOGGER.info(
                 "Skipping the rest of the schema update test since we have pydantic>=2.9"
@@ -157,13 +157,13 @@ class CliTest(TestCase):
 
         # It's an error for the currently saved schema to be out of date
         result = self.runner.invoke(update_schema)
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         assert "up to date" in result.output
 
         with tempfile.TemporaryDirectory() as tmpdir:
             # Exercise writing a new schema to disk even if up to date
             result = self.runner.invoke(update_schema, ["-o", tmpdir])
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             assert "Wrote" in result.output
 
             # Reload the written schema for further unit tests
@@ -178,13 +178,13 @@ class CliTest(TestCase):
             # A second run will necessarily already be up to date even if the patch is bumped
             with monkey_patch_g2p_version((0, 0, +1)):
                 result_rerun = self.runner.invoke(update_schema, ["-o", tmpdir])
-                self.assertEqual(result_rerun.exit_code, 0)
+                assert result_rerun.exit_code == 0
                 assert "already up to date" in result_rerun.output
 
             # Monkey patch the version to test a previous version still being up to date
             with monkey_patch_g2p_version((+0, +1)):
                 result_new = self.runner.invoke(update_schema, ["-o", tmpdir])
-                self.assertEqual(result_new.exit_code, 0)
+                assert result_new.exit_code == 0
                 assert "still up to date" in result_new.output
 
             # Monkey patch the version and the model to require a schema update
@@ -193,7 +193,7 @@ class CliTest(TestCase):
                 MappingConfig.__doc__ = "Changed docstring"
                 result_update = self.runner.invoke(update_schema, ["-o", tmpdir])
                 MappingConfig.__doc__ = saved_doc
-                self.assertEqual(result_update.exit_code, 0)
+                assert result_update.exit_code == 0
                 assert "Wrote" in result_update.output
 
             # Require a schema update when it's already written: that's an error
@@ -227,7 +227,7 @@ class CliTest(TestCase):
                 result = self.runner.invoke(
                     convert, [*tok_option, word_to_convert, in_lang, out_lang]
                 )
-                self.assertEqual(result.exit_code, 0)
+                assert result.exit_code == 0
                 if "--no-tok" not in tok_option:
                     output_string = result.stdout.strip()
                     if reference_string.strip() not in output_string:
@@ -274,31 +274,31 @@ class CliTest(TestCase):
 
     def test_doctor(self):
         result = self.runner.invoke(doctor, "-m fra")
-        self.assertEqual(result.exit_code, 2)
+        assert result.exit_code == 2
 
         result = self.runner.invoke(doctor, "-m fra-ipa")
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
 
         # Disable this test: it's very slow (8s, just by itself) and does not assert
         # anything useful.
         # Migrated to test_doctor_expensive.py so we can still run it, manually or via
         # ./run.py all.
         # result = self.runner.invoke(doctor)
-        # self.assertEqual(result.exit_code, 0)
+        # assert result.exit_code == 0
         # self.assertGreaterEqual(len(result.stdout), 10000)
 
         result = self.runner.invoke(doctor, "-m eng-arpabet")
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         assert "No checks implemented" in result.output
 
     def test_doctor_lists(self):
         result = self.runner.invoke(doctor, "--list-all")
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         assert "eng-arpabet:" in result.stdout
         assert "eng-ipa:" in result.stdout
 
         result = self.runner.invoke(doctor, "--list-ipa")
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertNotIn("eng-arpabet:", result.stdout)
         assert "eng-ipa:" in result.stdout
 
@@ -308,7 +308,7 @@ class CliTest(TestCase):
             result = self.runner.invoke(
                 scan, ["fra", os.path.join(DATA_DIR, paragram_file)]
             )
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             self.assertLogs(level="WARNING")
             diacritics = "àâéèêëîïôùûüç"
             for d in diacritics:
@@ -322,7 +322,7 @@ class CliTest(TestCase):
         result = self.runner.invoke(
             scan, ["fra", os.path.join(DATA_DIR, "fra_simple.txt")]
         )
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertLogs(level="WARNING")
         diacritics = "àâéèêëîïôùûüç"
         for d in diacritics:
@@ -336,7 +336,7 @@ class CliTest(TestCase):
             scan, ["str", os.path.join(DATA_DIR, "str_un_human_rights.txt")]
         )
         returned_set = re.search("{(.*)}", result.stdout).group(1)  # type: ignore
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertLogs(level="WARNING")
         unmapped_upper = "FGR"
         for u in unmapped_upper:
@@ -397,28 +397,28 @@ class CliTest(TestCase):
             results = self.runner.invoke(
                 generate_mapping, ["--ipa", "atj", "--out-dir", tmpdir]
             )
-            self.assertEqual(results.exit_code, 0)
+            assert results.exit_code == 0
             rulespath = os.path.join(tmpdir, "atj-ipa_to_eng-ipa.json")
             assert os.path.exists(rulespath)
             confpath = os.path.join(tmpdir, "config-g2p.yaml")
             config = MappingConfig.load_mapping_config_from_path(confpath)
-            self.assertEqual(len(config.mappings), 1)
-            self.assertEqual(config.mappings[0].rules_path, Path(rulespath))
+            assert len(config.mappings) == 1
+            assert config.mappings[0].rules_path == Path(rulespath)
             # Run it again, should get the same result
             results = self.runner.invoke(
                 generate_mapping, ["--ipa", "atj", "--out-dir", tmpdir]
             )
-            self.assertEqual(results.exit_code, 0)
+            assert results.exit_code == 0
             config = MappingConfig.load_mapping_config_from_path(confpath)
-            self.assertEqual(len(config.mappings), 1)
-            self.assertEqual(config.mappings[0].rules_path, Path(rulespath))
+            assert len(config.mappings) == 1
+            assert config.mappings[0].rules_path == Path(rulespath)
             # Run it with a different language, should get more config
             results = self.runner.invoke(
                 generate_mapping, ["--ipa", "alq", "--out-dir", tmpdir]
             )
-            self.assertEqual(results.exit_code, 0)
+            assert results.exit_code == 0
             config = MappingConfig.load_mapping_config_from_path(confpath)
-            self.assertEqual(len(config.mappings), 2)
+            assert len(config.mappings) == 2
 
     def test_generate_mapping_errors(self):
         """Exercise various error situations with the g2p generate-mapping CLI command"""
@@ -520,14 +520,14 @@ class CliTest(TestCase):
     def test_show_mappings(self):
         # One arg = all mappings to or from that language
         results = self.runner.invoke(show_mappings, ["fra-ipa", "--verbose"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "French to IPA" in results.output
         assert "French IPA to English IPA" in results.output
         self.assertEqual(len(re.findall(r"display_name", results.output)), 3)
 
         # One arg = all mappings to or from that language, terse output
         results = self.runner.invoke(show_mappings, ["fra-ipa"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "fra-ipa" in results.output
         assert "eng-ipa" in results.output
         self.assertEqual(len(re.findall(r"→", results.output)), 2)
@@ -549,7 +549,7 @@ class CliTest(TestCase):
 
         # Two conencted args = that mapping
         results = self.runner.invoke(show_mappings, ["fra", "fra-ipa", "--verbose"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "French to IPA" in results.output
         self.assertIn(r'{"in": "&", "out": "et"},', results.output)
         self.assertIn(
@@ -564,7 +564,7 @@ class CliTest(TestCase):
 
         # Two args connected via a intermediate steps = all mappings on that path
         results = self.runner.invoke(show_mappings, ["fra", "eng-arpabet", "--verbose"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "French to IPA" in results.output
         assert "French IPA to English IPA" in results.output
         assert "English IPA to Arpabet" in results.output
@@ -572,12 +572,12 @@ class CliTest(TestCase):
 
         # --all = all mappings
         results = self.runner.invoke(show_mappings, [])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         self.assertGreater(len(re.findall(r"→", results.output)), 100)
 
         # --csv = CSV formatted output
         results = self.runner.invoke(show_mappings, ["--csv", "crl-equiv", "--verbose"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "Northern East Cree Equivalencies" in results.output
         self.assertIn("thwaa,ᕨ,,", results.output)
         assert "Northern East Cree to IPA" in results.output
@@ -599,7 +599,7 @@ class CliTest(TestCase):
     def test_convert_from_file(self):
         input_file = os.path.join(DATA_DIR, "fra_simple.txt")
         results = self.runner.invoke(convert, [input_file, "fra", "fra-ipa", "--file"])
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "fʁɑ̃sɛ" in results.output
         with open(input_file, encoding="utf8") as f:
             lines_in = len(list(f))
@@ -607,13 +607,13 @@ class CliTest(TestCase):
         self.assertNotIn("ResourceWarning", results.output)
         self.assertNotIn("unclosed file", results.output)
         # The output should have the same number of lines as the input
-        self.assertEqual(lines_in, len(results.output.splitlines()))
+        assert lines_in == len(results.output.splitlines())
 
         # - is stdin
         results = self.runner.invoke(
             convert, ["--file", "-", "fra", "fra-ipa"], input="français"
         )
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "fʁɑ̃sɛ" in results.output
 
         # warning about deprecated heuristic file detection
@@ -653,18 +653,18 @@ class CliTest(TestCase):
 
     def test_short_dash_h(self):
         results_short = self.runner.invoke(convert, "-h")
-        self.assertEqual(results_short.exit_code, 0)
+        assert results_short.exit_code == 0
         assert "Show this message and exit" in results_short.output
         results_long = self.runner.invoke(convert, "--help")
-        self.assertEqual(results_long.exit_code, 0)
-        self.assertEqual(results_short.output, results_long.output)
+        assert results_long.exit_code == 0
+        assert results_short.output == results_long.output
 
     def test_generate_mapping(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             result = self.runner.invoke(
                 generate_mapping, ["--ipa", "--out-dir", tmpdir, "fra"]
             )
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             with open(
                 os.path.join(tmpdir, "fra-ipa_to_eng-ipa.json"), encoding="utf8"
             ) as f:

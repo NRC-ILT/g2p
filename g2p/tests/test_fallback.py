@@ -88,7 +88,7 @@ class FallbackTest(TestCase):
             *panphon_021_ref[2:],
         ]
         if test_ipa.rules != panphon_021_ref:
-            self.assertEqual(test_ipa.rules, panphon_020_ref)
+            assert test_ipa.rules == panphon_020_ref
 
 
 if __name__ == "__main__":

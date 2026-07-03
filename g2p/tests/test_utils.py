@@ -46,10 +46,10 @@ class UtilsTest(TestCase):
         assert "Too many levels of recursion" in str(cm.exception)
         expanded_non_recursive = utils.expand_abbreviations("HIGH_VOWELS", test_dict)
         expanded_recursive = utils.expand_abbreviations("VOWELS", test_dict)
-        self.assertEqual("test", expanded_plain)
-        self.assertEqual("test", expanded_bad_plain)
-        self.assertEqual("i|u", expanded_non_recursive)
-        self.assertEqual("i|u|e|o", expanded_recursive)
+        assert "test" == expanded_plain
+        assert "test" == expanded_bad_plain
+        assert "i|u" == expanded_non_recursive
+        assert "i|u|e|o" == expanded_recursive
 
     def test_abb_flatten_and_expand_format(self):
         test_rows = [["VOWEL", "a", "e", "i", "o", "u"], ["OTHER", "t", "e", "s", "t"]]
@@ -57,17 +57,17 @@ class UtilsTest(TestCase):
         default_dict["VOWEL"].extend(["a", "e", "i", "o", "u"])
         default_dict["OTHER"].extend(["t", "e", "s", "t"])
         empty_rows = [["", "", "", "", "", ""] for _ in range(10)]
-        self.assertEqual(utils.flatten_abbreviations_format(test_rows), default_dict)
-        self.assertEqual(utils.expand_abbreviations_format(default_dict), test_rows)
-        self.assertEqual(utils.expand_abbreviations_format({}), empty_rows)
+        assert utils.flatten_abbreviations_format(test_rows) == default_dict
+        assert utils.expand_abbreviations_format(default_dict) == test_rows
+        assert utils.expand_abbreviations_format({}) == empty_rows
 
     def test_unicode_escape(self):
         """Should turn \u0331 declared in CSVs
         into actual Unicode string for that codepoint
         """
-        self.assertEqual("\u0000", utils.unicode_escape("\\u0000"))
-        self.assertEqual("\u0331", utils.unicode_escape("\\u0331"))
-        self.assertEqual("\u26f0", utils.unicode_escape("\\u26F0"))
+        assert "\u0000" == utils.unicode_escape("\\u0000")
+        assert "\u0331" == utils.unicode_escape("\\u0331")
+        assert "\u26f0" == utils.unicode_escape("\\u26F0")
 
     def test_fixed_width(self):
         test_dict = defaultdict(list)
@@ -121,11 +121,11 @@ class UtilsTest(TestCase):
         xlsx = Mapping.load_mapping_from_path(
             os.path.join(PUBLIC_DIR, "mappings", "minimal_configs.yaml"), 4
         )
-        self.assertEqual(minimal.rules, csv.rules)
-        self.assertEqual(minimal.rules, tsv.rules)
-        self.assertEqual(minimal.rules, psv.rules)
-        self.assertEqual(minimal.rules, json.rules)
-        self.assertEqual(minimal.rules, xlsx.rules)
+        assert minimal.rules == csv.rules
+        assert minimal.rules == tsv.rules
+        assert minimal.rules == psv.rules
+        assert minimal.rules == json.rules
+        assert minimal.rules == xlsx.rules
 
     def test_escape_special(self):
         self.assertEqual(
@@ -178,17 +178,17 @@ class UtilsTest(TestCase):
                     **{"in": "a", "out": "b", "context_before": "", "context_after": ""}
                 ).export_to_dict(),
             )
-            self.assertEqual(test_config.in_lang, "test")
-            self.assertEqual(test_config.out_lang, "test-out")
-            self.assertEqual(test_config.language_name, "test")
-            self.assertEqual(test_config.display_name, "test custom to test-out custom")
+            assert test_config.in_lang == "test"
+            assert test_config.out_lang == "test-out"
+            assert test_config.language_name == "test"
+            assert test_config.display_name == "test custom to test-out custom"
             self.assertEqual(
                 test_config_added.rules[0].export_to_dict(),
                 {"in": "a", "out": "b"},
             )
-            self.assertEqual(test_config_added.in_lang, "test")
-            self.assertEqual(test_config_added.out_lang, "test-out")
-            self.assertEqual(test_config_added.language_name, "test")
+            assert test_config_added.in_lang == "test"
+            assert test_config_added.out_lang == "test-out"
+            assert test_config_added.language_name == "test"
             self.assertEqual(
                 test_config_added.display_name, "test custom to test-out custom"
             )
@@ -306,9 +306,9 @@ class UtilsTest(TestCase):
 
     def test_get_arpabet_langs(self):
         LANGS, LANG_NAMES = get_arpabet_langs()
-        self.assertEqual(LANGS, sorted(LANGS))
-        self.assertEqual(list(LANG_NAMES.keys()), sorted(LANG_NAMES.keys()))
-        self.assertEqual(LANGS, list(LANG_NAMES.keys()))
+        assert LANGS == sorted(LANGS)
+        assert list(LANG_NAMES.keys()) == sorted(LANG_NAMES.keys())
+        assert LANGS == list(LANG_NAMES.keys())
         assert "kwk-umista" in LANG_NAMES
         assert "str" in LANG_NAMES
         self.assertGreater(len(LANGS), 40)
@@ -347,21 +347,21 @@ class UtilsTest(TestCase):
         # Current and deprecated usages
         for t in t1, t2:
             with self.assertWarns(DeprecationWarning):
-                self.assertEqual(t.text, t["text"])
+                assert t.text == t["text"]
             with self.assertWarns(DeprecationWarning):
-                self.assertEqual(t.is_word, t["is_word"])
+                assert t.is_word == t["is_word"]
         # new way to set
         t1.text = "test2"
         t1.is_word = False
-        self.assertEqual(t1.text, "test2")
-        self.assertEqual(t1.is_word, False)
+        assert t1.text == "test2"
+        assert not t1.is_word
         # deprecated way to set
         with self.assertWarns(DeprecationWarning):
             t1["text"] = "test3"
         with self.assertWarns(DeprecationWarning):
             t1["is_word"] = True
-        self.assertEqual(t1.text, "test3")
-        self.assertEqual(t1.is_word, True)
+        assert t1.text == "test3"
+        assert t1.is_word
 
         with self.assertRaises(KeyError):
             with self.assertWarns(DeprecationWarning):

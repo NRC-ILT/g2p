@@ -92,8 +92,8 @@ class StudioTest(IsolatedAsyncioTestCase):
             await page.wait_for_timeout(self.timeout_delay)
             input_text = await input_el.input_value()
             output_text = await output_el.input_value()
-            self.assertEqual(input_text, output_text)
-            self.assertEqual(input_text, "hello world")
+            assert input_text == output_text
+            assert input_text == "hello world"
             await input_el.fill("")
             await output_el.fill("")
             await page.type("#input", "hello world")
@@ -119,22 +119,22 @@ class StudioTest(IsolatedAsyncioTestCase):
             await in_lang_selector.select_option(value="alq")
             await page.wait_for_timeout(self.timeout_delay)
             settings_title = await page.text_content("#link-0")
-            self.assertEqual(settings_title, "Algonquin to IPA")
+            assert settings_title == "Algonquin to IPA"
             # Switch output language
             out_lang_selector = page.locator("#output-langselect")
             await out_lang_selector.select_option("eng-arpabet")
             settings_title_3 = await page.text_content("#link-2")
-            self.assertEqual(settings_title_3, "English IPA to Arpabet")
+            assert settings_title_3 == "English IPA to Arpabet"
             # Switch back to custom
             await in_lang_selector.select_option(value="Custom")
             await page.wait_for_timeout(self.timeout_delay)
             settings_title = await page.text_content("#link-0")
-            self.assertEqual(settings_title, "Custom")
+            assert settings_title == "Custom"
             # FIXME: Test that the table works somewhere, somehow
             # Switch to in_lang = eng-arpabet, which means there is no possible outlang
             await in_lang_selector.select_option(value="eng-arpabet")
             await page.wait_for_timeout(self.timeout_delay)
-            self.assertEqual(await page.locator("#link-0").count(), 0)
+            assert await page.locator("#link-0").count() == 0
 
     async def test_langs(self):
         langs_to_test = load_public_test_data()
@@ -293,7 +293,7 @@ class StudioTest(IsolatedAsyncioTestCase):
                     # Check that output is correct after the first succesful attempt or
                     # after all the attempts have failed.
                     if not self.debug_convert:
-                        self.assertEqual(output_text.strip(), test_expected_output)
+                        assert output_text.strip() == test_expected_output
                         LOGGER.info(
                             f"Successfully converted {test_input_text} from {test_in_lang} to {test_out_lang}"
                         )

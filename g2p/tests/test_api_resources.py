@@ -55,7 +55,7 @@ class ResourceIntegrationTest(TestCase):
             try:
                 with self.assertLogs():  # silence the logs by asserting them
                     r = self.client.get(rt)
-                self.assertEqual(r.status_code, 200)
+                assert r.status_code == 200
                 LOGGER.debug("Route " + rt + " returned " + str(r.status_code))
             except Exception as exc:
                 LOGGER.error("Couldn't connect. Is the API running? %s", exc)
@@ -70,7 +70,7 @@ class ResourceIntegrationTest(TestCase):
                 try:
                     with self.assertLogs():  # silence the logs by asseting them
                         r = self.client.get(rt)
-                    self.assertEqual(r.status_code, 200)
+                    assert r.status_code == 200
                 except Exception as exc:
                     LOGGER.error("Couldn't connect. Is the API running? %s", exc)
             LOGGER.debug(
@@ -110,10 +110,10 @@ class ResourceIntegrationTest(TestCase):
         with self.assertLogs():
             response = self.client.get(self.conversion_route, params=params)  # type: ignore
         res_json = response.json()
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         with open(os.path.join(PUB_DIR, "sample_response.json")) as f:
             data = json.load(f)
-        self.assertEqual(res_json, data)
+        assert res_json == data
         # check minimal response
         with self.assertLogs():
             minimal_response = self.client.get(
@@ -121,19 +121,19 @@ class ResourceIntegrationTest(TestCase):
             )
         data["debugger"] = False
         data["index"] = False
-        self.assertEqual(minimal_response.status_code, 200)
-        self.assertEqual(minimal_response.json(), data)
+        assert minimal_response.status_code == 200
+        assert minimal_response.json() == data
         with self.assertLogs(LOGGER, level="ERROR"):
             bad_response = self.client.get(self.conversion_route, params=bad_params)
         with self.assertLogs(LOGGER, level="ERROR"):
             same_response = self.client.get(self.conversion_route, params=same_params)
-        self.assertEqual(bad_response.status_code, 400)
-        self.assertEqual(same_response.status_code, 400)
+        assert bad_response.status_code == 400
+        assert same_response.status_code == 400
         with self.assertLogs(LOGGER, level="ERROR"):
             missing_response = self.client.get(
                 self.conversion_route, params=missing_params
             )
-        self.assertEqual(missing_response.status_code, 404)
+        assert missing_response.status_code == 404
         invalid_params = {
             "in-lang": "dan",
             "out-lang": "eng-arpabet",
@@ -145,7 +145,7 @@ class ResourceIntegrationTest(TestCase):
             invalid_response = self.client.get(
                 self.conversion_route, params=invalid_params
             )
-        self.assertEqual(invalid_response.status_code, 422)
+        assert invalid_response.status_code == 422
 
     def test_g2p_conversion_with_tok(self):
         params_with_tok: Dict[str, Union[str, bool]] = {
@@ -158,9 +158,9 @@ class ResourceIntegrationTest(TestCase):
         }
         with self.assertLogs():
             response = self.client.get(self.conversion_route, params=params_with_tok)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         res_json_tok = response.json()
-        self.assertEqual(res_json_tok["debugger"][0][0][0]["input"], "ceci")
+        assert res_json_tok["debugger"][0][0][0]["input"] == "ceci"
 
         params_no_tok: Dict[str, Union[str, bool]] = {
             "in-lang": "fra",
@@ -172,7 +172,7 @@ class ResourceIntegrationTest(TestCase):
         }
         with self.assertLogs():
             response = self.client.get(self.conversion_route, params=params_no_tok)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         res_json_no_tok = response.json()
         self.assertNotEqual(res_json_tok, res_json_no_tok)
         self.assertEqual(res_json_no_tok["debugger"][0][0][0]["input"], "ceci, celà")

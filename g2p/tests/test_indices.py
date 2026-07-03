@@ -293,19 +293,19 @@ class IndicesTest(TestCase):
     def test_feeding(self):
         """Test feeding"""
         transducer_1 = self.trans_feeding_1("ab")
-        self.assertEqual(transducer_1.output_string, "cd")
+        assert transducer_1.output_string == "cd"
         self.assertEqual(transducer_1.edges, [(0, 0), (0, 1), (1, 0), (1, 1)])
         # because of "crossed" indices, we get one single monotonic alignment
         self.assertEqual(transducer_1.substring_alignments(), [("ab", "cd")])
         transducer_2 = self.trans_feeding_2("a")
-        self.assertEqual(transducer_2.output_string, "b")
+        assert transducer_2.output_string == "b"
         self.assertEqual(transducer_2.edges, [(0, 0)])
         self.assertEqual(transducer_2.substring_alignments(), [("a", "b")])
 
     def test_issue_157(self):
         """Test explicit problem from Issue 157"""
         transducer = self.trans_157("abcmn")
-        self.assertEqual(transducer.output_string, "deNM")
+        assert transducer.output_string == "deNM"
         self.assertEqual(transducer.edges, [(0, 0), (1, 1), (2, 1), (3, 3), (4, 2)])
         self.assertEqual(
             transducer.substring_alignments(), [("a", "d"), ("bc", "e"), ("mn", "NM")]
@@ -317,10 +317,10 @@ class IndicesTest(TestCase):
         transducer_2 = self.trans_173_2("xyzmndef")
         transducer_3 = self.trans_173_3("abc")
         transducer_4 = self.trans_173_4("abc")
-        self.assertEqual(transducer_1.output_string, "abmndef")
-        self.assertEqual(transducer_2.output_string, "abmndef")
-        self.assertEqual(transducer_3.output_string, "XY")
-        self.assertEqual(transducer_4.output_string, "xyz")
+        assert transducer_1.output_string == "abmndef"
+        assert transducer_2.output_string == "abmndef"
+        assert transducer_3.output_string == "XY"
+        assert transducer_4.output_string == "xyz"
         self.assertEqual(
             transducer_1.edges,
             [(0, 1), (1, 0), (2, 0), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6)],
@@ -358,10 +358,10 @@ class IndicesTest(TestCase):
         explicit_2 = self.trans_explicit_equal_2("ab")
         explicit_3 = self.trans_explicit_equal_4("ab")
         implicit = self.trans_explicit_equal_3("ab")
-        self.assertEqual(explicit_1.output_string, "cd")
-        self.assertEqual(explicit_2.output_string, "cd")
-        self.assertEqual(implicit.output_string, "cd")
-        self.assertEqual(explicit_3.output_string, "cd")
+        assert explicit_1.output_string == "cd"
+        assert explicit_2.output_string == "cd"
+        assert implicit.output_string == "cd"
+        assert explicit_3.output_string == "cd"
         self.assertEqual(explicit_1.edges, [(0, 0), (1, 1)])
         self.assertEqual(explicit_2.edges, [(0, 0), (1, 1)])
         self.assertEqual(implicit.edges, [(0, 0), (1, 1)])
@@ -370,20 +370,20 @@ class IndicesTest(TestCase):
     def test_no_indices(self):
         """Test straightforward conversion without returning indices."""
         transducer = self.trans_combining("k\u0313am")
-        self.assertEqual(transducer.output_string, "'kam")
+        assert transducer.output_string == "'kam"
 
     def test_combining(self):
         """Test index preserving combining characters"""
         transducer = self.trans_combining("k\u0313am")
-        self.assertEqual(transducer.output_string, "'kam")
+        assert transducer.output_string == "'kam"
         self.assertEqual(transducer.edges, [(0, 1), (1, 0), (2, 2), (3, 3)])
 
     def test_wacky(self):
         """Test weird Unicode emoji transformation..."""
         transducer_lite = self.trans_wacky_lite("abcc")
         transducer_lite_extra = self.trans_wacky_lite("abcca")
-        self.assertEqual(transducer_lite.output_string, "ccccc")
-        self.assertEqual(transducer_lite_extra.output_string, "ccccca")
+        assert transducer_lite.output_string == "ccccc"
+        assert transducer_lite_extra.output_string == "ccccca"
         self.assertEqual(
             transducer_lite.edges, [(0, 4), (1, 0), (2, 1), (2, 2), (3, 3)]
         )
@@ -420,27 +420,27 @@ class IndicesTest(TestCase):
     def test_circum(self):
         """Test circumfixing"""
         transducer = self.trans_circum("ac")
-        self.assertEqual(transducer.output_string, "cac")
+        assert transducer.output_string == "cac"
         self.assertEqual(transducer.edges, [(0, 1), (1, 0), (1, 2)])
         self.assertEqual(transducer.substring_alignments(), [("ac", "cac")])
 
     def test_case_one(self):
         """Test case one"""
         transducer = self.trans_one("test")
-        self.assertEqual(transducer.output_string, "pest")
+        assert transducer.output_string == "pest"
         self.assertEqual(transducer.edges, [(0, 0), (1, 1), (2, 2), (3, 3)])
         self.assertEqual(
             transducer.substring_alignments(),
             [("t", "p"), ("e", "e"), ("s", "s"), ("t", "t")],
         )
         transducer = self.trans_one("")
-        self.assertEqual(transducer.output_string, "")
-        self.assertEqual(transducer.edges, [])
-        self.assertEqual(transducer.substring_alignments(), [])
+        assert transducer.output_string == ""
+        assert transducer.edges == []
+        assert transducer.substring_alignments() == []
 
     def test_case_two(self):
         transducer = self.trans_two("test")
-        self.assertEqual(transducer.output_string, "tst")
+        assert transducer.output_string == "tst"
         self.assertEqual(transducer.edges, [(0, 0), (1, 0), (2, 1), (3, 2)])
         self.assertEqual(
             transducer.substring_alignments(), [("te", "t"), ("s", "s"), ("t", "t")]
@@ -448,7 +448,7 @@ class IndicesTest(TestCase):
 
     def test_case_three(self):
         transducer = self.trans_three("test")
-        self.assertEqual(transducer.output_string, "chest")
+        assert transducer.output_string == "chest"
         self.assertEqual(transducer.edges, [(0, 0), (0, 1), (1, 2), (2, 3), (3, 4)])
         self.assertEqual(
             transducer.substring_alignments(),
@@ -457,7 +457,7 @@ class IndicesTest(TestCase):
 
     def test_case_four(self):
         transducer = self.trans_four("test")
-        self.assertEqual(transducer.output_string, "pst")
+        assert transducer.output_string == "pst"
         self.assertEqual(transducer.edges, [(0, 0), (1, 0), (2, 1), (3, 2)])
         self.assertEqual(
             transducer.substring_alignments(), [("te", "p"), ("s", "s"), ("t", "t")]
@@ -465,7 +465,7 @@ class IndicesTest(TestCase):
 
     def test_case_six(self):
         transducer = self.trans_six("test")
-        self.assertEqual(transducer.output_string, "tset")
+        assert transducer.output_string == "tset"
         self.assertEqual(transducer.edges, [(0, 0), (1, 2), (2, 1), (3, 3)])
         self.assertEqual(
             transducer.substring_alignments(), [("t", "t"), ("es", "se"), ("t", "t")]
@@ -473,7 +473,7 @@ class IndicesTest(TestCase):
 
     def test_case_long_six(self):
         transducer = self.trans_six("esesse")
-        self.assertEqual(transducer.output_string, "sesese")
+        assert transducer.output_string == "sesese"
         # Ensure that *minimal* monotonic segments are output
         self.assertEqual(
             transducer.substring_alignments(),
@@ -482,14 +482,14 @@ class IndicesTest(TestCase):
 
     def test_case_seven(self):
         transducer_as_written = self.test_seven_as_written("test")
-        self.assertEqual(transducer_as_written.output_string, "test")
+        assert transducer_as_written.output_string == "test"
         self.assertEqual(transducer_as_written.edges, [(0, 0), (1, 1), (2, 2), (3, 3)])
         self.assertEqual(
             transducer_as_written.substring_alignments(),
             [("t", "t"), ("e", "e"), ("s", "s"), ("t", "t")],
         )
         transducer = self.trans_seven("test")
-        self.assertEqual(transducer.output_string, "tesht")
+        assert transducer.output_string == "tesht"
         self.assertEqual(transducer.edges, [(0, 0), (1, 1), (2, 2), (2, 3), (3, 4)])
         self.assertEqual(
             transducer.substring_alignments(),
@@ -498,7 +498,7 @@ class IndicesTest(TestCase):
 
     def test_case_eight(self):
         transducer = self.trans_eight("test")
-        self.assertEqual(transducer.output_string, "chess")
+        assert transducer.output_string == "chess"
         self.assertEqual(transducer.edges, [(0, 0), (1, 1), (1, 2), (2, 3), (3, 4)])
         self.assertEqual(
             transducer.substring_alignments(),
@@ -507,12 +507,12 @@ class IndicesTest(TestCase):
 
     def test_case_nine(self):
         transducer = self.trans_nine("aa")
-        self.assertEqual(transducer.output_string, "")
+        assert transducer.output_string == ""
         self.assertEqual(transducer.edges, [(0, None), (1, None)])
         # Support deletions in substring_alignments
         self.assertEqual(transducer.substring_alignments(), [("aa", "")])
         transducer = self.trans_nine("aabbaab")
-        self.assertEqual(transducer.output_string, "bbb")
+        assert transducer.output_string == "bbb"
         self.assertEqual(
             transducer.edges,
             [(0, 0), (1, 0), (2, 0), (3, 1), (4, 1), (5, 1), (6, 2)],
@@ -527,13 +527,13 @@ class IndicesTest(TestCase):
 
     def test_case_ten(self):
         transducer = self.trans_ten("abc")
-        self.assertEqual(transducer.output_string, "a")
+        assert transducer.output_string == "a"
         self.assertEqual(transducer.edges, [(0, 0), (1, 0), (2, 0)])
         self.assertEqual(transducer.substring_alignments(), [("abc", "a")])
 
     def test_case_eleven(self):
         transducer = self.trans_eleven("a")
-        self.assertEqual(transducer.output_string, "aaaa")
+        assert transducer.output_string == "aaaa"
         self.assertEqual(transducer.edges, [(0, 0), (0, 1), (0, 2), (0, 3)])
         self.assertEqual(transducer.substring_alignments(), [("a", "aaaa")])
 
@@ -550,14 +550,14 @@ class IndicesTest(TestCase):
             cm.output[0],
             "it should warn that empty inputs are disallowed",
         )
-        self.assertEqual(transducer.output_string, "b")
+        assert transducer.output_string == "b"
 
     def test_case_acdc(self):
         transducer = Transducer(
             Mapping(rules=[{"in": "a{1}c{2}", "out": "c{2}a{1}c{2}"}])
         )
         tg = transducer("acdc")
-        self.assertEqual(tg.output_string, "cacdc")
+        assert tg.output_string == "cacdc"
         self.assertEqual(tg.edges, [(0, 1), (1, 0), (1, 2), (2, 3), (3, 4)])
         self.assertEqual(
             tg.substring_alignments(), [("ac", "cac"), ("d", "d"), ("c", "c")]
@@ -569,7 +569,7 @@ class IndicesTest(TestCase):
             Mapping(rules=[{"in": "ab", "out": ""}, {"in": "c", "out": "ab"}])
         )
         tg = transducer("abcabc")
-        self.assertEqual(tg.output_string, "abab")
+        assert tg.output_string == "abab"
         self.assertEqual(
             tg.edges,
             [
@@ -585,7 +585,7 @@ class IndicesTest(TestCase):
         )
         self.assertEqual(tg.substring_alignments(), [("abcab", "ab"), ("c", "ab")])
         tg_default = transducer_default("abcabc")
-        self.assertEqual(tg_default.output_string, "abab")
+        assert tg_default.output_string == "abab"
         self.assertEqual(
             tg_default.edges,
             [
@@ -616,8 +616,8 @@ class IndicesTest(TestCase):
         )
         tg = transducer(normalize("NFC", "ĩĩ"))
         tg_nfd = transducer_nfd(normalize("NFD", "ĩĩ"))
-        self.assertEqual(tg.output_string, "IY N IY N ")
-        self.assertEqual(tg_nfd.output_string, "IY N IY N ")
+        assert tg.output_string == "IY N IY N "
+        assert tg_nfd.output_string == "IY N IY N "
         self.assertEqual(
             tg.edges,
             [

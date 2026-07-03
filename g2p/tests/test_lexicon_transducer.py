@@ -25,24 +25,24 @@ class LexiconTransducerTest(TestCase):
                     os.path.dirname(public_data), "mappings", "hello.aligned.txt"
                 ),
             )
-        self.assertEqual(m.rules, [])
-        self.assertEqual(m.type, "lexicon")
+        assert m.rules == []
+        assert m.type == "lexicon"
         t = Transducer(m)
         tg = t("hello")
-        self.assertEqual(tg.output_string, "HH EH L OW ")
+        assert tg.output_string == "HH EH L OW "
         self.assertEqual(
             tg.edges, [(0, 0), (0, 1), (1, 3), (1, 4), (2, 6), (3, 6), (4, 8), (4, 9)]
         )
         tg = t("you're")
-        self.assertEqual(tg.output_string, "Y UH R ")
+        assert tg.output_string == "Y UH R "
         self.assertEqual(
             tg.edges,
             [(0, 0), (1, 2), (1, 3), (2, 2), (2, 3), (3, 4), (4, 5), (5, 5)],
         )
         # These alignments are somewhat bogus, hence the name
         tg = t("bogus")
-        self.assertEqual(tg.input_string, "bogus")
-        self.assertEqual(tg.output_string, "")
+        assert tg.input_string == "bogus"
+        assert tg.output_string == ""
         self.assertEqual(
             tg.edges,
             [(0, None), (1, None), (2, None), (3, None), (4, None)],
@@ -53,8 +53,8 @@ class LexiconTransducerTest(TestCase):
         )
         tg = t("bogus")
         tg += t("hello")
-        self.assertEqual(tg.input_string, "bogushello")
-        self.assertEqual(tg.output_string, "HH EH L OW ")
+        assert tg.input_string == "bogushello"
+        assert tg.output_string == "HH EH L OW "
         self.assertEqual(
             tg.edges,
             [
@@ -81,7 +81,7 @@ class LexiconTransducerTest(TestCase):
         tg += t("bogus")
         tg += t("you're")
         tg += t("bogus")
-        self.assertEqual(tg.input_string, "hellobogusyou'rebogus")
+        assert tg.input_string == "hellobogusyou'rebogus"
         self.assertEqual(
             tg.edges,
             [
@@ -135,19 +135,20 @@ class LexiconTransducerTest(TestCase):
                     os.path.dirname(public_data), "mappings", "lexicon_config-g2p.yaml"
                 )
             )
-        self.assertEqual(m.rules, [])
-        self.assertEqual(m.type, "lexicon")
+        assert m.rules == []
+        assert m.type == "lexicon"
         t = Transducer(m)
         tg = t("hello")
-        self.assertEqual(tg.output_string, "HH EH L OW ")
+        assert tg.output_string == "HH EH L OW "
         self.assertEqual(
             tg.edges, [(0, 0), (0, 1), (1, 3), (1, 4), (2, 6), (3, 6), (4, 8), (4, 9)]
         )
 
     def test_bad_lexicon_mapping(self):
         """Test failure to load alignments."""
-        with self.assertRaises(FileNotFoundError), self.assertLogs(
-            LOGGER, level="INFO"
+        with (
+            self.assertRaises(FileNotFoundError),
+            self.assertLogs(LOGGER, level="INFO"),
         ):
             _ = Mapping.load_mapping_from_path(
                 os.path.join(
@@ -160,17 +161,17 @@ class LexiconTransducerTest(TestCase):
     def test_eng_lexicon(self):
         """Test the cached eng to eng-ipa lexicon as a Mapping."""
         m = Mapping.find_mapping(in_lang="eng", out_lang="eng-ipa")
-        self.assertEqual(m.type, "lexicon")
+        assert m.type == "lexicon"
         t = Transducer(m)
         tg = t("hello")
-        self.assertEqual(tg.output_string, "hʌloʊ")
+        assert tg.output_string == "hʌloʊ"
         self.assertEqual(tg.edges, [(0, 0), (1, 1), (2, 2), (3, 2), (4, 3), (4, 4)])
         tg = t("you're")
-        self.assertEqual(tg.output_string, "jʊɹ")
+        assert tg.output_string == "jʊɹ"
         self.assertEqual(tg.edges, [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2), (5, 2)])
         tg = t("change")
-        self.assertEqual(tg.output_string, "tʃeɪndʒ")
-        self.assertEqual(tg.input_string, "change")
+        assert tg.output_string == "tʃeɪndʒ"
+        assert tg.input_string == "change"
         self.assertEqual(
             tg.edges,
             [
@@ -189,12 +190,12 @@ class LexiconTransducerTest(TestCase):
         # These aligments are weird but they are the ones EM gave us
         # (and the ones that our arbitrary assignment of deletions to
         # adjacent outputs gives us, too...)
-        self.assertEqual(tg.output_string, "tʃeɪn")
-        self.assertEqual(tg.input_string, "chain")
+        assert tg.output_string == "tʃeɪn"
+        assert tg.input_string == "chain"
         self.assertEqual(tg.edges, [(0, 0), (0, 1), (1, 1), (2, 2), (3, 3), (4, 4)])
         tg = t("xtra")
-        self.assertEqual(tg.output_string, "ɛkstɹʌ")
-        self.assertEqual(tg.input_string, "xtra")
+        assert tg.output_string == "ɛkstɹʌ"
+        assert tg.input_string == "xtra"
         self.assertEqual(tg.edges, [(0, 0), (0, 1), (0, 2), (1, 3), (2, 4), (3, 5)])
         pe = tg.pretty_edges()
         self.assertEqual(
@@ -206,7 +207,7 @@ class LexiconTransducerTest(TestCase):
         """Test the cached eng to eng-ipa lexicon from make_g2p."""
         transducer = make_g2p("eng", "eng-arpabet")
         tg = transducer("hello")
-        self.assertEqual(tg.output_string, "HH AH L OW ")
+        assert tg.output_string == "HH AH L OW "
 
         # since we tokenize by default now, this works:
         self.assertEqual(
@@ -267,7 +268,7 @@ class LexiconTransducerTest(TestCase):
         transducer = make_g2p("eng", "eng-ipa", tokenize=False)
         for word, expected in test_cases:
             tg = transducer(word)
-            self.assertEqual(tg.output_string, expected)
+            assert tg.output_string == expected
             before = word[:-1] + chr(ord(word[-1]) - 1) + "z"
             self.assertEqual(
                 transducer(before).output_string, "", f"word={word} before={before}"

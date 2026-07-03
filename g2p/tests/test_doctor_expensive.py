@@ -29,7 +29,7 @@ class ExpensiveDoctorTest(TestCase):
         runner = CliRunner()
         with self.assertLogs(LOGGER, level="WARNING") as cm:
             result = runner.invoke(doctor)
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertGreaterEqual(len(cm.output), 10)
 
     # Migrated here from test_doctor.py

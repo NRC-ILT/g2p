@@ -74,7 +74,7 @@ class LocalConfigTest(TestCase):
         results = self.runner.invoke(
             convert, ["--tok", "--config", tok_config, "AAA-BBB", "tok-in", "tok-out"]
         )
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "aac_dbb" in results.output
 
         # While "AAA-BBB" gets tokenized as [word("AAA-BBB")], since "A-B" is
@@ -84,7 +84,7 @@ class LocalConfigTest(TestCase):
         results = self.runner.invoke(
             convert, ["--tok", "--config", tok_config, "D-C", "tok-in", "tok-out"]
         )
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "d_end-c" in results.output
 
     def test_null_mapping(self) -> None:
@@ -97,7 +97,7 @@ class LocalConfigTest(TestCase):
         results = self.runner.invoke(
             convert, ["--config", null_config, "x-ad-x", "null-in", "null-out"]
         )
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "x-be-x" in results.output
 
     def test_case_feeding_mapping(self) -> None:
@@ -115,7 +115,7 @@ class LocalConfigTest(TestCase):
             ],
         )
         # print(results.output)
-        self.assertEqual(results.exit_code, 0)
+        assert results.exit_code == 0
         assert "ke-antinetin" in results.output
 
     def test_missing_files(self) -> None:
@@ -213,36 +213,36 @@ class LocalConfigTest(TestCase):
                 generate_mapping,
                 ["--from", "gm1", "--to", "gm2", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             with open(self.mappings_dir / "gm1-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm1-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
             # 2 mappings in to 1 mapping out
             result = self.runner.invoke(
                 generate_mapping,
                 ["--from", "gm3", "--to", "gm2", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             with open(self.mappings_dir / "gm3-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm3-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
             # 1 mapping in to 2 mappings out
             result = self.runner.invoke(
                 generate_mapping,
                 ["--from", "gm2", "--to", "gm3", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
+            assert result.exit_code == 0
             with open(self.mappings_dir / "gm2-ipa_to_gm3-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm2-ipa_to_gm3-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
     def test_compose_NFC_NFD(self) -> None:
         config_path = str(self.mappings_dir / "compose.yaml")
@@ -259,7 +259,7 @@ class LocalConfigTest(TestCase):
                 "-e",
             ],
         )
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertIn("[[(0, 0), (1, 0)], [(0, 0), (0, 1)]]", result.output)
         self.assertIn(
             "[[('e', 'ò'), ('́', 'ò')], [('ò', 'u'), ('ò', '̀')]]", result.output
@@ -278,7 +278,7 @@ class LocalConfigTest(TestCase):
                 "-e",
             ],
         )
-        self.assertEqual(result.exit_code, 0)
+        assert result.exit_code == 0
         self.assertIn("[[(0, 0)], [(0, 0), (0, 1)]]", result.output)
         self.assertIn("[[('é', 'ò')], [('ò', 'u'), ('ò', '̀')]]", result.output)
 
