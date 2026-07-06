@@ -4,10 +4,12 @@ on:
   push:
   workflow_call:
   schedule:
-    # Every Monday at 1am UTC, so the weekly caches are refreshed and we exercise
-    # the effect of newly published versions of our dependencies
-    # 0:minute 12:noon-UTC *:any-day-of-month *:any-month 1:Monday
-    - cron: '0 12 * * 1'
+    # Every Monday morning so the weekly caches are refreshed and we exercise
+    # the effect of newly published versions of our dependencies.
+    # Minute 24 so it's not on the hour, and thus hopefully a less busy time at GHA
+    # and we don't get delayed as much, but this can still get delayed by hours.
+    # 24:minute 9:9am-UTC *:any-day-of-month *:any-month 1:Monday
+    - cron: '24 9 * * 1'
 
 # Since we don't checkout the full history, we use a default version so certain tests
 # (pep440, update_schema) will still function. The fake version is set in file
