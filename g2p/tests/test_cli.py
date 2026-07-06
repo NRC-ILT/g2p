@@ -8,6 +8,7 @@ import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
+from textwrap import dedent
 from unittest import TestCase, mock
 
 import jsonschema
@@ -166,7 +167,7 @@ class CliTest(TestCase):
             self.assertIn("Wrote", result.output)
 
             # Reload the written schema for further unit tests
-            (major, minor, *_rest) = g2p._version.version_tuple
+            major, minor, *_rest = g2p._version.version_tuple
             major_minor = f"{major}.{minor}"
             with open(
                 Path(tmpdir) / f"g2p-config-schema-{major_minor}.json",
@@ -522,14 +523,29 @@ class CliTest(TestCase):
         self.assertEqual(results.exit_code, 0)
         self.assertIn("French to IPA", results.output)
         self.assertIn("French IPA to English IPA", results.output)
-        self.assertEqual(len(re.findall(r"display_name", results.output)), 2)
+        self.assertEqual(len(re.findall(r"display_name", results.output)), 3)
 
         # One arg = all mappings to or from that language, terse output
         results = self.runner.invoke(show_mappings, ["fra-ipa"])
         self.assertEqual(results.exit_code, 0)
         self.assertIn("fra-ipa", results.output)
         self.assertIn("eng-ipa", results.output)
-        self.assertEqual(len(re.findall(r"→", results.output)), 2)
+        self.assertEqual(len(re.findall(r"→", results.output)), 3)
+        # including descendants
+        self.assertIn("eng-arpabet", results.output)
+        fra_output = dedent(
+            """\
+            1: fra → fra-ipa  (French to IPA)
+            2: fra-ipa → eng-ipa  (French IPA to English IPA)
+            3: eng-ipa → eng-arpabet  (English IPA to Arpabet)
+            """
+        )
+        assert fra_output in results.output
+
+        # Topological ordering for one arg gives same result from fra and fra-ipa
+        results = self.runner.invoke(show_mappings, ["fra"])
+        assert results.exit_code == 0
+        assert fra_output in results.output
 
         # Two conencted args = that mapping
         results = self.runner.invoke(show_mappings, ["fra", "fra-ipa", "--verbose"])
@@ -570,12 +586,15 @@ class CliTest(TestCase):
         # Bad language code
         results = self.runner.invoke(show_mappings, ["not-a-lang"])
         self.assertNotEqual(results.exit_code, 0)
+        assert "No language called" in results.output
         results = self.runner.invoke(show_mappings, ["fra", "not-a-lang"])
         self.assertNotEqual(results.exit_code, 0)
+        assert "No language called" in results.output
 
         # No path
         results = self.runner.invoke(show_mappings, ["fra", "moe"])
         self.assertNotEqual(results.exit_code, 0)
+        assert "Cannot find mapping from" in results.output
 
     def test_convert_from_file(self):
         input_file = os.path.join(DATA_DIR, "fra_simple.txt")

@@ -850,25 +850,28 @@ def scan(lang, path) -> None:
     help="Display mapping configs and all rules too.",
 )
 @click.argument("lang2", required=False, default=None)
-@click.argument("lang1", required=False, default=None)
+@click.argument("lang", required=False, default=None)
 @cli.command(context_settings=CONTEXT_SETTINGS, short_help="Show cached mappings.")
-def show_mappings(lang1, lang2, verbose, csv):
+def show_mappings(lang, lang2, verbose, csv):
     """Show cached mappings, as last updated by "g2p update".
 
-    Mappings on the path from LANG1 to LANG2 are displayed.
-    If only LANG1 is used, all mappings to or from LANG1 are displayed.
-    With no LANG, all cached mappings are included.
+    Given two langs, mappings on all paths from LANG to LANG2 are displayed.
+
+    If only one lang is given, all mappings to or from LANG, and from its descendants, are displayed.
+
+    With no lang, all cached mappings are shown.
     """
     # Defer expensive imports
     from g2p.mappings import MAPPINGS_AVAILABLE, Mapping
+    from g2p.mappings.langs import LANGS_NETWORK
     from g2p.transducer import CompositeTransducer, Transducer
 
-    if lang1 is not None and lang2 is not None:
+    if lang is not None and lang2 is not None:
         try:
-            transducer = make_g2p(lang1, lang2, tokenize=False)
+            transducer = make_g2p(lang, lang2, tokenize=False)
         except (NoPath, InvalidLanguageCode) as e:
             raise click.UsageError(
-                f'Cannot find mapping from "{lang1}" to "{lang2}": {e}'
+                f'Cannot find mapping from "{lang}" to "{lang2}": {e}'
             ) from e
 
         if isinstance(transducer, Transducer):
@@ -877,22 +880,39 @@ def show_mappings(lang1, lang2, verbose, csv):
             assert isinstance(transducer, CompositeTransducer)
             mappings = [t.mapping for t in transducer._transducers]
 
-    elif lang1 is not None:
+    elif lang is not None:
+        if lang not in LANGS_NETWORK:
+            raise click.BadParameter(
+                f'No language called: "{lang}".', param_hint="lang"
+            )
+        descendants = LANGS_NETWORK.descendants(lang)
         mappings = [
             Mapping.find_mapping(in_lang=m.in_lang, out_lang=m.out_lang)
             for m in MAPPINGS_AVAILABLE
-            if m.in_lang == lang1 or m.out_lang == lang1
+            if m.in_lang == lang or m.out_lang == lang or m.in_lang in descendants
         ]
         if not mappings:
             raise click.BadParameter(
-                f'No mapping found to or from "{lang1}".', param_hint="lang1"
+                f'No mapping found to or from "{lang}".', param_hint="lang"
             )
+
+        def ordering_for_one_lang(m):
+            if m.out_lang == lang:
+                rank = 0
+            elif m.in_lang == lang:
+                rank = 1
+            else:
+                rank = len(LANGS_NETWORK.shortest_path(lang, m.in_lang))
+            return (rank, m.in_lang, m.out_lang)
+
+        mappings = sorted(mappings, key=ordering_for_one_lang)
 
     else:
         mappings = [
             Mapping.find_mapping(in_lang=m.in_lang, out_lang=m.out_lang)
             for m in MAPPINGS_AVAILABLE
         ]
+        mappings = sorted(mappings, key=lambda m: (m.in_lang, m.out_lang))
 
     file_type = "csv" if csv else "json"
     if verbose:
