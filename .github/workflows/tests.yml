@@ -93,7 +93,7 @@ jobs:
           coverage combine
           coverage report
           coverage xml
-          if git status | grep -E 'static.*json|mapping.*pkl|mapping.*.json.gz'; then echo 'g2p databases out of date, please run "g2p update" and commit the results.'; false; else echo OK; fi
+
       - name: Upload coverage information
         uses: codecov/codecov-action@v5
         with:
@@ -118,6 +118,7 @@ jobs:
             echo "Please run 'PYTHONPROFILEIMPORTTIME=1 g2p -h 2> importtime.txt; tuna importtime.txt' and tuck away expensive imports so that the CLI doesn't load them until it uses them."; \
             false; \
           fi
+
       - name: Report help speed in a PR comment
         if: github.event_name == 'pull_request'
         continue-on-error: true
@@ -125,6 +126,21 @@ jobs:
         with:
           preformatted: true
           message-path: import-message.txt
+
+      - name: Make sure g2p databases are up to date
+        # for static/*.json, a straight git status works
+        # for mappings/langs/*.json.gz, bit-for-bit-stable gzip is no longer possible since zlib-ng
+        # replaced zlib in Python 3.14 on Windows and will arrive sooner or later on all platforms.
+        # Ref: https://www.man.com/technology/faster-python
+        run: |
+          OUT_OF_DATE=
+          if git status | grep -E 'static.*json'; then OUT_OF_DATE=1; fi
+          if git status | grep 'mappings.*.json.gz'; then \
+            echo "*.json.gz diff=zcat" > .gitattributes; \
+            git config set diff.zcat.textconv zcat; \
+            if git diff | grep 'mappings.*.json.gz'; then OUT_OF_DATE=1; fi; \
+          fi
+          if [[ $OUT_OF_DATE ]]; then echo 'g2p databases out of date, please run "g2p update" and commit the results.'; false; else echo OK; fi
 
   test-on-windows:
     # Make sure stuff stays compatible with Windows by testing there too.
