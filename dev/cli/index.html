@@ -704,11 +704,11 @@ Accounts for case sensitivity in the configuration.</p>
 </code></pre></div>
 <h2 id="show-mappings">show-mappings<a class="headerlink" href="#show-mappings" title="Permanent link">&para;</a></h2>
 <p>Show cached mappings, as last updated by "g2p update".</p>
-<p>Mappings on the path from LANG1 to LANG2 are displayed.
-If only LANG1 is used, all mappings to or from LANG1 are displayed.
-With no LANG, all cached mappings are included.</p>
+<p>Given two langs, mappings on all paths from LANG to LANG2 are displayed.</p>
+<p>If only one lang is given, all mappings to or from LANG, and from its descendants, are displayed.</p>
+<p>With no lang, all cached mappings are shown.</p>
 <p><strong>Usage:</strong></p>
-<div class="highlight"><pre><span></span><code>g2p show-mappings [OPTIONS] [LANG1] [LANG2]
+<div class="highlight"><pre><span></span><code>g2p show-mappings [OPTIONS] [LANG] [LANG2]
 </code></pre></div>
 <p><strong>Options:</strong></p>
 <div class="highlight"><pre><span></span><code>  -v, --verbose  Display mapping configs and all rules too.
