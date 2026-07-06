@@ -696,3 +696,20 @@ mappings:
     reverse: false
     rule_ordering: apply-longest-first
     rules_path: yid-ipa_to_eng-ipa.json
+  - authors:
+      - Generated 2026-07-02 14:14:10.702445
+    case_equivalencies: {}
+    case_sensitive: false
+    display_name: pol-ipa IPA to eng-ipa IPA
+    escape_special: false
+    in_lang: pol-ipa
+    language_name: pol-ipa
+    norm_form: NFC
+    out_delimiter: ''
+    out_lang: eng-ipa
+    preserve_case: false
+    prevent_feeding: true
+    reverse: false
+    rule_ordering: apply-longest-first
+    rules_path: pol-ipa_to_eng-ipa.json
+    type: mapping

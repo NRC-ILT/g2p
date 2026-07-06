@@ -1,0 +1,122 @@
+[
+  { "in": "trz", "out": "t͡ʃ", "comment": "Merge <trz> into the retroflex affricate /t͡ʃ/" },
+  { "in": "drz", "out": "d͡ʒ", "comment": "Merge <drz> into the voiced retroflex affricate /d͡ʒ/" },
+  { "in": "dsz", "out": "t͡ʃ", "comment": "Treat <dsz> as the retroflex affricate /t͡ʃ/" },
+  { "in": "tsz", "out": "t͡ʃ", "comment": "Treat <tsz> as the retroflex affricate /t͡ʃ/"},
+
+  { "in": "ci",  "out": "t͡ɕ", "context_after": "[aeouąęó]", "comment": "Before a vowel, <ci> represents /t͡ɕ/ (no separate /i/)" },
+  { "in": "ci",  "out": "t͡ɕi","context_after": "(?![aeouąęó])", "comment": "Elsewhere, preserve the vowel: /t͡ɕi/" },
+  { "in": "si",  "out": "ɕ",  "context_after": "[aeouąęó]", "comment": "Before a vowel, <si> represents /ɕ/" },
+  { "in": "zi",  "out": "ʑ",  "context_after": "[aeouąęó]", "comment": "Before a vowel, <zi> represents /ʑ/" },
+  { "in": "zi",  "out": "ʑi", "comment": "Elsewhere, preserve the vowel: /ʑi/" },
+  { "in": "dzi", "out": "d͡ʑ", "context_after": "[aeouąęó]", "comment": "Before a vowel, <dzi> represents /d͡ʑ/" },
+
+  { "in": "rz",  "out": "ʃ",  "context_before": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h",  "comment": "<rz> is devoiced to /ʃ/ after a voiceless consonant" },
+  
+  { "in": "pi",  "out": "pʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /p/ before vowel-initial <i>" },
+  { "in": "bi",  "out": "bʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /b/ before vowel-initial <i>" },
+  { "in": "mi",  "out": "mʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /m/ before vowel-initial <i>" },
+  { "in": "fi",  "out": "fʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /f/ before vowel-initial <i>" },
+  { "in": "wi",  "out": "fʲ", "context_before": "c|ć|cz|f|h|k|p|s|ś|sz|t|ch", "context_after": "[aeouąęó]", "comment": "Devoice and palatalize /w/ before a vowel after a voiceless consonant" },
+  { "in": "wi",  "out": "vʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /w/ before a vowel" },
+  { "in": "wi", "out": "vi",  "context_after": "ć|ś|ź|dź|cz|sz", "comment": "Keep /v/ non-palatal before already-palatal consonants" },
+
+  { "in": "ti",  "out": "tʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /t/ before vowel-initial <i>" },
+  { "in": "di",  "out": "dʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /d/ before vowel-initial <i>" },
+  { "in": "ni",  "out": "ɲʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /n/ before vowel-initial <i>" },
+  { "in": "li",  "out": "lʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /l/ before vowel-initial <i>" },
+
+  { "in": "ni",  "out": "ɲi", "comment": "<ni> represents the palatal nasal followed by /i/" },
+
+  { "in": "ki",  "out": "kʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /k/ before vowel-initial <i>" },
+  { "in": "gi",  "out": "ɡʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /ɡ/ before vowel-initial <i>" },
+  { "in": "chi", "out": "xj", "context_after": "[aeouąęó]", "comment": "Insert a glide after <ch> before a vowel" },
+  { "in": "chi", "out": "xʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /x/ before vowel-initial <i>" },
+  { "in": "hi", "out": "xj", "context_after": "[aeouąęó]", "comment": "Insert a glide after <h> before a vowel" },
+  { "in": "hi",  "out": "xʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /x/ before vowel-initial <i>" },
+  { "in": "ri", "out": "rj", "context_after": "[aeouąęó]", "comment": "Convert <ri> into /rj/ before a vowel" },
+
+  { "in": "dz",  "out": "d͡ʑ", "context_after": "[ieęyąó]", "comment": "Palatalize <dz> before front vowels" },
+
+  { "in": "ę",   "out":"ɛm",  "context_after":"p|b", "comment": "Realize <ę> as /ɛm/ before bilabials" },
+  { "in": "ę",   "out":"ɛn",  "context_after":"t|d(?!z)|c|dz", "comment": "Realize <ę> as /ɛn/ before alveolars" },
+  { "in": "ę",   "out":"ɛ̃",   "context_after":"s|z|sz|rz|ż", "comment": "Keep <ę> nasal before fricatives" },
+  { "in": "ę",   "out":"ɛɲ",  "context_after":"ć|dź|ś|ź", "comment": "Realize <ę> as /ɛɲ/ before palatal consonants"},
+  { "in": "ę",   "out":"ɛŋ",  "context_after":"k|g", "comment": "Realize <ę> as /ɛŋ/ before velars"},
+  { "in": "ę",   "out":"ɛ̃",   "context_after":"k|g", "comment": "Purely nasal realization before velars"},
+  { "in": "ę",   "out": "ɛ",  "context_after": "$", "comment": "Word-final <ę> loses nasality" },
+
+  { "in":"ni",   "out":"ɲʲ",  "context_after":"e", "comment": "Special handling of <nie> palatalization" },
+
+  { "in": "d", "out": "t", "context_after": "ł$", "comment": "Devoice final /d/ before silent <ł>" },
+  { "in": "ł", "out": "", "context_before": "t", "context_after": "$", "comment": "Delete silent word-final <ł> after /t/" },
+
+  { "in": "n",   "out":"ŋ",   "context_after":"k|g", "comment": "Velar assimilation of /n/" },
+
+  { "in": "w",   "out": "f",  "context_before": "c|ć|cz|f|h|k|p|s|ś|sz|t", "comment": "Devoice <w> after a voiceless consonant" },
+  { "in": "w",   "out": "f",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice <w> before a voiceless consonant" },
+  { "in": "rz",  "out":"ʃ",   "context_before": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice <rz> after a voiceless consonant" },
+  { "in": "rz",  "out": "ʃ",  "context_after": "$", "comment": "Word-final devoicing of <rz>" },
+  { "in": "dz",  "out": "t͡s", "context_after": "$", "comment": "Word-final devoicing of <dz>" },
+  { "in": "dź",  "out": "t͡ɕ",  "context_after": "$", "comment": "Word-final devoicing of <dź>" },
+  { "in": "dż",  "out": "t͡ʃ",  "context_after": "$", "comment": "Word-final devoicing of <dż>" },
+  { "in": "w", "out": "f", "context_after": "$", "comment": "Word-final devoicing of <w>" },
+
+  { "in": "cz",  "out": "t͡ʃ", "comment": "Map digraph <cz>" },
+  { "in": "sz",  "out": "ʃ",  "comment": "Map digraph <sz>" },
+  { "in": "rz",  "out": "ʒ",  "comment": "Map digraph <rz>" },
+  { "in": "dz",  "out": "d͡z", "comment": "Map digraph <dz>" },
+  { "in": "dź",  "out": "d͡ʑ", "comment": "Map digraph <dź>" },
+  { "in": "dż",  "out": "d͡ʒ", "comment": "Map digraph <dż>" },
+  { "in": "ch",  "out": "x",  "comment": "Map digraph <ch>" },
+
+  { "in": "e",   "out": "ɛ",  "comment": "Map vowel <e>" },
+  { "in": "o",   "out": "ɔ",  "comment": "Map vowel <o>" },
+  { "in": "ó",   "out": "u",  "comment": "Map vowel <ó>" },
+  { "in": "y",   "out": "ɨ",  "comment": "Map vowel <y>" },
+  { "in": "ą",   "out": "ɔn", "context_after": "dz", "comment": "Realize <ą> as /ɔn/ before <dz>" },
+  { "in": "ą",   "out": "ɔɲ", "context_after": "ć|dź|ś|ź|cz|sz|c|t|d(?!z)|p", "comment": "Realize <ą> as /ɔɲ/ before coronal consonants" },
+  { "in": "ą",   "out": "ɔŋ", "context_after": "k|g", "comment": "Realize <ą> as /ɔŋ/ before velars" },
+  { "in": "ą",   "out": "ɔm", "context_after": "p|b|f|v", "comment": "Realize <ą> as /ɔm/ before labials" },
+  { "in": "ą",   "out": "ɔ̃",  "comment": "Default nasal realization of <ą>" },
+
+  { "in":"ą", "out":"ɔm", "context_after":"p|b|f|w", "comment": "Realize <ą> as /ɔm/ before labials" },
+  { "in":"ą", "out":"ɔn", "context_after":"t|d(?!z)|c|dz|s|z|sz|rz|ż|cz", "comment": "Realize <ą> as /ɔn/ before alveolars and retroflexes" },
+  { "in":"ą", "out":"ɔɲ", "context_after":"ć|dź|ś|ź", "comment": "Realize <ą> as /ɔɲ/ before palatal consonants" },
+  { "in":"ą", "out":"ɔŋ", "context_after":"k|g", "comment": "Realize <ą> as /ɔŋ/ before velars" },
+  { "in":"ą", "out":"ɔ̃", "comment": "Default nasal realization of <ą>" },
+  { "in": "ę",   "out": "ɛ̃",  "comment": "Default nasal realization of <ę>" },
+
+  { "in": "b",   "out": "p",  "context_after": "$", "comment": "Word-final devoicing of /b/" },
+  { "in": "d",   "out": "t",  "context_after": "$", "comment": "Word-final devoicing of /d/" },
+  { "in": "g",   "out": "k",  "context_after": "$", "comment": "Word-final devoicing of /ɡ/" },
+  { "in": "z",   "out": "s",  "context_after": "$", "comment": "Word-final devoicing of /z/" },
+  { "in": "ż",   "out": "ʃ",  "context_after": "$", "comment": "Word-final devoicing of /ʒ/" },
+
+  { "in": "x", "out": "ɣ", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /x/ before a voiced obstruent" },
+
+  { "in": "k",   "out": "ɡ",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /k/ before a voiced obstruent" },
+  { "in": "t",   "out": "d",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /t/ before a voiced obstruent" },
+  { "in": "p",   "out": "b",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /p/ before a voiced obstruent" },
+  { "in": "s",   "out": "z",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /s/ before a voiced obstruent" },
+  { "in": "f",   "out": "v",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /f/ before a voiced obstruent" },
+  { "in": "c",   "out": "d͡z", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /t͡s/ before a voiced obstruent" },
+  { "in": "cz",  "out": "d͡ʒ", "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /t͡ʃ/ before a voiced obstruent" },
+  { "in": "sz",  "out": "ʒ",  "context_after": "b|d|g|z|ż|rz|dz|dź|dż|w", "comment": "Voice /ʃ/ before a voiced obstruent" },
+
+  { "in": "b",   "out": "p",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice /b/ before a voiceless obstruent" },
+  { "in": "d",   "out": "t",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice /d/ before a voiceless obstruent" },
+  { "in": "g",   "out": "k",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice /ɡ/ before a voiceless obstruent" },
+  { "in": "z",   "out": "s",  "context_after": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h", "comment": "Devoice /z/ before a voiceless obstruent" },
+
+  { "in": "c",   "out": "t͡s", "comment": "Map letter <c>" },
+  { "in": "ć",   "out": "t͡ɕ", "comment": "Map letter <ć>" },
+  { "in": "g",   "out": "ɡ",  "comment": "Map letter <g>" },
+  { "in": "h",   "out": "x",  "comment": "Map letter <h>" },
+  { "in": "w",   "out": "v",  "comment": "Map letter <w>" },
+  { "in": "ł",   "out": "w",  "comment": "Map letter <ł>" },
+  { "in": "ń",   "out": "ɲ",  "comment": "Map letter <ń>" },
+  { "in": "ś",   "out": "ɕ",  "comment": "Map letter <ś>" },
+  { "in": "ź",   "out": "ʑ",  "comment": "Map letter <ź>" },
+  { "in": "ż",   "out": "ʒ",  "comment": "Map letter <ż>" }
+]
