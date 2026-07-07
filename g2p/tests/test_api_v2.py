@@ -20,8 +20,8 @@ class TestAPIV2(TestCase):
         codes = {x["code"] for x in response.json()}
         assert "fin" in codes
         assert "atj" in codes
-        self.assertFalse("generated" in codes)
-        self.assertFalse("atj-ipa" in codes)
+        assert "generated" not in codes
+        assert "atj-ipa" not in codes
         names = {x["name"] for x in response.json()}
         assert "Finnish" in names
 
@@ -33,7 +33,7 @@ class TestAPIV2(TestCase):
         assert "eng-arpabet" in codes
         assert "eng-ipa" in codes
         assert "atj" in codes
-        self.assertFalse("generated" in codes)
+        assert "generated" not in codes
 
     def test_outputs_for(self):
         with redirect_stderr(StringIO()):

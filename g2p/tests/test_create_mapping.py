@@ -71,9 +71,9 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("a").output_string, "ɑ")
-        self.assertEqual(transducer("i").output_string, "i")
-        self.assertEqual(transducer("u").output_string, "u")
+        assert transducer("a").output_string == "ɑ"
+        assert transducer("i").output_string == "i"
+        assert transducer("u").output_string == "u"
 
     def test_bigram_mappings(self):
         src_mappings = [
@@ -84,9 +84,9 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("pi").output_string, "pi")
-        self.assertEqual(transducer("ti").output_string, "ti")
-        self.assertEqual(transducer("ki").output_string, "ki")
+        assert transducer("pi").output_string == "pi"
+        assert transducer("ti").output_string == "ti"
+        assert transducer("ki").output_string == "ki"
 
     def test_trigram_mappings(self):
         src_mappings = [
@@ -97,9 +97,9 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("t͡ʃi").output_string, "tʃi")
-        self.assertEqual(transducer("t͡ʃu").output_string, "tʃu")
-        self.assertEqual(transducer("t͡ʃa").output_string, "tʃɑ")
+        assert transducer("t͡ʃi").output_string == "tʃi"
+        assert transducer("t͡ʃu").output_string == "tʃu"
+        assert transducer("t͡ʃa").output_string == "tʃɑ"
 
     def test_trigram_mappings_xsampa(self):
         src_mappings = [
@@ -110,9 +110,9 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-xsampa")
         mapping = create_mapping(src_mapping, self.target_mapping_xsampa)
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("tSi").output_string, "tSi")
-        self.assertEqual(transducer("tSu").output_string, "tSu")
-        self.assertEqual(transducer("tSa").output_string, "tSA")
+        assert transducer("tSi").output_string == "tSi"
+        assert transducer("tSu").output_string == "tSu"
+        assert transducer("tSa").output_string == "tSA"
 
     def test_long_mappings(self):
         src_mappings = [
@@ -123,9 +123,9 @@ class MappingCreationTest(TestCase):
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         mapping = create_mapping(src_mapping, self.target_mapping)
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("pʷeː").output_string, "pweː")
-        self.assertEqual(transducer("tʷeː").output_string, "tweː")
-        self.assertEqual(transducer("kʷeː").output_string, "kweː")
+        assert transducer("pʷeː").output_string == "pweː"
+        assert transducer("tʷeː").output_string == "tweː"
+        assert transducer("kʷeː").output_string == "kweː"
 
     def test_distance_errors(self):
         src_mappings = [{"in": "ᐃ", "out": "i"}]
@@ -196,11 +196,11 @@ class MappingCreationTest(TestCase):
         log_output = io.StringIO()
         with redirect_stderr(log_output):
             mapping = create_mapping(src_mapping, self.target_mapping)
-        self.assertFalse("WARNING" in log_output.getvalue())
+        assert "WARNING" not in log_output.getvalue()
         transducer = Transducer(mapping)
-        self.assertEqual(transducer("a").output_string, "ɑ")
-        self.assertEqual(transducer("i").output_string, "i")
-        self.assertEqual(transducer("u").output_string, "u")
+        assert transducer("a").output_string == "ɑ"
+        assert transducer("i").output_string == "i"
+        assert transducer("u").output_string == "u"
 
 
 if __name__ == "__main__":

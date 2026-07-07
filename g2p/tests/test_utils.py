@@ -28,7 +28,7 @@ class UtilsTest(TestCase):
     def test_run_doctest(self):
         """Run doctests in g2p.mappings.utils"""
         results = doctest.testmod(utils)
-        self.assertFalse(results.failed, results)
+        assert not results.failed, results
 
     def test_abb_expand(self):
         test_dict = defaultdict(list)
