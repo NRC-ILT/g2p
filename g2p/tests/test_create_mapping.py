@@ -7,9 +7,8 @@ Test all Mappings
 import io
 import sys
 from contextlib import redirect_stderr
-from unittest import TestCase
 
-from pytest import main
+from pytest import fixture, main, raises
 
 from g2p.log import LOGGER
 from g2p.mappings import Mapping
@@ -21,8 +20,9 @@ from g2p.mappings.create_ipa_mapping import (
 from g2p.transducer import Transducer
 
 
-class MappingCreationTest(TestCase):
-    def setUp(self):
+class TestMappingCreation:
+    @fixture(autouse=True)
+    def setup(self):
         self.mappings = [
             {"in": "ɑ", "out": "AA"},
             {"in": "eː", "out": "EY"},
@@ -127,15 +127,15 @@ class MappingCreationTest(TestCase):
         assert transducer("tʷeː").output_string == "tweː"
         assert transducer("kʷeː").output_string == "kweː"
 
-    def test_distance_errors(self):
+    def test_distance_errors(self, caplog):
         src_mappings = [{"in": "ᐃ", "out": "i"}]
         src_mapping = Mapping(rules=src_mappings, in_lang="crj", out_lang="crj-ipa")
         # Exercise looking up distances in the known list
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             _ = create_mapping(
                 src_mapping, self.target_mapping, distance="not_a_distance"
             )
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             _ = create_multi_mapping(
                 [(src_mapping, "out")],
                 [(self.target_mapping, "in")],
@@ -144,11 +144,11 @@ class MappingCreationTest(TestCase):
         # White box testing: monkey-patch an invalid distance to validate the
         # second way we make sure distances are supported
         DISTANCE_METRICS.append("not_a_real_distance")
-        with self.assertRaises(ValueError), self.assertLogs(LOGGER, level="ERROR"):
+        with raises(ValueError), caplog.at_level("ERROR", logger=LOGGER.name):
             _ = create_mapping(
                 src_mapping, self.target_mapping, distance="not_a_real_distance"
             )
-        with self.assertRaises(ValueError), self.assertLogs(LOGGER, level="ERROR"):
+        with raises(ValueError), caplog.at_level("ERROR", logger=LOGGER.name):
             _ = create_multi_mapping(
                 [(src_mapping, "out")],
                 [(self.target_mapping, "in")],
@@ -182,7 +182,7 @@ class MappingCreationTest(TestCase):
             )
             assert isinstance(mapping, Mapping)
             set_of_mappings.add(tuple(rule.rule_output for rule in mapping.rules))
-        self.assertGreater(len(set_of_mappings), 3)
+        assert len(set_of_mappings) > 3
 
     def test_deletion_mapping(self):
         """Ensure that deletion rules do not lead to spurious warnings."""

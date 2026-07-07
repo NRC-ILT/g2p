@@ -16,7 +16,6 @@ import pydantic
 import pytest
 import yaml
 from click.testing import CliRunner
-from pytest import main
 
 import g2p._version
 from g2p.cli import (
@@ -693,4 +692,4 @@ class TestCli:
 
 
 if __name__ == "__main__":
-    main([__file__, *sys.argv])
+    pytest.main([__file__, *sys.argv])

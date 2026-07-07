@@ -8,10 +8,9 @@ import os
 import re
 import sys
 from typing import Dict, Union
-from unittest import TestCase
 
 from fastapi.testclient import TestClient
-from pytest import main
+from pytest import fixture, main
 
 from g2p.app import APP
 from g2p.log import LOGGER
@@ -21,13 +20,14 @@ from g2p.tests.public import __file__ as PUB_FILE
 PUB_DIR = os.path.dirname(PUB_FILE)
 
 
-class ResourceIntegrationTest(TestCase):
+class TestResourceIntegration:
     """
     This tests that the api returns 200s for all basic
     GET requests.
     """
 
-    def setUp(self):
+    @fixture(autouse=True)
+    def setup(self):
         # routes
         self.conversion_route = "/g2p"
         for route in APP.routes:
@@ -53,8 +53,7 @@ class ResourceIntegrationTest(TestCase):
         """
         for rt in self.routes_no_args:
             try:
-                with self.assertLogs():  # silence the logs by asserting them
-                    r = self.client.get(rt)
+                r = self.client.get(rt)
                 assert r.status_code == 200
                 LOGGER.debug("Route " + rt + " returned " + str(r.status_code))
             except Exception as exc:
@@ -68,8 +67,7 @@ class ResourceIntegrationTest(TestCase):
             for node in LANGS_NETWORK.nodes:
                 rt = re.sub(self.arg_match, node, ep)
                 try:
-                    with self.assertLogs():  # silence the logs by asseting them
-                        r = self.client.get(rt)
+                    r = self.client.get(rt)
                     assert r.status_code == 200
                 except Exception as exc:
                     LOGGER.error("Couldn't connect. Is the API running? %s", exc)
@@ -81,7 +79,7 @@ class ResourceIntegrationTest(TestCase):
                 + " ."
             )
 
-    def test_g2p_conversion(self):
+    def test_g2p_conversion(self, caplog):
         """
         Ensure conversion returns proper response
         """
@@ -107,29 +105,25 @@ class ResourceIntegrationTest(TestCase):
             "text": "hej",
         }
         self.maxDiff = None
-        with self.assertLogs():
-            response = self.client.get(self.conversion_route, params=params)  # type: ignore
+        response = self.client.get(self.conversion_route, params=params)  # type: ignore
         res_json = response.json()
         assert response.status_code == 200
         with open(os.path.join(PUB_DIR, "sample_response.json")) as f:
             data = json.load(f)
         assert res_json == data
         # check minimal response
-        with self.assertLogs():
-            minimal_response = self.client.get(
-                self.conversion_route, params=minimal_params
-            )
+        minimal_response = self.client.get(self.conversion_route, params=minimal_params)
         data["debugger"] = False
         data["index"] = False
         assert minimal_response.status_code == 200
         assert minimal_response.json() == data
-        with self.assertLogs(LOGGER, level="ERROR"):
+        with caplog.at_level("ERROR", logger=LOGGER.name):
             bad_response = self.client.get(self.conversion_route, params=bad_params)
-        with self.assertLogs(LOGGER, level="ERROR"):
+        with caplog.at_level("ERROR", logger=LOGGER.name):
             same_response = self.client.get(self.conversion_route, params=same_params)
         assert bad_response.status_code == 400
         assert same_response.status_code == 400
-        with self.assertLogs(LOGGER, level="ERROR"):
+        with caplog.at_level("ERROR", logger=LOGGER.name):
             missing_response = self.client.get(
                 self.conversion_route, params=missing_params
             )
@@ -141,13 +135,13 @@ class ResourceIntegrationTest(TestCase):
             "debugger": "THIS IS NOT A BOOLEAN!!!",
             "index": "NEITHER IS THIS!!!",
         }
-        with self.assertLogs(LOGGER, level="ERROR"):
+        with caplog.at_level("ERROR", logger=LOGGER.name):
             invalid_response = self.client.get(
                 self.conversion_route, params=invalid_params
             )
         assert invalid_response.status_code == 422
 
-    def test_g2p_conversion_with_tok(self):
+    def test_g2p_conversion_with_tok(self, caplog):
         params_with_tok: Dict[str, Union[str, bool]] = {
             "in-lang": "fra",
             "out-lang": "eng-arpabet",
@@ -156,8 +150,7 @@ class ResourceIntegrationTest(TestCase):
             "index": True,
             "tokenize": True,
         }
-        with self.assertLogs():
-            response = self.client.get(self.conversion_route, params=params_with_tok)
+        response = self.client.get(self.conversion_route, params=params_with_tok)
         assert response.status_code == 200
         res_json_tok = response.json()
         assert res_json_tok["debugger"][0][0][0]["input"] == "ceci"
@@ -170,14 +163,13 @@ class ResourceIntegrationTest(TestCase):
             "index": True,
             "tokenize": False,
         }
-        with self.assertLogs():
-            response = self.client.get(self.conversion_route, params=params_no_tok)
+        response = self.client.get(self.conversion_route, params=params_no_tok)
         assert response.status_code == 200
         res_json_no_tok = response.json()
-        self.assertNotEqual(res_json_tok, res_json_no_tok)
-        self.assertEqual(res_json_no_tok["debugger"][0][0][0]["input"], "ceci, celà")
+        assert res_json_tok != res_json_no_tok
+        assert res_json_no_tok["debugger"][0][0][0]["input"] == "ceci, celà"
 
-        self.assertNotEqual(res_json_tok["debugger"], res_json_no_tok["debugger"])
+        assert res_json_tok["debugger"] != res_json_no_tok["debugger"]
 
 
 if __name__ == "__main__":

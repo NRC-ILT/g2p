@@ -3,7 +3,6 @@
 """ Test Mapping langs utility functions and their use in g2p convert --check """
 
 import sys
-from unittest import TestCase
 
 from pytest import main
 
@@ -12,14 +11,14 @@ from g2p.log import LOGGER
 from g2p.mappings.langs import utils
 
 
-class CheckIpaArpabetTest(TestCase):
-    def test_is_IPA(self):
-        self.assertTrue(utils.is_panphon("ijŋeːʒoːɡd͡ʒ"))  # All panphon chars
-        self.assertTrue(utils.is_panphon("ij ij"))  # tokenizes on spaces
+class TestCheckIpaArpabet:
+    def test_is_IPA(self, caplog):
+        assert utils.is_panphon("ijŋeːʒoːɡd͡ʒ")  # All panphon chars
+        assert utils.is_panphon("ij ij")  # tokenizes on spaces
         # ASCII g is not ipa/panphon use ɡ (\u0261)
-        # self.assertFalse(utils.is_panphon("ga"))  - tolerated because of panphon preprocessor!
+        # assert not utils.is_panphon("ga")  - tolerated because of panphon preprocessor!
         # ASCII : is not ipa/panphon, use ː (\u02D0)
-        with self.assertLogs(LOGGER, level="WARNING"):
+        with caplog.at_level("WARNING", logger=LOGGER.name):
             assert not utils.is_panphon("ge:", display_warnings=True)
 
     def test_is_arpabet(self):
@@ -35,11 +34,11 @@ class CheckIpaArpabetTest(TestCase):
         assert transducer.check(transducer("ɡɑŋi"))
         assert not transducer.check(transducer("ñ"))
 
-    def test_check_ipa(self):
+    def test_check_ipa(self, caplog):
         transducer = make_g2p("fra", "fra-ipa", tokenize=False)
         assert transducer.check(transducer("ceci"))
         assert not transducer.check(transducer("ñ"))
-        with self.assertLogs(LOGGER, level="WARNING"):
+        with caplog.at_level("WARNING", logger=LOGGER.name):
             assert not transducer.check(transducer("ñ"), display_warnings=True)
         assert transducer.check(transducer("ceci est un test été à"))
 
@@ -60,29 +59,27 @@ class CheckIpaArpabetTest(TestCase):
         transducer = make_g2p("fra", "fra-ipa")
         assert transducer.check(transducer("ceci est un test été à"))
         assert not transducer.check(transducer("ñ oǹ"))
-        self.assertTrue(
-            transducer.check(transducer("ceci, cela; c'est tokenizé: alors c'est bon!"))
+        assert transducer.check(
+            transducer("ceci, cela; c'est tokenizé: alors c'est bon!")
         )
-        self.assertFalse(
-            transducer.check(transducer("mais... c'est ñoñ, si du texte ne passe pas!"))
+        assert not transducer.check(
+            transducer("mais... c'est ñoñ, si du texte ne passe pas!")
         )
 
-    def test_check_tokenizing_composite_transducer(self):
+    def test_check_tokenizing_composite_transducer(self, caplog):
         transducer = make_g2p("fra", "eng-arpabet")
         assert transducer.check(transducer("ceci est un test été à"))
         assert not transducer.check(transducer("ñ oǹ"))
-        self.assertTrue(
-            transducer.check(transducer("ceci, cela; c'est tokenizé: alors c'est bon!"))
+        assert transducer.check(
+            transducer("ceci, cela; c'est tokenizé: alors c'est bon!")
         )
-        self.assertFalse(
-            transducer.check(transducer("mais... c'est ñoñ, si du texte ne passe pas!"))
+        assert not transducer.check(
+            transducer("mais... c'est ñoñ, si du texte ne passe pas!")
         )
-        with self.assertLogs(LOGGER, level="WARNING"):
-            self.assertFalse(
-                transducer.check(
-                    transducer("mais... c'est ñoñ, si du texte ne passe pas!"),
-                    display_warnings=True,
-                )
+        with caplog.at_level("WARNING", logger=LOGGER.name):
+            assert not transducer.check(
+                transducer("mais... c'est ñoñ, si du texte ne passe pas!"),
+                display_warnings=True,
             )
 
     def test_shallow_check(self):
@@ -111,9 +108,7 @@ class CheckIpaArpabetTest(TestCase):
         # LOGGER.warning(
         #     f"tau-ipa {tau_ipa}\neng-ipa {eng_ipa}\n eng-arpabet {eng_arpabet}"
         # )
-        self.assertTrue(
-            transducer.check(transducer("sh'oo Jign maasee' do'eent'aa shyyyh"))
-        )
+        assert transducer.check(transducer("sh'oo Jign maasee' do'eent'aa shyyyh"))
 
 
 if __name__ == "__main__":
