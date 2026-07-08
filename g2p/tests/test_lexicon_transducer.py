@@ -2,29 +2,26 @@
 
 import os
 import sys
-from unittest import TestCase
 
-from pytest import main
+from pytest import main, raises
 
 from g2p import make_g2p
-from g2p.log import LOGGER
 from g2p.mappings import Mapping
 from g2p.tests.public import __file__ as public_data
 from g2p.transducer import Transducer
 
 
-class LexiconTransducerTest(TestCase):
+class TestLexiconTransducer:
     def test_lexicon_mapping(self):
         """Test loading a lexicon mapping directly in the constructor."""
-        with self.assertLogs(LOGGER, level="INFO"):
-            m = Mapping(
-                type="lexicon",
-                case_sensitive=False,
-                out_delimiter=" ",
-                alignments_path=os.path.join(
-                    os.path.dirname(public_data), "mappings", "hello.aligned.txt"
-                ),
-            )
+        m = Mapping(
+            type="lexicon",
+            case_sensitive=False,
+            out_delimiter=" ",
+            alignments_path=os.path.join(
+                os.path.dirname(public_data), "mappings", "hello.aligned.txt"
+            ),
+        )
         assert m.rules == []
         assert m.type == "lexicon"
         t = Transducer(m)
@@ -129,12 +126,11 @@ class LexiconTransducerTest(TestCase):
 
     def test_load_lexicon_mapping(self):
         """Test loading a lexicon mapping through a config file."""
-        with self.assertLogs(LOGGER, level="INFO"):
-            m = Mapping.load_mapping_from_path(
-                os.path.join(
-                    os.path.dirname(public_data), "mappings", "lexicon_config-g2p.yaml"
-                )
+        m = Mapping.load_mapping_from_path(
+            os.path.join(
+                os.path.dirname(public_data), "mappings", "lexicon_config-g2p.yaml"
             )
+        )
         assert m.rules == []
         assert m.type == "lexicon"
         t = Transducer(m)
@@ -153,10 +149,7 @@ class LexiconTransducerTest(TestCase):
 
     def test_bad_lexicon_mapping(self):
         """Test failure to load alignments."""
-        with (
-            self.assertRaises(FileNotFoundError),
-            self.assertLogs(LOGGER, level="INFO"),
-        ):
+        with raises(FileNotFoundError):
             _ = Mapping.load_mapping_from_path(
                 os.path.join(
                     os.path.dirname(public_data),

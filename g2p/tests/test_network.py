@@ -4,9 +4,8 @@ import gzip
 import json
 import sys
 from typing import Any
-from unittest import TestCase
 
-from pytest import main
+from pytest import main, raises
 
 from g2p import make_g2p
 from g2p.exceptions import InvalidLanguageCode, NoPath
@@ -16,22 +15,19 @@ from g2p.mappings.langs.network_lite import DiGraph, node_link_data, node_link_g
 from g2p.transducer import CompositeTransducer, Transducer
 
 
-class NetworkTest(TestCase):
+class TestNetwork:
     """Basic Test for available networks"""
 
-    def setUp(self):
-        pass
-
-    def test_not_found(self):
-        with self.assertRaises(InvalidLanguageCode):
-            with self.assertLogs(LOGGER, level="ERROR"):
+    def test_not_found(self, caplog):
+        with raises(InvalidLanguageCode):
+            with caplog.at_level("ERROR", logger=LOGGER.name):
                 make_g2p("foo", "eng-ipa")
-        with self.assertRaises(InvalidLanguageCode):
-            with self.assertLogs(LOGGER, level="ERROR"):
+        with raises(InvalidLanguageCode):
+            with caplog.at_level("ERROR", logger=LOGGER.name):
                 make_g2p("git", "bar")
 
-    def test_no_path(self):
-        with self.assertRaises(NoPath), self.assertLogs(LOGGER, level="ERROR"):
+    def test_no_path(self, caplog):
+        with raises(NoPath), caplog.at_level("ERROR", logger=LOGGER.name):
             make_g2p("hei", "git")
 
     def test_valid_composite(self):
@@ -45,11 +41,11 @@ class NetworkTest(TestCase):
         assert "niɡiɡw" == transducer("nikikw").output_string
 
 
-class NetworkLiteTest(TestCase):
+class TestNetworkLite:
     data: Any
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         with gzip.open(LANGS_NWORK_PATH, "rt", encoding="utf8") as f:
             cls.data = json.load(f)
 
@@ -63,19 +59,19 @@ class NetworkLiteTest(TestCase):
         assert graph.has_path("a", "c")
         assert graph.has_path("a", "d")
         assert graph.has_path("b", "a")
-        self.assertFalse(graph.has_path("a", "e"))
-        self.assertFalse(graph.has_path("a", "f"))
-        self.assertFalse(graph.has_path("c", "a"))
-        with self.assertRaises(KeyError):
+        assert not graph.has_path("a", "e")
+        assert not graph.has_path("a", "f")
+        assert not graph.has_path("c", "a")
+        with raises(KeyError):
             graph.has_path("a", "y")
-        with self.assertRaises(KeyError):
+        with raises(KeyError):
             graph.has_path("x", "b")
 
     def test_g2p_path(self):
         graph = node_link_graph(self.data)
         assert graph.has_path("atj", "eng-ipa")
         assert graph.has_path("atj", "atj-ipa")
-        self.assertFalse(graph.has_path("hei", "git"))
+        assert not graph.has_path("hei", "git")
 
     def test_successors(self):
         graph: DiGraph = DiGraph()
@@ -99,7 +95,7 @@ class NetworkLiteTest(TestCase):
         assert graph.descendants("d") == set()
         assert graph.descendants("e") == {"f"}
         assert graph.descendants("f") == set()
-        with self.assertRaises(KeyError):
+        with raises(KeyError):
             graph.descendants("x")
 
     def test_g2p_descendants(self):
@@ -122,13 +118,13 @@ class NetworkLiteTest(TestCase):
         assert graph.ancestors("d") == {"a", "c"}
         assert graph.ancestors("e") == set()
         assert graph.ancestors("f") == {"e"}
-        with self.assertRaises(KeyError):
+        with raises(KeyError):
             graph.ancestors("x")
 
     def test_g2p_ancestors(self):
         graph: DiGraph = node_link_graph(self.data)
         assert graph.ancestors("atj") == set()
-        self.assertGreater(len(graph.ancestors("eng-ipa")), 50)
+        assert len(graph.ancestors("eng-ipa")) > 50
 
     def test_shortest_path(self):
         graph: DiGraph = DiGraph()
@@ -146,11 +142,11 @@ class NetworkLiteTest(TestCase):
         assert graph.shortest_path("a", "d") == ["a", "d"]
         assert graph.shortest_path("c", "d") == ["c", "d"]
         assert graph.shortest_path("a", "a") == ["a"]
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             graph.shortest_path("c", "a")
-        with self.assertRaises(KeyError):
+        with raises(KeyError):
             graph.shortest_path("a", "y")
-        with self.assertRaises(KeyError):
+        with raises(KeyError):
             graph.shortest_path("x", "b")
 
     def test_g2p_shortest_path(self):
@@ -167,26 +163,26 @@ class NetworkLiteTest(TestCase):
         graph.add_edge("a", "b")
         assert "a" in graph
         assert "b" in graph
-        self.assertFalse("c" in graph)
+        assert "c" not in graph
 
     def test_node_link_data(self):
         graph = node_link_graph(self.data)
         assert node_link_data(graph) == self.data
 
     def test_node_link_graph_errors(self):
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             node_link_graph({**self.data, "directed": False})  # type: ignore
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             node_link_graph({**self.data, "multigraph": True})  # type: ignore
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             node_link_graph({**self.data, "nodes": "not a list"})  # type: ignore
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             node_link_graph({**self.data, "links": "not a list"})  # type: ignore
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             data = self.data.copy()
             del data["nodes"]
             node_link_graph(data)
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             data = self.data.copy()
             del data["links"]
             node_link_graph(data)

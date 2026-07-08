@@ -7,7 +7,7 @@
 import sys
 from unicodedata import normalize
 
-from pytest import fixture, main
+from pytest import main
 
 from g2p.log import LOGGER
 from g2p.mappings import Mapping
@@ -174,37 +174,37 @@ class TestIndices:
         # Verify that empty inputs are not allowed
     """
 
-    @fixture(autouse=True)
-    def setup(self):
-        self.test_mapping_one = Mapping(
+    def setup_class(cls):
+        # Let's set this up just once for the class, not for each test
+        cls.test_mapping_one = Mapping(
             rules=[{"in": "t", "out": "p", "context_after": "e"}]
         )
-        self.test_mapping_two = Mapping(rules=[{"in": "e", "out": ""}])
-        self.test_mapping_three = Mapping(
+        cls.test_mapping_two = Mapping(rules=[{"in": "e", "out": ""}])
+        cls.test_mapping_three = Mapping(
             rules=[{"in": "t", "out": "ch", "context_after": "e"}]
         )
-        self.test_mapping_four = Mapping(rules=[{"in": "te", "out": "p"}])
-        self.test_mapping_five = Mapping(
+        cls.test_mapping_four = Mapping(rules=[{"in": "te", "out": "p"}])
+        cls.test_mapping_five = Mapping(
             rules=[{"context_before": "t", "context_after": "$", "in": "", "out": "y"}]
         )
-        self.test_mapping_six = Mapping(rules=[{"in": "e{1}s{2}", "out": "s{2}e{1}"}])
-        self.test_mapping_seven = Mapping(
+        cls.test_mapping_six = Mapping(rules=[{"in": "e{1}s{2}", "out": "s{2}e{1}"}])
+        cls.test_mapping_seven = Mapping(
             rules=[{"in": "s", "out": "sh"}, {"in": "sh", "out": "s"}],
             rule_ordering="apply-longest-first",
         )
-        self.test_mapping_seven_as_written = Mapping(
+        cls.test_mapping_seven_as_written = Mapping(
             rules=[{"in": "s", "out": "sh"}, {"in": "sh", "out": "s"}]
         )
-        self.test_mapping_eight = Mapping(
+        cls.test_mapping_eight = Mapping(
             rules=[{"in": "te", "out": "che"}, {"in": "t", "out": "s"}]
         )
-        self.test_mapping_nine = Mapping(rules=[{"in": "aa", "out": ""}])
-        self.test_mapping_ten = Mapping(rules=[{"in": "abc", "out": "a"}])
-        self.test_mapping_eleven = Mapping(rules=[{"in": "a", "out": "aaaa"}])
-        self.test_mapping_combining = Mapping(
+        cls.test_mapping_nine = Mapping(rules=[{"in": "aa", "out": ""}])
+        cls.test_mapping_ten = Mapping(rules=[{"in": "abc", "out": "a"}])
+        cls.test_mapping_eleven = Mapping(rules=[{"in": "a", "out": "aaaa"}])
+        cls.test_mapping_combining = Mapping(
             rules=[{"in": "k{1}\u0313{2}", "out": "'{2}k{1}"}]
         )
-        self.test_mapping_wacky = Mapping(
+        cls.test_mapping_wacky = Mapping(
             rules=[
                 {
                     "in": "\U0001f600{1}\U0001f603\U0001f604{2}\U0001f604{3}",
@@ -212,35 +212,35 @@ class TestIndices:
                 }
             ]
         )
-        self.test_mapping_wacky_lite = Mapping(
+        cls.test_mapping_wacky_lite = Mapping(
             rules=[{"in": "a{1}bc{2}c{3}", "out": "ccc{2}c{3}c{1}"}]
         )
-        self.test_mapping_circum = Mapping(
+        cls.test_mapping_circum = Mapping(
             rules=[{"in": "a{1}c{2}", "out": "c{2}a{1}c{2}"}]
         )
-        self.test_mapping_explicit_equal_1 = Mapping(
+        cls.test_mapping_explicit_equal_1 = Mapping(
             rules=[{"in": "a{1}b{1}", "out": "c{1}d{1}"}]
         )
-        self.test_mapping_explicit_equal_2 = Mapping(
+        cls.test_mapping_explicit_equal_2 = Mapping(
             rules=[{"in": "ab{1}", "out": "cd{1}"}]
         )
-        self.test_mapping_explicit_equal_3 = Mapping(rules=[{"in": "ab", "out": "cd"}])
-        self.test_mapping_explicit_equal_4 = Mapping(
+        cls.test_mapping_explicit_equal_3 = Mapping(rules=[{"in": "ab", "out": "cd"}])
+        cls.test_mapping_explicit_equal_4 = Mapping(
             rules=[{"in": "a{1}b{2}", "out": "c{1}d{2}"}]
         )
-        self.test_issue_173_1 = Mapping(
+        cls.test_issue_173_1 = Mapping(
             rules=[
                 {"in": "x{1}y{2}z{3}", "out": "a{2}b{1}"},
                 {"in": "d{1}e{2}f{3}", "out": "d{1}e{2}f{3}"},
             ]
         )
-        self.test_issue_173_2 = Mapping(
+        cls.test_issue_173_2 = Mapping(
             rules=[
                 {"in": "x{1}y{2}z{3}", "out": "a{1}b{2}"},
                 {"in": "d{1}e{2}f{3}", "out": "d{1}e{2}f{3}"},
             ]
         )
-        self.test_issue_157_mapping = Mapping(
+        cls.test_issue_157_mapping = Mapping(
             rules=[
                 {"in": "a", "out": "d"},
                 {"in": "bc", "out": "e"},
@@ -248,40 +248,40 @@ class TestIndices:
                 {"in": "m{1}n{2}", "out": "N{2}M{1}"},
             ]
         )
-        self.test_feeding_mapping_1 = Mapping(
+        cls.test_feeding_mapping_1 = Mapping(
             rules=[{"in": "ab", "out": "a"}, {"in": "a", "out": "cd"}]
         )
-        self.test_feeding_mapping_2 = Mapping(
+        cls.test_feeding_mapping_2 = Mapping(
             rules=[{"in": "a", "out": "cd"}, {"in": "cd", "out": "b"}]
         )
-        self.test_issue_173_3 = Mapping(rules=[{"in": "ab{1}c{2}", "out": "X{1}Y{2}"}])
-        self.test_issue_173_4 = Mapping(rules=[{"in": "a{1}bc{2}", "out": "xy{1}z{2}"}])
-        self.trans_one = Transducer(self.test_mapping_one)
-        self.trans_two = Transducer(self.test_mapping_two)
-        self.trans_three = Transducer(self.test_mapping_three)
-        self.trans_four = Transducer(self.test_mapping_four)
-        self.trans_six = Transducer(self.test_mapping_six)
-        self.trans_seven = Transducer(self.test_mapping_seven)
-        self.test_seven_as_written = Transducer(self.test_mapping_seven_as_written)
-        self.trans_eight = Transducer(self.test_mapping_eight)
-        self.trans_nine = Transducer(self.test_mapping_nine)
-        self.trans_ten = Transducer(self.test_mapping_ten)
-        self.trans_eleven = Transducer(self.test_mapping_eleven)
-        self.trans_combining = Transducer(self.test_mapping_combining)
-        self.trans_wacky = Transducer(self.test_mapping_wacky)
-        self.trans_wacky_lite = Transducer(self.test_mapping_wacky_lite)
-        self.trans_circum = Transducer(self.test_mapping_circum)
-        self.trans_explicit_equal_1 = Transducer(self.test_mapping_explicit_equal_1)
-        self.trans_explicit_equal_2 = Transducer(self.test_mapping_explicit_equal_2)
-        self.trans_explicit_equal_3 = Transducer(self.test_mapping_explicit_equal_3)
-        self.trans_explicit_equal_4 = Transducer(self.test_mapping_explicit_equal_4)
-        self.trans_173_1 = Transducer(self.test_issue_173_1)
-        self.trans_173_2 = Transducer(self.test_issue_173_2)
-        self.trans_173_3 = Transducer(self.test_issue_173_3)
-        self.trans_173_4 = Transducer(self.test_issue_173_4)
-        self.trans_157 = Transducer(self.test_issue_157_mapping)
-        self.trans_feeding_1 = Transducer(self.test_feeding_mapping_1)
-        self.trans_feeding_2 = Transducer(self.test_feeding_mapping_2)
+        cls.test_issue_173_3 = Mapping(rules=[{"in": "ab{1}c{2}", "out": "X{1}Y{2}"}])
+        cls.test_issue_173_4 = Mapping(rules=[{"in": "a{1}bc{2}", "out": "xy{1}z{2}"}])
+        cls.trans_one = Transducer(cls.test_mapping_one)
+        cls.trans_two = Transducer(cls.test_mapping_two)
+        cls.trans_three = Transducer(cls.test_mapping_three)
+        cls.trans_four = Transducer(cls.test_mapping_four)
+        cls.trans_six = Transducer(cls.test_mapping_six)
+        cls.trans_seven = Transducer(cls.test_mapping_seven)
+        cls.test_seven_as_written = Transducer(cls.test_mapping_seven_as_written)
+        cls.trans_eight = Transducer(cls.test_mapping_eight)
+        cls.trans_nine = Transducer(cls.test_mapping_nine)
+        cls.trans_ten = Transducer(cls.test_mapping_ten)
+        cls.trans_eleven = Transducer(cls.test_mapping_eleven)
+        cls.trans_combining = Transducer(cls.test_mapping_combining)
+        cls.trans_wacky = Transducer(cls.test_mapping_wacky)
+        cls.trans_wacky_lite = Transducer(cls.test_mapping_wacky_lite)
+        cls.trans_circum = Transducer(cls.test_mapping_circum)
+        cls.trans_explicit_equal_1 = Transducer(cls.test_mapping_explicit_equal_1)
+        cls.trans_explicit_equal_2 = Transducer(cls.test_mapping_explicit_equal_2)
+        cls.trans_explicit_equal_3 = Transducer(cls.test_mapping_explicit_equal_3)
+        cls.trans_explicit_equal_4 = Transducer(cls.test_mapping_explicit_equal_4)
+        cls.trans_173_1 = Transducer(cls.test_issue_173_1)
+        cls.trans_173_2 = Transducer(cls.test_issue_173_2)
+        cls.trans_173_3 = Transducer(cls.test_issue_173_3)
+        cls.trans_173_4 = Transducer(cls.test_issue_173_4)
+        cls.trans_157 = Transducer(cls.test_issue_157_mapping)
+        cls.trans_feeding_1 = Transducer(cls.test_feeding_mapping_1)
+        cls.trans_feeding_2 = Transducer(cls.test_feeding_mapping_2)
 
     def test_feeding(self):
         """Test feeding"""
