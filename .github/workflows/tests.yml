@@ -87,7 +87,7 @@ jobs:
         shell: bash
         run: |
           uv pip install 'pydantic<2.9'
-          coverage run -m unittest -v g2p.tests.test_cli.CliTest.test_update_schema_with_pydantic_lt29 |& tee schema-test.log
+          coverage run -m pytest -v -s g2p/tests/test_cli.py::TestCli::test_update_schema_with_pydantic_lt29 |& tee schema-test.log
           ! grep -i skip schema-test.log || ! echo "Error: Schema update test got skipped, something went wrong."
 
       - name: Post test analyses
