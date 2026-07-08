@@ -103,10 +103,10 @@ class TransducerTest(TestCase):
         assert "spam" == self.test_trans.in_lang
         assert "eggs" == self.test_trans.out_lang
         assert [self.test_trans] == self.test_trans.transducers
-        self.assertEqual(
-            [self.test_trans, self.test_trans_rev],
-            self.test_trans_composite.transducers,
-        )
+        assert [
+            self.test_trans,
+            self.test_trans_rev,
+        ] == self.test_trans_composite.transducers
         assert "spam" == self.test_trans_composite.in_lang
         assert "parrot" == self.test_trans_composite.out_lang
 
@@ -116,20 +116,18 @@ class TransducerTest(TestCase):
         assert "abab" == tg.input_string
         assert "bbbb" == tg.output_string
         assert 1 == len(tg.tiers)
-        self.assertEqual([(0, "a"), (1, "b"), (2, "a"), (3, "b")], tg.input_nodes)
-        self.assertEqual([(0, "b"), (1, "b"), (2, "b"), (3, "b")], tg.output_nodes)
-        self.assertEqual([(0, 0), (1, 1), (2, 2), (3, 3)], tg.edges)
-        self.assertEqual(
-            [("a", "b"), ("b", "b"), ("a", "b"), ("b", "b")], tg.pretty_edges()
-        )
+        assert [(0, "a"), (1, "b"), (2, "a"), (3, "b")] == tg.input_nodes
+        assert [(0, "b"), (1, "b"), (2, "b"), (3, "b")] == tg.output_nodes
+        assert [(0, 0), (1, 1), (2, 2), (3, 3)] == tg.edges
+        assert [("a", "b"), ("b", "b"), ("a", "b"), ("b", "b")] == tg.pretty_edges()
         assert 1 == len(tg.debugger)
         assert 2 == len(tg.debugger[0])
         tg.input_string = "bbbb"
-        self.assertEqual([(0, "b"), (1, "b"), (2, "b"), (3, "b")], tg.input_nodes)
+        assert [(0, "b"), (1, "b"), (2, "b"), (3, "b")] == tg.input_nodes
         tg.output_string = "baba"
-        self.assertEqual([(0, "b"), (1, "a"), (2, "b"), (3, "a")], tg.output_nodes)
+        assert [(0, "b"), (1, "a"), (2, "b"), (3, "a")] == tg.output_nodes
         tg.edges = [(0, 1), (1, 0), (2, 3), (3, 2)]
-        self.assertEqual([(0, 1), (1, 0), (2, 3), (3, 2)], tg.edges)
+        assert [(0, 1), (1, 0), (2, 3), (3, 2)] == tg.edges
         tg.debugger = [["spam", "spam", "spam", "spam"]]
         assert 1 == len(tg.debugger)
         assert 4 == len(tg.debugger[0])
@@ -150,18 +148,13 @@ class TransducerTest(TestCase):
         assert "aba" == ctg.input_string
         assert "aaa" == ctg.output_string
         assert 2 == len(ctg.tiers)
-        self.assertEqual([(0, "a"), (1, "b"), (2, "a")], ctg.input_nodes)
-        self.assertEqual([(0, "a"), (1, "a"), (2, "a")], ctg.output_nodes)
-        self.assertEqual(
-            [[(0, 0), (1, 1), (2, 2)], [(0, 0), (1, 1), (2, 2)]], ctg.edges
-        )
-        self.assertEqual(
-            [
-                [("a", "b"), ("b", "b"), ("a", "b")],
-                [("b", "a"), ("b", "a"), ("b", "a")],
-            ],
-            ctg.pretty_edges(),
-        )
+        assert [(0, "a"), (1, "b"), (2, "a")] == ctg.input_nodes
+        assert [(0, "a"), (1, "a"), (2, "a")] == ctg.output_nodes
+        assert [[(0, 0), (1, 1), (2, 2)], [(0, 0), (1, 1), (2, 2)]] == ctg.edges
+        assert [
+            [("a", "b"), ("b", "b"), ("a", "b")],
+            [("b", "a"), ("b", "a"), ("b", "a")],
+        ] == ctg.pretty_edges()
         assert len(ctg.tiers) == len(ctg.debugger)
         ctg.input_string = "bbbb"
         assert [(0 == "b"), (1, "b"), (2, "b"), (3, "b")], ctg.input_nodes
@@ -217,9 +210,7 @@ class TransducerTest(TestCase):
 
     def test_regex_set(self):
         # https://github.com/NRC-ILT/g2p/issues/15
-        self.assertEqual(
-            self.test_regex_set_transducer_sanity("ca").output_string, "cb"
-        )
+        assert self.test_regex_set_transducer_sanity("ca").output_string == "cb"
         assert self.test_regex_set_transducer("ca").output_string == "cb"
         assert self.test_regex_set_transducer("fa").output_string == "fb"
 
@@ -285,9 +276,7 @@ class TransducerTest(TestCase):
             (3, 2),
             (4, 4),
         ]
-        self.assertEqual(
-            normalize_edges(bad_edges), [(0, 0), (1, 0), (2, 2), (3, 2), (4, 4)]
-        )
+        assert normalize_edges(bad_edges) == [(0, 0), (1, 0), (2, 2), (3, 2), (4, 4)]
         # Sort edges on inputs and suppress duplicates
         bad_edges = [(4, 0), (1, 3), (1, 2), (2, 5)]
         assert normalize_edges(bad_edges) == [(1, 3), (1, 2), (2, 5), (4, 0)]
@@ -299,9 +288,14 @@ class TransducerTest(TestCase):
         bad_edges = [(0, 0), (1, None), (2, None), (3, None)]
         assert normalize_edges(bad_edges) == [(0, 0), (1, 0), (2, 0), (3, 0)]
         bad_edges = [(0, 0), (1, None), (2, None), (3, 1), (4, None), (5, 2)]
-        self.assertEqual(
-            normalize_edges(bad_edges), [(0, 0), (1, 0), (2, 0), (3, 1), (4, 1), (5, 2)]
-        )
+        assert normalize_edges(bad_edges) == [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (3, 1),
+            (4, 1),
+            (5, 2),
+        ]
         # Map None to next if it exists
         bad_edges = [(0, None), (2, 1)]
         assert normalize_edges(bad_edges) == [(0, 1), (2, 1)]

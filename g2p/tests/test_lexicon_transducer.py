@@ -30,102 +30,102 @@ class LexiconTransducerTest(TestCase):
         t = Transducer(m)
         tg = t("hello")
         assert tg.output_string == "HH EH L OW "
-        self.assertEqual(
-            tg.edges, [(0, 0), (0, 1), (1, 3), (1, 4), (2, 6), (3, 6), (4, 8), (4, 9)]
-        )
+        assert tg.edges == [
+            (0, 0),
+            (0, 1),
+            (1, 3),
+            (1, 4),
+            (2, 6),
+            (3, 6),
+            (4, 8),
+            (4, 9),
+        ]
         tg = t("you're")
         assert tg.output_string == "Y UH R "
-        self.assertEqual(
-            tg.edges,
-            [(0, 0), (1, 2), (1, 3), (2, 2), (2, 3), (3, 4), (4, 5), (5, 5)],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (1, 2),
+            (1, 3),
+            (2, 2),
+            (2, 3),
+            (3, 4),
+            (4, 5),
+            (5, 5),
+        ]
         # These alignments are somewhat bogus, hence the name
         tg = t("bogus")
         assert tg.input_string == "bogus"
         assert tg.output_string == ""
-        self.assertEqual(
-            tg.edges,
-            [(0, None), (1, None), (2, None), (3, None), (4, None)],
-        )
-        self.assertEqual(
-            tg.substring_alignments(),
-            [("bogus", "")],
-        )
+        assert tg.edges == [(0, None), (1, None), (2, None), (3, None), (4, None)]
+        assert tg.substring_alignments() == [("bogus", "")]
         tg = t("bogus")
         tg += t("hello")
         assert tg.input_string == "bogushello"
         assert tg.output_string == "HH EH L OW "
-        self.assertEqual(
-            tg.edges,
-            [
-                (0, 0),
-                (1, 0),
-                (2, 0),
-                (3, 0),
-                (4, 0),
-                (5, 0),
-                (5, 1),
-                (6, 3),
-                (6, 4),
-                (7, 6),
-                (8, 6),
-                (9, 8),
-                (9, 9),
-            ],
-        )
-        self.assertEqual(
-            tg.substring_alignments(),
-            [("bogush", "HH"), ("e", "EH"), ("ll", "L"), ("o", "OW")],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (3, 0),
+            (4, 0),
+            (5, 0),
+            (5, 1),
+            (6, 3),
+            (6, 4),
+            (7, 6),
+            (8, 6),
+            (9, 8),
+            (9, 9),
+        ]
+        assert tg.substring_alignments() == [
+            ("bogush", "HH"),
+            ("e", "EH"),
+            ("ll", "L"),
+            ("o", "OW"),
+        ]
         tg = t("hello")
         tg += t("bogus")
         tg += t("you're")
         tg += t("bogus")
         assert tg.input_string == "hellobogusyou'rebogus"
-        self.assertEqual(
-            tg.edges,
-            [
-                (0, 0),
-                (0, 1),
-                (1, 3),
-                (1, 4),
-                (2, 6),
-                (3, 6),
-                (4, 8),
-                (4, 9),
-                (5, 9),
-                (6, 9),
-                (7, 9),
-                (8, 9),
-                (9, 9),
-                (10, 11),
-                (11, 13),
-                (11, 14),
-                (12, 13),
-                (12, 14),
-                (13, 15),
-                (14, 16),
-                (15, 16),
-                (16, 16),
-                (17, 16),
-                (18, 16),
-                (19, 16),
-                (20, 16),
-            ],
-        )
-        self.assertEqual(
-            tg.substring_alignments(),
-            [
-                ("h", "HH"),
-                ("e", "EH"),
-                ("ll", "L"),
-                ("obogus", "OW"),
-                ("y", "Y"),
-                ("ou", "UH"),
-                ("'", " "),
-                ("rebogus", "R"),
-            ],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (0, 1),
+            (1, 3),
+            (1, 4),
+            (2, 6),
+            (3, 6),
+            (4, 8),
+            (4, 9),
+            (5, 9),
+            (6, 9),
+            (7, 9),
+            (8, 9),
+            (9, 9),
+            (10, 11),
+            (11, 13),
+            (11, 14),
+            (12, 13),
+            (12, 14),
+            (13, 15),
+            (14, 16),
+            (15, 16),
+            (16, 16),
+            (17, 16),
+            (18, 16),
+            (19, 16),
+            (20, 16),
+        ]
+        assert tg.substring_alignments() == [
+            ("h", "HH"),
+            ("e", "EH"),
+            ("ll", "L"),
+            ("obogus", "OW"),
+            ("y", "Y"),
+            ("ou", "UH"),
+            ("'", " "),
+            ("rebogus", "R"),
+        ]
 
     def test_load_lexicon_mapping(self):
         """Test loading a lexicon mapping through a config file."""
@@ -140,9 +140,16 @@ class LexiconTransducerTest(TestCase):
         t = Transducer(m)
         tg = t("hello")
         assert tg.output_string == "HH EH L OW "
-        self.assertEqual(
-            tg.edges, [(0, 0), (0, 1), (1, 3), (1, 4), (2, 6), (3, 6), (4, 8), (4, 9)]
-        )
+        assert tg.edges == [
+            (0, 0),
+            (0, 1),
+            (1, 3),
+            (1, 4),
+            (2, 6),
+            (3, 6),
+            (4, 8),
+            (4, 9),
+        ]
 
     def test_bad_lexicon_mapping(self):
         """Test failure to load alignments."""
@@ -172,20 +179,17 @@ class LexiconTransducerTest(TestCase):
         tg = t("change")
         assert tg.output_string == "tʃeɪndʒ"
         assert tg.input_string == "change"
-        self.assertEqual(
-            tg.edges,
-            [
-                (0, 0),
-                (0, 1),
-                (1, 1),
-                (2, 2),
-                (2, 3),
-                (3, 4),
-                (4, 5),
-                (4, 6),
-                (5, 6),
-            ],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (0, 1),
+            (1, 1),
+            (2, 2),
+            (2, 3),
+            (3, 4),
+            (4, 5),
+            (4, 6),
+            (5, 6),
+        ]
         tg = t("chain")
         # These aligments are weird but they are the ones EM gave us
         # (and the ones that our arbitrary assignment of deletions to
@@ -198,10 +202,14 @@ class LexiconTransducerTest(TestCase):
         assert tg.input_string == "xtra"
         assert tg.edges == [(0, 0), (0, 1), (0, 2), (1, 3), (2, 4), (3, 5)]
         pe = tg.pretty_edges()
-        self.assertEqual(
-            pe,
-            [("x", "ɛ"), ("x", "k"), ("x", "s"), ("t", "t"), ("r", "ɹ"), ("a", "ʌ")],
-        )
+        assert pe == [
+            ("x", "ɛ"),
+            ("x", "k"),
+            ("x", "s"),
+            ("t", "t"),
+            ("r", "ɹ"),
+            ("a", "ʌ"),
+        ]
 
     def test_eng_transducer(self):
         """Test the cached eng to eng-ipa lexicon from make_g2p."""
@@ -210,8 +218,9 @@ class LexiconTransducerTest(TestCase):
         assert tg.output_string == "HH AH L OW "
 
         # since we tokenize by default now, this works:
-        self.assertEqual(
-            transducer("hello my friend").output_string, "HH AH L OW  M AY  F R EH N D "
+        assert (
+            transducer("hello my friend").output_string
+            == "HH AH L OW  M AY  F R EH N D "
         )
 
     def test_eng_lexicon_corner_cases(self):
@@ -270,13 +279,11 @@ class LexiconTransducerTest(TestCase):
             tg = transducer(word)
             assert tg.output_string == expected
             before = word[:-1] + chr(ord(word[-1]) - 1) + "z"
-            self.assertEqual(
-                transducer(before).output_string, "", f"word={word} before={before}"
-            )
+            assert (
+                transducer(before).output_string == ""
+            ), f"word={word} before={before}"
             after = word[:-1] + chr(ord(word[-1]) + 1) + "z"
-            self.assertEqual(
-                transducer(after).output_string, "", f"word={word} after={after}"
-            )
+            assert transducer(after).output_string == "", f"word={word} after={after}"
 
 
 if __name__ == "__main__":

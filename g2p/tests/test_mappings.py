@@ -77,8 +77,8 @@ class MappingTest(TestCase):
         assert isinstance(has_neural_support(), bool)
 
     def test_normalization(self):
-        self.assertEqual(
-            ud.normalize("NFD", "\u00e1"), self.test_mapping_norm.rules[0].rule_input
+        assert (
+            ud.normalize("NFD", "\u00e1") == self.test_mapping_norm.rules[0].rule_input
         )
         self.assertNotEqual(self.test_mapping_norm.rules[0].rule_input, "\u00e1")
         assert self.test_mapping_norm.rules[0].rule_input == "\u0061\u0301"
@@ -89,9 +89,9 @@ class MappingTest(TestCase):
 
     def test_utils_normalize(self):
         """Explicitly test our custom normalize function."""
-        self.assertEqual(normalize(r"\u0061", None), "a")
-        self.assertEqual(normalize("\u010d", "NFD"), "\u0063\u030c")
-        self.assertEqual(normalize("\u0063\u030c", "NFC"), "\u010d")
+        assert normalize(r"\u0061", None) == "a"
+        assert normalize("\u010d", "NFD") == "\u0063\u030c"
+        assert normalize("\u0063\u030c", "NFC") == "\u010d"
         with self.assertRaises(InvalidNormalization) as cm:
             normalize("FOOBIE", "BLETCH")
         assert "invalid argument" in str(cm.exception)
@@ -403,9 +403,9 @@ class MappingTest(TestCase):
                 )
             )
         transducer = Transducer(mapping)
-        self.assertEqual(
-            transducer("Jouni haluaa juoda kahvia").output_string,
-            "Jouni hɑluɑː juodɑ kɑhviɑ",
+        assert (
+            transducer("Jouni haluaa juoda kahvia").output_string
+            == "Jouni hɑluɑː juodɑ kɑhviɑ"
         )
         # Concatenate them (this is not a good idea) and make sure it works anyway
         tf = NamedTemporaryFile(
@@ -431,9 +431,7 @@ class MappingTest(TestCase):
         with self.assertLogs(LOGGER, level="WARNING"):  # silence "" input warnings
             mapping = Mapping(rules_path=tf.name)
         transducer = Transducer(mapping)
-        self.assertEqual(
-            transducer("tee on herkullista").output_string, "teː on herkullistɑ"
-        )
+        assert transducer("tee on herkullista").output_string == "teː on herkullistɑ"
         os.unlink(tf.name)
 
     def test_no_reprocess(self):

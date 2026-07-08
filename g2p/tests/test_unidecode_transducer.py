@@ -40,9 +40,7 @@ class UnidecodeTransducerTest(TestCase):
     def test_unidecode_to_arpabet(self):
         transducer = make_g2p("und", "eng-arpabet", tokenize=False)
         tg = transducer("été Nunavut ᓄᓇᕗᑦ")
-        self.assertEqual(
-            tg.output_string, "EY T EY  N UW N AA V UW T  N OW N AA F OW T "
-        )
+        assert tg.output_string == "EY T EY  N UW N AA V UW T  N OW N AA F OW T "
 
     def test_unidecode_arabic_to_arpabet(self):
         transducer = make_g2p("und", "eng-arpabet")
@@ -62,9 +60,9 @@ class UnidecodeTransducerTest(TestCase):
     def test_unidecode_hanzi_to_arpabet(self):
         transducer = make_g2p("und", "eng-arpabet", tokenize=False)
         tg = transducer("你们好!你们说汉语马?")
-        self.assertEqual(
-            tg.output_string,
-            "N IY M EY N HH AA OW N IY M EY N S HH UW OW Y IY Y UW M AA HH ",
+        assert (
+            tg.output_string
+            == "N IY M EY N HH AA OW N IY M EY N S HH UW OW Y IY Y UW M AA HH "
         )
 
 

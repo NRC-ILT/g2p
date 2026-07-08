@@ -104,9 +104,7 @@ class NetworkLiteTest(TestCase):
 
     def test_g2p_descendants(self):
         graph = node_link_graph(self.data)
-        self.assertEqual(
-            graph.descendants("atj"), {"eng-ipa", "atj-ipa", "eng-arpabet"}
-        )
+        assert graph.descendants("atj") == {"eng-ipa", "atj-ipa", "eng-arpabet"}
         assert graph.descendants("eng-ipa") == {"eng-arpabet"}
         assert graph.descendants("atj-ipa") == {"eng-ipa", "eng-arpabet"}
         assert graph.descendants("eng-arpabet") == set()
@@ -145,9 +143,9 @@ class NetworkLiteTest(TestCase):
         graph.add_edge("c", "d")
         graph.add_edge("a", "d")
         graph.add_edge("b", "d")
-        self.assertEqual(graph.shortest_path("a", "d"), ["a", "d"])
-        self.assertEqual(graph.shortest_path("c", "d"), ["c", "d"])
-        self.assertEqual(graph.shortest_path("a", "a"), ["a"])
+        assert graph.shortest_path("a", "d") == ["a", "d"]
+        assert graph.shortest_path("c", "d") == ["c", "d"]
+        assert graph.shortest_path("a", "a") == ["a"]
         with self.assertRaises(ValueError):
             graph.shortest_path("c", "a")
         with self.assertRaises(KeyError):
@@ -157,10 +155,12 @@ class NetworkLiteTest(TestCase):
 
     def test_g2p_shortest_path(self):
         graph = node_link_graph(self.data)
-        self.assertEqual(
-            graph.shortest_path("atj", "eng-arpabet"),
-            ["atj", "atj-ipa", "eng-ipa", "eng-arpabet"],
-        )
+        assert graph.shortest_path("atj", "eng-arpabet") == [
+            "atj",
+            "atj-ipa",
+            "eng-ipa",
+            "eng-arpabet",
+        ]
 
     def test_contains(self):
         graph: DiGraph = DiGraph()

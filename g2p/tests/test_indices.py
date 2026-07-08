@@ -6,16 +6,15 @@
 
 import sys
 from unicodedata import normalize
-from unittest import TestCase
 
-from pytest import main
+from pytest import fixture, main
 
 from g2p.log import LOGGER
 from g2p.mappings import Mapping
 from g2p.transducer import Transducer
 
 
-class IndicesTest(TestCase):
+class TestIndices:
     """Basic Transducer Test
     Preserve character-level mappings:
 
@@ -175,10 +174,8 @@ class IndicesTest(TestCase):
         # Verify that empty inputs are not allowed
     """
 
-    def __init__(self, *args):
-        # Let's use __init__() to set all these up just once at class creation
-        # time, instead of setUp() which repeatedly does it for each test case
-        super().__init__(*args)
+    @fixture(autouse=True)
+    def setup(self):
         self.test_mapping_one = Mapping(
             rules=[{"in": "t", "out": "p", "context_after": "e"}]
         )
@@ -187,13 +184,9 @@ class IndicesTest(TestCase):
             rules=[{"in": "t", "out": "ch", "context_after": "e"}]
         )
         self.test_mapping_four = Mapping(rules=[{"in": "te", "out": "p"}])
-        # We know this issues a warning, so let's silence it by asserting it.
-        with self.assertLogs(LOGGER, "WARNING"):
-            self.test_mapping_five = Mapping(
-                rules=[
-                    {"context_before": "t", "context_after": "$", "in": "", "out": "y"}
-                ]
-            )
+        self.test_mapping_five = Mapping(
+            rules=[{"context_before": "t", "context_after": "$", "in": "", "out": "y"}]
+        )
         self.test_mapping_six = Mapping(rules=[{"in": "e{1}s{2}", "out": "s{2}e{1}"}])
         self.test_mapping_seven = Mapping(
             rules=[{"in": "s", "out": "sh"}, {"in": "sh", "out": "s"}],
@@ -397,38 +390,37 @@ class IndicesTest(TestCase):
         transducer_lite_extra = self.trans_wacky_lite("abcca")
         assert transducer_lite.output_string == "ccccc"
         assert transducer_lite_extra.output_string == "ccccca"
-        self.assertEqual(
-            transducer_lite.edges, [(0, 4), (1, 0), (2, 1), (2, 2), (3, 3)]
-        )
+        assert transducer_lite.edges == [(0, 4), (1, 0), (2, 1), (2, 2), (3, 3)]
         assert transducer_lite.substring_alignments() == [("abcc", "ccccc")]
-        self.assertEqual(
-            transducer_lite_extra.edges,
-            [(0, 4), (1, 0), (2, 1), (2, 2), (3, 3), (4, 5)],
-        )
-        self.assertEqual(
-            transducer_lite_extra.substring_alignments(),
-            [("abcc", "ccccc"), ("a", "a")],
-        )
+        assert transducer_lite_extra.edges == [
+            (0, 4),
+            (1, 0),
+            (2, 1),
+            (2, 2),
+            (3, 3),
+            (4, 5),
+        ]
+        assert transducer_lite_extra.substring_alignments() == [
+            ("abcc", "ccccc"),
+            ("a", "a"),
+        ]
         transducer_no_i = self.trans_wacky("\U0001f600\U0001f603\U0001f604\U0001f604")
-        self.assertEqual(
-            transducer_no_i.output_string,
-            "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604",
+        assert (
+            transducer_no_i.output_string
+            == "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604"
         )
         transducer = self.trans_wacky("\U0001f600\U0001f603\U0001f604\U0001f604")
-        self.assertEqual(
-            transducer.output_string,
-            "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604",
+        assert (
+            transducer.output_string
+            == "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604"
         )
         assert transducer.edges == [(0, 4), (1, 0), (2, 1), (2, 2), (3, 3)]
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [
-                (
-                    "\U0001f600\U0001f603\U0001f604\U0001f604",
-                    "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604",
-                )
-            ],
-        )
+        assert transducer.substring_alignments() == [
+            (
+                "\U0001f600\U0001f603\U0001f604\U0001f604",
+                "\U0001f604\U0001f604\U0001f604\U0001f604\U0001f604",
+            )
+        ]
 
     def test_circum(self):
         """Test circumfixing"""
@@ -442,10 +434,12 @@ class IndicesTest(TestCase):
         transducer = self.trans_one("test")
         assert transducer.output_string == "pest"
         assert transducer.edges == [(0, 0), (1, 1), (2, 2), (3, 3)]
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("t", "p"), ("e", "e"), ("s", "s"), ("t", "t")],
-        )
+        assert transducer.substring_alignments() == [
+            ("t", "p"),
+            ("e", "e"),
+            ("s", "s"),
+            ("t", "t"),
+        ]
         transducer = self.trans_one("")
         assert transducer.output_string == ""
         assert transducer.edges == []
@@ -455,68 +449,84 @@ class IndicesTest(TestCase):
         transducer = self.trans_two("test")
         assert transducer.output_string == "tst"
         assert transducer.edges == [(0, 0), (1, 0), (2, 1), (3, 2)]
-        self.assertEqual(
-            transducer.substring_alignments(), [("te", "t"), ("s", "s"), ("t", "t")]
-        )
+        assert transducer.substring_alignments() == [
+            ("te", "t"),
+            ("s", "s"),
+            ("t", "t"),
+        ]
 
     def test_case_three(self):
         transducer = self.trans_three("test")
         assert transducer.output_string == "chest"
         assert transducer.edges == [(0, 0), (0, 1), (1, 2), (2, 3), (3, 4)]
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("t", "ch"), ("e", "e"), ("s", "s"), ("t", "t")],
-        )
+        assert transducer.substring_alignments() == [
+            ("t", "ch"),
+            ("e", "e"),
+            ("s", "s"),
+            ("t", "t"),
+        ]
 
     def test_case_four(self):
         transducer = self.trans_four("test")
         assert transducer.output_string == "pst"
         assert transducer.edges == [(0, 0), (1, 0), (2, 1), (3, 2)]
-        self.assertEqual(
-            transducer.substring_alignments(), [("te", "p"), ("s", "s"), ("t", "t")]
-        )
+        assert transducer.substring_alignments() == [
+            ("te", "p"),
+            ("s", "s"),
+            ("t", "t"),
+        ]
 
     def test_case_six(self):
         transducer = self.trans_six("test")
         assert transducer.output_string == "tset"
         assert transducer.edges == [(0, 0), (1, 2), (2, 1), (3, 3)]
-        self.assertEqual(
-            transducer.substring_alignments(), [("t", "t"), ("es", "se"), ("t", "t")]
-        )
+        assert transducer.substring_alignments() == [
+            ("t", "t"),
+            ("es", "se"),
+            ("t", "t"),
+        ]
 
     def test_case_long_six(self):
         transducer = self.trans_six("esesse")
         assert transducer.output_string == "sesese"
         # Ensure that *minimal* monotonic segments are output
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("es", "se"), ("es", "se"), ("s", "s"), ("e", "e")],
-        )
+        assert transducer.substring_alignments() == [
+            ("es", "se"),
+            ("es", "se"),
+            ("s", "s"),
+            ("e", "e"),
+        ]
 
     def test_case_seven(self):
         transducer_as_written = self.test_seven_as_written("test")
         assert transducer_as_written.output_string == "test"
         assert transducer_as_written.edges == [(0, 0), (1, 1), (2, 2), (3, 3)]
-        self.assertEqual(
-            transducer_as_written.substring_alignments(),
-            [("t", "t"), ("e", "e"), ("s", "s"), ("t", "t")],
-        )
+        assert transducer_as_written.substring_alignments() == [
+            ("t", "t"),
+            ("e", "e"),
+            ("s", "s"),
+            ("t", "t"),
+        ]
         transducer = self.trans_seven("test")
         assert transducer.output_string == "tesht"
         assert transducer.edges == [(0, 0), (1, 1), (2, 2), (2, 3), (3, 4)]
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("t", "t"), ("e", "e"), ("s", "sh"), ("t", "t")],
-        )
+        assert transducer.substring_alignments() == [
+            ("t", "t"),
+            ("e", "e"),
+            ("s", "sh"),
+            ("t", "t"),
+        ]
 
     def test_case_eight(self):
         transducer = self.trans_eight("test")
         assert transducer.output_string == "chess"
         assert transducer.edges == [(0, 0), (1, 1), (1, 2), (2, 3), (3, 4)]
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("t", "c"), ("e", "he"), ("s", "s"), ("t", "s")],
-        )
+        assert transducer.substring_alignments() == [
+            ("t", "c"),
+            ("e", "he"),
+            ("s", "s"),
+            ("t", "s"),
+        ]
 
     def test_case_nine(self):
         transducer = self.trans_nine("aa")
@@ -526,17 +536,23 @@ class IndicesTest(TestCase):
         assert transducer.substring_alignments() == [("aa", "")]
         transducer = self.trans_nine("aabbaab")
         assert transducer.output_string == "bbb"
-        self.assertEqual(
-            transducer.edges,
-            [(0, 0), (1, 0), (2, 0), (3, 1), (4, 1), (5, 1), (6, 2)],
-        )
+        assert transducer.edges == [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (3, 1),
+            (4, 1),
+            (5, 1),
+            (6, 2),
+        ]
         # Support deletions in substring_alignments.  NOTE: these
         # alignments are quite bogus due to the ad-hoc treatment of
         # deletions by rule-based mappings
-        self.assertEqual(
-            transducer.substring_alignments(),
-            [("aab", "b"), ("baa", "b"), ("b", "b")],
-        )
+        assert transducer.substring_alignments() == [
+            ("aab", "b"),
+            ("baa", "b"),
+            ("b", "b"),
+        ]
 
     def test_case_ten(self):
         transducer = self.trans_ten("abc")
@@ -550,16 +566,16 @@ class IndicesTest(TestCase):
         assert transducer.edges == [(0, 0), (0, 1), (0, 2), (0, 3)]
         assert transducer.substring_alignments() == [("a", "aaaa")]
 
-    def test_case_twelve(self):
+    def test_case_twelve(self, caplog):
         # Empty inputs are not allowed (should it actually throw an exception?)
-        with self.assertLogs(LOGGER) as cm:
+        with caplog.at_level("WARNING", logger=LOGGER.name):
             self.test_mapping_twelve = Mapping(
                 rules=[{"in": "", "out": "aa", "context_before": "b"}]
             )
             self.trans_twelve = Transducer(self.test_mapping_twelve)
             transducer = self.trans_twelve("b")
         assert (
-            "disallowed" in cm.output[0]
+            "disallowed" in caplog.text
         ), "it should warn that empty inputs are disallowed"
         assert transducer.output_string == "b"
 
@@ -570,9 +586,7 @@ class IndicesTest(TestCase):
         tg = transducer("acdc")
         assert tg.output_string == "cacdc"
         assert tg.edges == [(0, 1), (1, 0), (1, 2), (2, 3), (3, 4)]
-        self.assertEqual(
-            tg.substring_alignments(), [("ac", "cac"), ("d", "d"), ("c", "c")]
-        )
+        assert tg.substring_alignments() == [("ac", "cac"), ("d", "d"), ("c", "c")]
 
     def test_case_acac(self):
         transducer = Transducer(Mapping(rules=[{"in": "ab{1}c{2}", "out": "ab{2}"}]))
@@ -581,38 +595,30 @@ class IndicesTest(TestCase):
         )
         tg = transducer("abcabc")
         assert tg.output_string == "abab"
-        self.assertEqual(
-            tg.edges,
-            [
-                (0, 0),
-                (1, 0),
-                (2, 0),
-                (2, 1),
-                (3, 1),
-                (4, 1),
-                (5, 2),
-                (5, 3),
-            ],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, 1),
+            (3, 1),
+            (4, 1),
+            (5, 2),
+            (5, 3),
+        ]
         assert tg.substring_alignments() == [("abcab", "ab"), ("c", "ab")]
         tg_default = transducer_default("abcabc")
         assert tg_default.output_string == "abab"
-        self.assertEqual(
-            tg_default.edges,
-            [
-                (0, 0),
-                (1, 0),
-                (2, 0),
-                (2, 1),
-                (3, 1),
-                (4, 1),
-                (5, 2),
-                (5, 3),
-            ],
-        )
-        self.assertEqual(
-            tg_default.substring_alignments(), [("abcab", "ab"), ("c", "ab")]
-        )
+        assert tg_default.edges == [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, 1),
+            (3, 1),
+            (4, 1),
+            (5, 2),
+            (5, 3),
+        ]
+        assert tg_default.substring_alignments() == [("abcab", "ab"), ("c", "ab")]
 
     def test_arpabet(self):
         transducer = Transducer(
@@ -629,41 +635,37 @@ class IndicesTest(TestCase):
         tg_nfd = transducer_nfd(normalize("NFD", "ĩĩ"))
         assert tg.output_string == "IY N IY N "
         assert tg_nfd.output_string == "IY N IY N "
-        self.assertEqual(
-            tg.edges,
-            [
-                (0, 0),
-                (0, 1),
-                (0, 2),
-                (0, 3),
-                (0, 4),
-                (1, 5),
-                (1, 6),
-                (1, 7),
-                (1, 8),
-                (1, 9),
-            ],
-        )
+        assert tg.edges == [
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (0, 3),
+            (0, 4),
+            (1, 5),
+            (1, 6),
+            (1, 7),
+            (1, 8),
+            (1, 9),
+        ]
         assert tg.substring_alignments() == [("ĩ", "IY N "), ("ĩ", "IY N ")]
-        self.assertEqual(
-            tg_nfd.edges,
-            [
-                (0, 0),
-                (1, 1),
-                (1, 2),
-                (1, 3),
-                (1, 4),
-                (2, 5),
-                (3, 6),
-                (3, 7),
-                (3, 8),
-                (3, 9),
-            ],
-        )
-        self.assertEqual(
-            tg_nfd.substring_alignments(),
-            [("i", "I"), ("̃", "Y N "), ("i", "I"), ("̃", "Y N ")],
-        )
+        assert tg_nfd.edges == [
+            (0, 0),
+            (1, 1),
+            (1, 2),
+            (1, 3),
+            (1, 4),
+            (2, 5),
+            (3, 6),
+            (3, 7),
+            (3, 8),
+            (3, 9),
+        ]
+        assert tg_nfd.substring_alignments() == [
+            ("i", "I"),
+            ("̃", "Y N "),
+            ("i", "I"),
+            ("̃", "Y N "),
+        ]
 
 
 if __name__ == "__main__":

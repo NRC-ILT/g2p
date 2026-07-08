@@ -315,9 +315,7 @@ class StudioTest(IsolatedAsyncioTestCase):
                 LOGGER.info("Closing browser")
 
         if self.debug_convert and error_count > 0:
-            self.assertEqual(
-                first_failed_test[0],
-                first_failed_test[1],
+            assert first_failed_test[0] == first_failed_test[1], (
                 f"{error_count} lang mapping test case(s) failed, "
                 "look for warnings in the logs above for details.",
             )

@@ -42,11 +42,9 @@ class NeuralLangTest(TestCase):
                 )
                 error_count += 1
 
-        self.assertEqual(
-            error_count,
-            0,
-            f'Search for "ERROR - {error_prefix}" above to find all the g2p mapping errors.',
-        )
+        assert (
+            error_count == 0
+        ), f'Search for "ERROR - {error_prefix}" above to find all the g2p mapping errors.'
 
 
 if __name__ == "__main__":

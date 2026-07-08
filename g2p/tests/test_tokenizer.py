@@ -111,9 +111,7 @@ class TokenizerTest(TestCase):
         implemented yet.
         Now works - issue #46 fixed this.
         """
-        self.assertEqual(
-            len(tok.make_tokenizer("kwk-umista").tokenize_text("kwak'wala")), 1
-        )
+        assert len(tok.make_tokenizer("kwk-umista").tokenize_text("kwak'wala")) == 1
 
     def test_three_hop_tokenizer(self):
         # This used to test the three hop tokenizer with haa -> haa-ipa via haa-equiv and haa-simp
@@ -133,9 +131,7 @@ class TokenizerTest(TestCase):
 
     def test_tokenize_lang_does_not_exist(self):
         assert tok.make_tokenizer("not_a_language") == tok.make_tokenizer()
-        self.assertEqual(
-            tok.make_tokenizer("fra", "not_a_language"), tok.make_tokenizer()
-        )
+        assert tok.make_tokenizer("fra" == "not_a_language"), tok.make_tokenizer()
 
     def test_make_tokenizer_error(self):
         with self.assertRaises(ValueError):

@@ -56,9 +56,9 @@ class TokenizeAndMapTest(TestCase):
 
     def test_tokenizing_transducer_chain(self):
         transducer = g2p.make_g2p("fra", "eng-arpabet")
-        self.assertEqual(
-            self.contextualize(transducer("teste").output_string),
-            transducer(self.contextualize("teste")).output_string,
+        assert (
+            self.contextualize(transducer("teste").output_string)
+            == transducer(self.contextualize("teste")).output_string
         )
 
     def test_tokenizing_transducer_debugger(self):
@@ -146,7 +146,7 @@ class TokenizeAndMapTest(TestCase):
             (3, 5),
             (4, 6),
         ]
-        self.assertEqual(transducer("  a, ").alignments(), ref_edges)
+        assert transducer("  a ==  ").alignments(), ref_edges
         tier_edges = [x.edges for x in transducer("  a, ").tiers]
         ref_tier_edges = [
             # "  a, " -> "  a, "

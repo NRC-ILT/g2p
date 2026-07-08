@@ -94,9 +94,7 @@ class UtilsTest(TestCase):
             ),
         ]
         for pattern in patterns:
-            self.assertEqual(
-                len(re.split(lookbehind_pattern, pattern[0])) - 1, pattern[1]
-            )
+            assert len(re.split(lookbehind_pattern, pattern[0])) - 1 == pattern[1]
 
     def test_load_mapping(self):
         with self.assertLogs(LOGGER, "WARNING"):
@@ -128,11 +126,11 @@ class UtilsTest(TestCase):
         assert minimal.rules == xlsx.rules
 
     def test_escape_special(self):
-        self.assertEqual(
+        assert (
             utils.escape_special_characters(
                 Rule(rule_input="?", rule_output="")
-            ).rule_input,
-            "\\?",
+            ).rule_input
+            == "\\?"
         )
 
     def test_load_abbs(self):
@@ -172,26 +170,24 @@ class UtilsTest(TestCase):
             test_config_added = Mapping.load_mapping_from_path(
                 os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml")
             )
-            self.assertEqual(
-                test_config.rules[0].export_to_dict(),
-                Rule(
+            assert (
+                test_config.rules[0].export_to_dict()
+                == Rule(
                     **{"in": "a", "out": "b", "context_before": "", "context_after": ""}
-                ).export_to_dict(),
+                ).export_to_dict()
             )
             assert test_config.in_lang == "test"
             assert test_config.out_lang == "test-out"
             assert test_config.language_name == "test"
             assert test_config.display_name == "test custom to test-out custom"
-            self.assertEqual(
-                test_config_added.rules[0].export_to_dict(),
-                {"in": "a", "out": "b"},
-            )
+            assert test_config_added.rules[0].export_to_dict() == {
+                "in": "a",
+                "out": "b",
+            }
             assert test_config_added.in_lang == "test"
             assert test_config_added.out_lang == "test-out"
             assert test_config_added.language_name == "test"
-            self.assertEqual(
-                test_config_added.display_name, "test custom to test-out custom"
-            )
+            assert test_config_added.display_name == "test custom to test-out custom"
         finally:
             gen_mapping = os.path.join(PUBLIC_DIR, "mappings", "test_to_test-out.json")
             gen_config = os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
@@ -217,91 +213,79 @@ class UtilsTest(TestCase):
         # Useful site to get combining character code points:
         # http://www.alanwood.net/unicode/combining_diacritical_marks.html
         e_acute_nfd = "e\u0301"
-        self.assertEqual(
-            utils.normalize_with_indices("é", "NFD"),
-            (e_acute_nfd, [(0, 0), (0, 1)]),
+        assert utils.normalize_with_indices("é", "NFD") == (
+            e_acute_nfd,
+            [(0, 0), (0, 1)],
         )
         o_graveabove_nfd = "o\u0300"
-        self.assertEqual(
-            utils.normalize_with_indices("ò", "NFD"),
-            (o_graveabove_nfd, [(0, 0), (0, 1)]),
+        assert utils.normalize_with_indices("ò", "NFD") == (
+            o_graveabove_nfd,
+            [(0, 0), (0, 1)],
         )
         # TODO: this test case really should have indices (0,0),(0,2), (1,1)
         o_graveabove_acutebelow_mixed = "ò\u0317"  # 'ò̗'
         o_graveabove_acutebelow_nfd = "o\u0317\u0300"  # 'ò̗'
-        self.assertEqual(
-            utils.normalize_with_indices(o_graveabove_acutebelow_mixed, "NFD"),
-            (o_graveabove_acutebelow_nfd, [(0, 0), (0, 2), (1, 1)]),
+        assert utils.normalize_with_indices(o_graveabove_acutebelow_mixed, "NFD") == (
+            o_graveabove_acutebelow_nfd,
+            [(0, 0), (0, 2), (1, 1)],
         )
         o_graveabove_acutebelow_disordered = "o\u0300\u0317"
-        self.assertEqual(
-            utils.normalize_with_indices(o_graveabove_acutebelow_disordered, "NFD"),
-            (o_graveabove_acutebelow_nfd, [(0, 0), (1, 2), (2, 1)]),
-        )
+        assert utils.normalize_with_indices(
+            o_graveabove_acutebelow_disordered, "NFD"
+        ) == (o_graveabove_acutebelow_nfd, [(0, 0), (1, 2), (2, 1)])
         # From https://en.wikipedia.org/wiki/Precomposed_character:
         # "\u1e53" (ṓ) == "\u014d\u0301" (ṓ) == "\u006f\u0304\u0301" (ṓ)
-        self.assertEqual(
-            utils.normalize_with_indices("\u1e53", "NFD"),
-            ("\u006f\u0304\u0301", [(0, 0), (0, 1), (0, 2)]),
+        assert utils.normalize_with_indices("\u1e53", "NFD") == (
+            "\u006f\u0304\u0301",
+            [(0, 0), (0, 1), (0, 2)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("\u014d\u0301", "NFD"),
-            ("\u006f\u0304\u0301", [(0, 0), (0, 1), (1, 2)]),
+        assert utils.normalize_with_indices("\u014d\u0301", "NFD") == (
+            "\u006f\u0304\u0301",
+            [(0, 0), (0, 1), (1, 2)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("'שָׂ'", "NFD"),
-            ("'שָׂ'", [(0, 0), (1, 1), (2, 3), (3, 2), (4, 4)]),
+        assert utils.normalize_with_indices("'שָׂ'", "NFD") == (
+            "'שָׂ'",
+            [(0, 0), (1, 1), (2, 3), (3, 2), (4, 4)],
         )
 
     def test_compose_indices(self):
-        self.assertEqual(
-            utils.compose_indices([(0, 1), (1, 4)], [(0, 0), (1, 2), (1, 3), (4, 2)]),
-            [(0, 2), (0, 3), (1, 2)],
-        )
-        self.assertEqual(
-            utils.compose_indices([(0, 0), (0, 1), (1, 2)], [(0, 3), (1, 3), (2, 3)]),
-            [(0, 3), (1, 3)],
-        )
-        self.assertEqual(
-            utils.compose_indices([(0, 1), (1, 2)], [(1, 4), (3, 1)]),
-            [(0, 4)],
-        )
+        assert utils.compose_indices(
+            [(0, 1), (1, 4)], [(0, 0), (1, 2), (1, 3), (4, 2)]
+        ) == [(0, 2), (0, 3), (1, 2)]
+        assert utils.compose_indices(
+            [(0, 0), (0, 1), (1, 2)], [(0, 3), (1, 3), (2, 3)]
+        ) == [(0, 3), (1, 3)]
+        assert utils.compose_indices([(0, 1), (1, 2)], [(1, 4), (3, 1)]) == [(0, 4)]
 
     def test_normalize_to_NFC_with_indices(self):
-        self.assertEqual(
-            utils.normalize_with_indices("e\u0301", "NFC"),
-            ("é", [(0, 0), (1, 0)]),
+        assert utils.normalize_with_indices("e\u0301", "NFC") == ("é", [(0, 0), (1, 0)])
+        assert utils.normalize_with_indices("ò\u0317", "NFC") == ("ò̗", [(0, 0), (1, 1)])
+        assert utils.normalize_with_indices("\u014d\u0301", "NFC") == (
+            "\u1e53",
+            [(0, 0), (1, 0)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("ò\u0317", "NFC"),
-            ("ò̗", [(0, 0), (1, 1)]),
+        assert utils.normalize_with_indices("o\u0304\u0301", "NFC") == (
+            "\u1e53",
+            [(0, 0), (1, 0), (2, 0)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("\u014d\u0301", "NFC"),
-            ("\u1e53", [(0, 0), (1, 0)]),
+        assert utils.normalize_with_indices("\u014d\u0301", "none") == (
+            "\u014d\u0301",
+            [(0, 0), (1, 1)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("o\u0304\u0301", "NFC"),
-            ("\u1e53", [(0, 0), (1, 0), (2, 0)]),
-        )
-        self.assertEqual(
-            utils.normalize_with_indices("\u014d\u0301", "none"),
-            ("\u014d\u0301", [(0, 0), (1, 1)]),
-        )
-        self.assertEqual(
-            utils.normalize_with_indices("o\u0300\u0317", "NFC"),
-            ("\u00f2\u0317", [(0, 0), (1, 0), (2, 1)]),
+        assert utils.normalize_with_indices("o\u0300\u0317", "NFC") == (
+            "\u00f2\u0317",
+            [(0, 0), (1, 0), (2, 1)],
         )
 
     def test_normalize_to_NFK_with_indices(self):
         e_acute_nfd = "e\u0301"
-        self.assertEqual(
-            utils.normalize_with_indices(e_acute_nfd, "NFKC"),
-            ("é", [(0, 0), (1, 0)]),
+        assert utils.normalize_with_indices(e_acute_nfd, "NFKC") == (
+            "é",
+            [(0, 0), (1, 0)],
         )
-        self.assertEqual(
-            utils.normalize_with_indices("é", "NFKD"),
-            (e_acute_nfd, [(0, 0), (0, 1)]),
+        assert utils.normalize_with_indices("é", "NFKD") == (
+            e_acute_nfd,
+            [(0, 0), (0, 1)],
         )
 
     def test_get_arpabet_langs(self):
@@ -329,11 +313,9 @@ class UtilsTest(TestCase):
                 pretend_version = f.read().strip()
             (major, minor, *_rest) = version_tuple
             major_minor = f"{major}.{minor}"
-            self.assertEqual(
-                major_minor,
-                pretend_version,
-                "Mismatch between .SETUPTOOLS_SCM_PRETEND_VERSION and the version setuptools_scm determined dynamically. Try: 1) fetch recent tags from GitHub, 2) rerun \"pip install -e .\", 3) if you're working on the next major or minor release, update .SETUPTOOLS_SCM_PRETEND_VERSION to match the dynamic version's major.minor.",
-            )
+            assert (
+                major_minor == pretend_version
+            ), "Mismatch between .SETUPTOOLS_SCM_PRETEND_VERSION and the version setuptools_scm determined dynamically. Try: 1) fetch recent tags from GitHub, 2) rerun \"pip install -e .\", 3) if you're working on the next major or minor release, update .SETUPTOOLS_SCM_PRETEND_VERSION to match the dynamic version's major.minor."
         except FileNotFoundError:
             # This is fine, it's only used in development
             pass
