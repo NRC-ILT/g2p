@@ -16,11 +16,10 @@ import sys
 import time
 from datetime import datetime
 from random import sample
-from unittest import IsolatedAsyncioTestCase
 
 import socketio  # type: ignore
 from playwright.async_api import Error, async_playwright, expect  # type: ignore
-from pytest import fixture, main
+from pytest import fixture, main, mark
 
 from g2p.log import LOGGER
 from g2p.tests.public.data import load_public_test_data
@@ -30,9 +29,7 @@ STUDIO_PORT = 5000
 
 @fixture(autouse=True, scope="module")
 def run_studio():
-    """Launch the studio server automatically via this fuxture (pytest only)
-
-    When using unittest, launch run_studio.py in another window first."""
+    """Launch the studio server automatically via this fuxture"""
     import threading
 
     def start_studio():
@@ -56,13 +53,12 @@ def run_studio():
     yield
 
 
-class StudioTest(IsolatedAsyncioTestCase):
-    def __init__(self, *args):
-        super().__init__(*args)
-        # self.port = 5000
-        self.port = STUDIO_PORT
-        self.debug_convert = True
-        self.timeout_delay = 500
+@mark.asyncio
+class TestStudio:
+    # self.port = 5000
+    port = STUDIO_PORT
+    debug_convert = True
+    timeout_delay = 500
 
     async def test_socket_connection(self):
         client = socketio.AsyncClient()

@@ -8,14 +8,12 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
-from unittest import TestCase
 
 import yaml
 from pep440.core import is_canonical
-from pytest import main
+from pytest import main, raises, warns
 
 import g2p
-import g2p.exceptions
 from g2p import get_arpabet_langs
 from g2p._version import VERSION, version_tuple
 from g2p.log import LOGGER
@@ -24,7 +22,7 @@ from g2p.mappings.utils import RULE_ORDERING_ENUM, Rule
 from g2p.tests.public import PUBLIC_DIR
 
 
-class UtilsTest(TestCase):
+class TestUtils:
     def test_run_doctest(self):
         """Run doctests in g2p.mappings.utils"""
         results = doctest.testmod(utils)
@@ -41,9 +39,9 @@ class UtilsTest(TestCase):
         )  # shouldn't allow self-referential abbreviations
         expanded_plain = utils.expand_abbreviations("test", test_dict)
         expanded_bad_plain = utils.expand_abbreviations("test", bad_dict)
-        with self.assertRaises(g2p.exceptions.RecursionError) as cm:
+        with raises(g2p.exceptions.RecursionError) as cm:
             utils.expand_abbreviations("HIGH_VOWELS", bad_dict)
-        assert "Too many levels of recursion" in str(cm.exception)
+        assert "Too many levels of recursion" in str(cm.value)
         expanded_non_recursive = utils.expand_abbreviations("HIGH_VOWELS", test_dict)
         expanded_recursive = utils.expand_abbreviations("VOWELS", test_dict)
         assert "test" == expanded_plain
@@ -96,8 +94,8 @@ class UtilsTest(TestCase):
         for pattern in patterns:
             assert len(re.split(lookbehind_pattern, pattern[0])) - 1 == pattern[1]
 
-    def test_load_mapping(self):
-        with self.assertLogs(LOGGER, "WARNING"):
+    def test_load_mapping(self, caplog):
+        with caplog.at_level("WARNING", logger=LOGGER.name):
             Mapping.load_mapping_from_path(
                 os.path.join(PUBLIC_DIR, "mappings", "malformed_config-g2p.yaml")
             )
@@ -134,7 +132,7 @@ class UtilsTest(TestCase):
         )
 
     def test_load_abbs(self):
-        with self.assertRaises(g2p.exceptions.IncorrectFileType):
+        with raises(g2p.exceptions.IncorrectFileType):
             utils.load_abbreviations_from_file(
                 os.path.join(PUBLIC_DIR, "mappings", "abbreviations.json")
             )
@@ -145,7 +143,7 @@ class UtilsTest(TestCase):
             assert "VOWEL" in abbs
             assert abbs["VOWEL"] == ["a", "e", "i", "o", "u"]
 
-    def test_generated_mapping(self):
+    def test_generated_mapping(self, caplog):
         try:
             # config = utils.generate_config('test', 'test-out', 'Test', 'TestOut')
             mapping = Mapping(
@@ -154,11 +152,11 @@ class UtilsTest(TestCase):
                 rule_ordering=RULE_ORDERING_ENUM.apply_longest_first,
                 rules=[Rule(rule_input="a", rule_output="b")],
             )
-            with self.assertLogs(LOGGER, level="WARNING"):
+            with caplog.at_level("WARNING", logger=LOGGER.name):
                 mapping.config_to_file(
                     os.path.join(PUBLIC_DIR, "mappings", "test_config-g2p.yaml")
                 )
-            with self.assertLogs(LOGGER, level="WARNING"):
+            with caplog.at_level("WARNING", logger=LOGGER.name):
                 mapping.config_to_file(
                     os.path.join(PUBLIC_DIR, "mappings", "generated_add.yaml")
                 )
@@ -206,7 +204,7 @@ class UtilsTest(TestCase):
                 )
 
     def test_bad_normalization(self):
-        with self.assertRaises(g2p.exceptions.InvalidNormalization):
+        with raises(g2p.exceptions.InvalidNormalization):
             utils.normalize_with_indices("test", "bad")
 
     def test_normalize_to_NFD_with_indices(self):
@@ -295,10 +293,10 @@ class UtilsTest(TestCase):
         assert LANGS == list(LANG_NAMES.keys())
         assert "kwk-umista" in LANG_NAMES
         assert "str" in LANG_NAMES
-        self.assertGreater(len(LANGS), 40)
+        assert len(LANGS) > 40
         LANGS2, LANG_NAMES2 = get_arpabet_langs()
-        self.assertIs(LANGS2, LANGS)
-        self.assertIs(LANG_NAMES2, LANG_NAMES)
+        assert LANGS2 is LANGS
+        assert LANG_NAMES2 is LANG_NAMES
 
     def test_version_is_pep440_compliant(self):
         """We test for almost PEP 440 compliance: hatch adds +local_sha1, which is not compliant."""
@@ -328,9 +326,9 @@ class UtilsTest(TestCase):
 
         # Current and deprecated usages
         for t in t1, t2:
-            with self.assertWarns(DeprecationWarning):
+            with warns(DeprecationWarning):
                 assert t.text == t["text"]
-            with self.assertWarns(DeprecationWarning):
+            with warns(DeprecationWarning):
                 assert t.is_word == t["is_word"]
         # new way to set
         t1.text = "test2"
@@ -338,18 +336,18 @@ class UtilsTest(TestCase):
         assert t1.text == "test2"
         assert not t1.is_word
         # deprecated way to set
-        with self.assertWarns(DeprecationWarning):
+        with warns(DeprecationWarning):
             t1["text"] = "test3"
-        with self.assertWarns(DeprecationWarning):
+        with warns(DeprecationWarning):
             t1["is_word"] = True
         assert t1.text == "test3"
         assert t1.is_word
 
-        with self.assertRaises(KeyError):
-            with self.assertWarns(DeprecationWarning):
+        with raises(KeyError):
+            with warns(DeprecationWarning):
                 t1["bad_key"] = "test"
-        with self.assertRaises(KeyError):
-            with self.assertWarns(DeprecationWarning):
+        with raises(KeyError):
+            with warns(DeprecationWarning):
                 _ = t2["bad_key"]
 
 

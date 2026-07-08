@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 
 import sys
-from unittest import TestCase
 
-from pytest import main
+from pytest import main, raises
 
 import g2p
 
 
-class TokenizeAndMapTest(TestCase):
+class TestTokenizeAndMap:
     """Test suite for chaining tokenization and transduction"""
-
-    def setUp(self):
-        pass
 
     def contextualize(self, word: str):
         return word + " " + word + " ," + word + ", " + word
@@ -162,37 +158,32 @@ class TokenizeAndMapTest(TestCase):
         # monkey patch to make sure we always exercise the TypeError pathway
         saved_version = g2p._version.VERSION
         g2p._version.VERSION = "2.0"
-        with self.assertRaises(TypeError):
+        with raises(TypeError):
             _ = g2p.make_g2p("iku-sro", "eng-ipa", "path")  # type: ignore
         g2p._version.VERSION = saved_version
 
     def test_make_g2p_cache(self):
-        self.assertIs(
-            g2p.make_g2p("fra", "fra-ipa", tokenize=False),
-            g2p.make_g2p("fra", "fra-ipa", tokenize=False),
+        assert g2p.make_g2p("fra", "fra-ipa", tokenize=False) is g2p.make_g2p(
+            "fra", "fra-ipa", tokenize=False
         )
-
-        self.assertIsNot(
-            g2p.make_g2p("fra", "fra-ipa", tokenize=True),
-            g2p.make_g2p("fra", "fra-ipa", tokenize=False),
+        assert g2p.make_g2p("fra", "fra-ipa", tokenize=True) is not g2p.make_g2p(
+            "fra", "fra-ipa", tokenize=False
         )
         my_tokenizer = g2p.make_tokenizer("oji")
-        self.assertIs(
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer),
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer),
+        assert g2p.make_g2p(
+            "oji", "eng-ipa", custom_tokenizer=my_tokenizer
+        ) is g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer)
+        assert g2p.make_g2p(
+            "oji", "eng-ipa", custom_tokenizer=my_tokenizer
+        ) is g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=g2p.make_tokenizer("oji"))
+        assert g2p.make_g2p(
+            "oji", "eng-ipa", custom_tokenizer=my_tokenizer
+        ) is not g2p.make_g2p(
+            "oji", "eng-ipa", custom_tokenizer=g2p.make_tokenizer("ikt")
         )
-        self.assertIs(
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer),
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=g2p.make_tokenizer("oji")),
-        )
-        self.assertIsNot(
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer),
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=g2p.make_tokenizer("ikt")),
-        )
-        self.assertIsNot(
-            g2p.make_g2p("oji", "eng-ipa", custom_tokenizer=my_tokenizer),
-            g2p.make_g2p("oji", "eng-ipa", tokenize=True),
-        )
+        assert g2p.make_g2p(
+            "oji", "eng-ipa", custom_tokenizer=my_tokenizer
+        ) is not g2p.make_g2p("oji", "eng-ipa", tokenize=True)
 
 
 if __name__ == "__main__":

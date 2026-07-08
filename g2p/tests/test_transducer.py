@@ -2,9 +2,9 @@
 
 import os
 import sys
-from unittest import TestCase, mock
+from unittest import mock
 
-from pytest import main
+from pytest import main, raises
 
 from g2p import make_g2p
 from g2p.exceptions import MalformedMapping, NeuralDependencyError
@@ -16,11 +16,11 @@ from g2p.transducer import CompositeTransducer, Transducer, normalize_edges
 # mypy: disable-error-code="attr-defined"
 
 
-class TransducerTest(TestCase):
+class TestTransducer:
     """Basic Transducer Test"""
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         cls.test_mapping_moh = Mapping.find_mapping(
             in_lang="moh-equiv", out_lang="moh-ipa"
         )
@@ -93,9 +93,9 @@ class TransducerTest(TestCase):
     def test_no_neural_dependencies(self):
         """This tests what happens if a user tries to create a neural g2p without installing the dependencies. Other neural tests (for when deps are installed are in test_neural.py module.)"""
         with mock.patch("g2p.mappings.utils.has_neural_support", return_value=False):
-            with self.assertRaises(NeuralDependencyError):
+            with raises(NeuralDependencyError):
                 make_g2p("foo", "bar", neural=True)
-            with self.assertRaises(NeuralDependencyError):
+            with raises(NeuralDependencyError):
                 make_g2p("str", "str-ipa", neural=True)
 
     def test_properties(self):
@@ -131,11 +131,11 @@ class TransducerTest(TestCase):
         tg.debugger = [["spam", "spam", "spam", "spam"]]
         assert 1 == len(tg.debugger)
         assert 4 == len(tg.debugger[0])
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             tg.input_nodes = ("foo", "bar", "baz")
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             tg.output_nodes = ("foo", "bar", "baz")
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             tg.tiers = ["spam", "spam", "eggs", "spam"]
         tg = self.test_trans("abab")
         tg += tg
@@ -160,15 +160,15 @@ class TransducerTest(TestCase):
         assert [(0 == "b"), (1, "b"), (2, "b"), (3, "b")], ctg.input_nodes
         ctg.output_string = "baba"
         assert [(0 == "b"), (1, "a"), (2, "b"), (3, "a")], ctg.output_nodes
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             ctg.debugger = [["spam", "spam", "spam", "spam"]]
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             ctg.edges = [(0, 1), (1, 0), (2, 3), (3, 2)]
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             ctg.input_nodes = ("foo", "bar", "baz")
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             ctg.output_nodes = ("foo", "bar", "baz")
-        with self.assertRaises(ValueError):
+        with raises(ValueError):
             ctg.tiers = ["spam", "spam", "eggs", "spam"]
         ctg = self.test_trans_composite("aba")
         ctg += ctg
@@ -244,7 +244,7 @@ class TransducerTest(TestCase):
         # I guess it's arguable what should happen here, but I'll just change case if any of the characters are differently cased
         assert transducer("Tlaba").output_string == "\u2144aba"
         # case equivalencies that are not the same length cause indexing errors in the current implementation
-        with self.assertRaises(MalformedMapping):
+        with raises(MalformedMapping):
             Mapping(
                 rules=[
                     {"in": "'a", "out": "b"},
@@ -257,7 +257,7 @@ class TransducerTest(TestCase):
                 case_equivalencies={"λ": "\u2144\u2144\u2144"},
             )
 
-        with self.assertRaises(MalformedMapping):
+        with raises(MalformedMapping):
             _ = Mapping(
                 rules=[{"in": "a", "out": "b"}],
                 case_sensitive=True,
