@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-from unittest import TestCase
 
 from pytest import main
 
@@ -9,7 +8,7 @@ from g2p.mappings import Mapping, Rule
 from g2p.mappings.create_fallback_mapping import align_to_dummy_fallback
 
 
-class FallbackTest(TestCase):
+class TestFallbackTest:
     """Basic Mapping Fallback Test.
     This feature is experimental, but it will try to map each character
     in a Mapping to one of the following 'unmarked' phonemes:
@@ -17,9 +16,6 @@ class FallbackTest(TestCase):
     If the mapping is 'ipa', it will align the inventories directly.
     If not, it will take a best guess at what the Unicode character using Unidecode and then align from there.
     """
-
-    def setUp(self):
-        pass
 
     def test_mapping(self):
         self.maxDiff = None
@@ -48,32 +44,26 @@ class FallbackTest(TestCase):
             out_lang="test-ipa",
         )
         test_in = align_to_dummy_fallback(mapping)
-        self.assertEqual(
-            test_in.rules,
-            [
-                Rule(rule_input="a", rule_output="ɑ", match_pattern="a"),
-                Rule(rule_input="e", rule_output="i", match_pattern="e"),
-                Rule(rule_input="i", rule_output="i", match_pattern="i"),
-                Rule(rule_input="b", rule_output="t", match_pattern="b"),
-                Rule(rule_input="g", rule_output="t", match_pattern="g"),
-                Rule(rule_input="g", rule_output="t", match_pattern="g"),
-                Rule(rule_input="i", rule_output="i", match_pattern="i"),
-            ],
-        )
+        assert test_in.rules == [
+            Rule(rule_input="a", rule_output="ɑ", match_pattern="a"),
+            Rule(rule_input="e", rule_output="i", match_pattern="e"),
+            Rule(rule_input="i", rule_output="i", match_pattern="i"),
+            Rule(rule_input="b", rule_output="t", match_pattern="b"),
+            Rule(rule_input="g", rule_output="t", match_pattern="g"),
+            Rule(rule_input="g", rule_output="t", match_pattern="g"),
+            Rule(rule_input="i", rule_output="i", match_pattern="i"),
+        ]
 
         test_out = align_to_dummy_fallback(mapping, "out")
-        self.assertEqual(
-            test_out.rules,
-            [
-                Rule(rule_input="æ", rule_output="ɑi", match_pattern="æ"),
-                Rule(rule_input="ɐ", rule_output="ɑ", match_pattern="ɐ"),
-                Rule(rule_input="ɑ̃", rule_output="ɑ", match_pattern="ɑ̃"),
-                Rule(rule_input="β", rule_output="t", match_pattern="β"),
-                Rule(rule_input="ɡ", rule_output="t", match_pattern="ɡ"),
-                Rule(rule_input="g", rule_output="t", match_pattern="g"),
-                Rule(rule_input="ةُ", rule_output="ɑu", match_pattern="ةُ"),
-            ],
-        )
+        assert test_out.rules == [
+            Rule(rule_input="æ", rule_output="ɑi", match_pattern="æ"),
+            Rule(rule_input="ɐ", rule_output="ɑ", match_pattern="ɐ"),
+            Rule(rule_input="ɑ̃", rule_output="ɑ", match_pattern="ɑ̃"),
+            Rule(rule_input="β", rule_output="t", match_pattern="β"),
+            Rule(rule_input="ɡ", rule_output="t", match_pattern="ɡ"),
+            Rule(rule_input="g", rule_output="t", match_pattern="g"),
+            Rule(rule_input="ةُ", rule_output="ɑu", match_pattern="ةُ"),
+        ]
         test_ipa = align_to_dummy_fallback(ipa_mapping, "out")
         panphon_021_ref = [
             Rule(rule_input="æ", rule_output="ɑ", match_pattern="æ"),

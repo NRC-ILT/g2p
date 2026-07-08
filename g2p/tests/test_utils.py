@@ -145,7 +145,7 @@ class UtilsTest(TestCase):
                 os.path.join(PUBLIC_DIR, "mappings", abb)
             )
             assert "VOWEL" in abbs
-            self.assertEqual(abbs["VOWEL"], ["a", "e", "i", "o", "u"])
+            assert abbs["VOWEL"] == ["a", "e", "i", "o", "u"]
 
     def test_generated_mapping(self):
         try:

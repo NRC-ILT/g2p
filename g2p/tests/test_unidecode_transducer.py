@@ -24,11 +24,11 @@ class UnidecodeTransducerTest(TestCase):
         transducer = make_g2p("und", "und-ascii", tokenize=False)
         tg = transducer(normalize("éçà", "NFD"))
         assert tg.output_string == "eca"
-        self.assertEqual(tg.edges, [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2), (5, 2)])
+        assert tg.edges == [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2), (5, 2)]
 
         tg = transducer(normalize("éçà", "NFC"))
         assert tg.output_string == "eca"
-        self.assertEqual(tg.edges, [(0, 0), (1, 1), (2, 2)])
+        assert tg.edges == [(0, 0), (1, 1), (2, 2)]
 
     def test_unidecode_empty_output(self):
         transducer = make_g2p("und", "und-ascii", tokenize=False)

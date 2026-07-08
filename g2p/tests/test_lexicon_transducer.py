@@ -165,10 +165,10 @@ class LexiconTransducerTest(TestCase):
         t = Transducer(m)
         tg = t("hello")
         assert tg.output_string == "hʌloʊ"
-        self.assertEqual(tg.edges, [(0, 0), (1, 1), (2, 2), (3, 2), (4, 3), (4, 4)])
+        assert tg.edges == [(0, 0), (1, 1), (2, 2), (3, 2), (4, 3), (4, 4)]
         tg = t("you're")
         assert tg.output_string == "jʊɹ"
-        self.assertEqual(tg.edges, [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2), (5, 2)])
+        assert tg.edges == [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2), (5, 2)]
         tg = t("change")
         assert tg.output_string == "tʃeɪndʒ"
         assert tg.input_string == "change"
@@ -192,11 +192,11 @@ class LexiconTransducerTest(TestCase):
         # adjacent outputs gives us, too...)
         assert tg.output_string == "tʃeɪn"
         assert tg.input_string == "chain"
-        self.assertEqual(tg.edges, [(0, 0), (0, 1), (1, 1), (2, 2), (3, 3), (4, 4)])
+        assert tg.edges == [(0, 0), (0, 1), (1, 1), (2, 2), (3, 3), (4, 4)]
         tg = t("xtra")
         assert tg.output_string == "ɛkstɹʌ"
         assert tg.input_string == "xtra"
-        self.assertEqual(tg.edges, [(0, 0), (0, 1), (0, 2), (1, 3), (2, 4), (3, 5)])
+        assert tg.edges == [(0, 0), (0, 1), (0, 2), (1, 3), (2, 4), (3, 5)]
         pe = tg.pretty_edges()
         self.assertEqual(
             pe,

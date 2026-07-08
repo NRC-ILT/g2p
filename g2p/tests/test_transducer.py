@@ -164,9 +164,9 @@ class TransducerTest(TestCase):
         )
         assert len(ctg.tiers) == len(ctg.debugger)
         ctg.input_string = "bbbb"
-        self.assertEqual([(0, "b"), (1, "b"), (2, "b"), (3, "b")], ctg.input_nodes)
+        assert [(0 == "b"), (1, "b"), (2, "b"), (3, "b")], ctg.input_nodes
         ctg.output_string = "baba"
-        self.assertEqual([(0, "b"), (1, "a"), (2, "b"), (3, "a")], ctg.output_nodes)
+        assert [(0 == "b"), (1, "a"), (2, "b"), (3, "a")], ctg.output_nodes
         with self.assertRaises(ValueError):
             ctg.debugger = [["spam", "spam", "spam", "spam"]]
         with self.assertRaises(ValueError):
@@ -226,7 +226,7 @@ class TransducerTest(TestCase):
     def test_deletion(self):
         tg = self.test_deletion_transducer("a")
         assert tg.output_string == ""
-        self.assertEqual(tg.pretty_edges(), [("a", None)])
+        assert tg.pretty_edges() == [("a", None)]
         assert self.test_deletion_transducer_csv("a").output_string == ""
         assert self.test_deletion_transducer_json("a").output_string == ""
 
@@ -290,23 +290,23 @@ class TransducerTest(TestCase):
         )
         # Sort edges on inputs and suppress duplicates
         bad_edges = [(4, 0), (1, 3), (1, 2), (2, 5)]
-        self.assertEqual(normalize_edges(bad_edges), [(1, 3), (1, 2), (2, 5), (4, 0)])
+        assert normalize_edges(bad_edges) == [(1, 3), (1, 2), (2, 5), (4, 0)]
         bad_edges = [(4, 0), (1, 3), (1, 3), (1, 2), (2, 5)]
-        self.assertEqual(normalize_edges(bad_edges), [(1, 3), (1, 2), (2, 5), (4, 0)])
+        assert normalize_edges(bad_edges) == [(1, 3), (1, 2), (2, 5), (4, 0)]
         # Map None to previous if it exists
         bad_edges = [(0, 0), (1, None), (2, 1)]
-        self.assertEqual(normalize_edges(bad_edges), [(0, 0), (1, 0), (2, 1)])
+        assert normalize_edges(bad_edges) == [(0, 0), (1, 0), (2, 1)]
         bad_edges = [(0, 0), (1, None), (2, None), (3, None)]
-        self.assertEqual(normalize_edges(bad_edges), [(0, 0), (1, 0), (2, 0), (3, 0)])
+        assert normalize_edges(bad_edges) == [(0, 0), (1, 0), (2, 0), (3, 0)]
         bad_edges = [(0, 0), (1, None), (2, None), (3, 1), (4, None), (5, 2)]
         self.assertEqual(
             normalize_edges(bad_edges), [(0, 0), (1, 0), (2, 0), (3, 1), (4, 1), (5, 2)]
         )
         # Map None to next if it exists
         bad_edges = [(0, None), (2, 1)]
-        self.assertEqual(normalize_edges(bad_edges), [(0, 1), (2, 1)])
+        assert normalize_edges(bad_edges) == [(0, 1), (2, 1)]
         bad_edges = [(0, None), (1, None), (2, 1)]
-        self.assertEqual(normalize_edges(bad_edges), [(0, 1), (1, 1), (2, 1)])
+        assert normalize_edges(bad_edges) == [(0, 1), (1, 1), (2, 1)]
         # Otherwise leave it as None
         bad_edges = []
         assert normalize_edges(bad_edges) == bad_edges
