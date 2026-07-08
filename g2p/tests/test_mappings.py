@@ -10,10 +10,10 @@ from contextlib import redirect_stderr
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List
-from unittest import TestCase, mock
+from unittest import mock
 
 from pydantic import ValidationError
-from pytest import main
+from pytest import fixture, main, raises
 
 from g2p import exceptions, make_g2p
 from g2p.exceptions import InvalidNormalization, NeuralDependencyError
@@ -33,10 +33,11 @@ def rules_from_strings(*mapping: str) -> List[dict]:
     return rules
 
 
-class MappingTest(TestCase):
+class TestMapping:
     """Basic Mapping Test"""
 
-    def setUp(self):
+    @fixture(autouse=True)
+    def setup(self):
         self.test_mapping_no_norm = Mapping(
             rules=[
                 {"in": "\u00e1", "out": "\u00e1"},
@@ -53,7 +54,7 @@ class MappingTest(TestCase):
 
     def test_find_mappings(self):
         rules_mapping = make_g2p("str", "str-ipa")
-        self.assertIsNone(rules_mapping.transducers[-1].mapping.type)
+        assert rules_mapping.transducers[-1].mapping.type is None
 
     def test_neural_not_available_raises_exception(self):
         from g2p.mappings.utils import (
@@ -65,11 +66,11 @@ class MappingTest(TestCase):
         # Call things that need neural with a mock context simulating not having
         # installed the dependencies, even when they are actually installed
         with mock.patch("g2p.mappings.utils.has_neural_support", return_value=False):
-            with self.assertRaises(NeuralDependencyError):
+            with raises(NeuralDependencyError):
                 make_g2p("str", "str-ipa", neural=True)
-            with self.assertRaises(NeuralDependencyError):
+            with raises(NeuralDependencyError):
                 deep_phonemizer_handler(Path(), {}, "foo")
-            with self.assertRaises(NeuralDependencyError):
+            with raises(NeuralDependencyError):
                 download_huggingface_model("foo")
 
         # calling has_neural_support should return a Bool without raising any exception,
@@ -80,7 +81,7 @@ class MappingTest(TestCase):
         assert (
             ud.normalize("NFD", "\u00e1") == self.test_mapping_norm.rules[0].rule_input
         )
-        self.assertNotEqual(self.test_mapping_norm.rules[0].rule_input, "\u00e1")
+        assert self.test_mapping_norm.rules[0].rule_input != "\u00e1"
         assert self.test_mapping_norm.rules[0].rule_input == "\u0061\u0301"
         assert self.test_mapping_no_norm.rules[0].rule_input == "\u00e1"
         assert self.test_mapping_no_norm.rules[0].rule_output == "\u00e1"
@@ -92,9 +93,9 @@ class MappingTest(TestCase):
         assert normalize(r"\u0061", None) == "a"
         assert normalize("\u010d", "NFD") == "\u0063\u030c"
         assert normalize("\u0063\u030c", "NFC") == "\u010d"
-        with self.assertRaises(InvalidNormalization) as cm:
+        with raises(InvalidNormalization) as cm:
             normalize("FOOBIE", "BLETCH")
-        assert "invalid argument" in str(cm.exception)
+        assert "invalid argument" in str(cm.value)
 
     def test_json_map(self):
         json_map = Mapping(
@@ -106,7 +107,7 @@ class MappingTest(TestCase):
         # assert json_map.kwargs["in_metadata"]["case_insensitive"]
 
     def test_no_mappings_key(self):
-        with self.assertRaises(ValidationError):
+        with raises(ValidationError):
             Mapping.load_mapping_from_path(
                 os.path.join(
                     os.path.dirname(public_data), "mappings", "no_mappings_key.yaml"
@@ -116,7 +117,7 @@ class MappingTest(TestCase):
     def test_improperly_initialized(self) -> None:
         mapping = Mapping(rules=[Rule(rule_input="a", rule_output="b")])
         mapping.rules = [{"rule_input": "something misguided"}]  # type: ignore
-        with self.assertRaises(AttributeError):
+        with raises(AttributeError):
             mapping.inventory()
 
     def test_as_is(self):
@@ -132,19 +133,13 @@ class MappingTest(TestCase):
             mapping_sorted = Mapping(
                 rules=[{"in": "a", "out": "b"}, {"in": "aa", "out": "c"}], as_is=False
             )
-        self.assertTrue(
-            mapping_sorted.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
-        )
-        self.assertIn(
-            "deprecated",
-            log_output.getvalue(),
-            "it should warn that the feature is deprecated",
-        )
-        self.assertIn(
-            "apply-longest-first",
-            log_output.getvalue(),
-            "it should show the equivalent rule_ordering setting",
-        )
+        assert mapping_sorted.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
+        assert (
+            "deprecated" in log_output.getvalue()
+        ), "it should warn that the feature is deprecated"
+        assert (
+            "apply-longest-first" in log_output.getvalue()
+        ), "it should show the equivalent rule_ordering setting"
 
         # explicitly set as_is=True
         log_output = io.StringIO()
@@ -152,27 +147,19 @@ class MappingTest(TestCase):
             mapping = Mapping(
                 rules=[{"in": "a", "out": "b"}, {"in": "aa", "out": "c"}], as_is=True
             )
-        self.assertFalse(
-            mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
-        )
-        self.assertIn(
-            "deprecated",
-            log_output.getvalue(),
-            "it should warn that the feature is deprecated",
-        )
-        self.assertIn(
-            "as-written",
-            log_output.getvalue(),
-            "it should show the equivalent rule_ordering setting",
-        )
+        assert mapping.rule_ordering != RULE_ORDERING_ENUM.apply_longest_first
+        assert (
+            "deprecated" in log_output.getvalue()
+        ), "it should warn that the feature is deprecated"
+        assert (
+            "as-written" in log_output.getvalue()
+        ), "it should show the equivalent rule_ordering setting"
 
         # test the default (rule_ordering="as-written")
         mapping_as_is = Mapping(
             rules=[{"in": "a", "out": "b"}, {"in": "aa", "out": "c"}]
         )
-        self.assertFalse(
-            mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
-        )
+        assert mapping.rule_ordering != RULE_ORDERING_ENUM.apply_longest_first
 
         # test the alternative (rule_ordering="apply-longest-first")
         transducer = Transducer(mapping_sorted)
@@ -223,7 +210,7 @@ class MappingTest(TestCase):
         incorrect_value = "apply-longest-frist"
 
         log_output = io.StringIO()
-        with redirect_stderr(log_output) and self.assertRaises(ValidationError):
+        with redirect_stderr(log_output), raises(ValidationError):
             Mapping(rules=rules, rule_ordering=incorrect_value)
 
     def test_case_sensitive(self):
@@ -236,7 +223,7 @@ class MappingTest(TestCase):
         assert transducer("A").output_string == "b"
 
     def test_case_equivalencies(self):
-        with self.assertRaises(exceptions.MalformedMapping):
+        with raises(exceptions.MalformedMapping):
             Mapping(rules=[{"in": "a", "out": "b"}], case_equivalencies={"a": "AA"})
 
     def test_escape_special(self):
@@ -300,9 +287,7 @@ class MappingTest(TestCase):
         transducer = Transducer(mapping)
         assert transducer("abb").output_string == "aaa"
         assert transducer("a").output_string == "a"
-        self.assertFalse(
-            mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first
-        )
+        assert not (mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first)
         assert not mapping.case_sensitive
         assert mapping.escape_special
         assert mapping.norm_form == NORM_FORM_ENUM.NFD
@@ -336,8 +321,8 @@ class MappingTest(TestCase):
         assert mapping.norm_form == NORM_FORM_ENUM.NFD
         assert mapping.reverse
 
-    def test_null_input(self):
-        with self.assertLogs(LOGGER, "WARNING"):
+    def test_null_input(self, caplog):
+        with caplog.at_level("WARNING", logger=LOGGER.name):
             Mapping(rules=[{"in": "", "out": "a"}])
 
     def test_no_escape(self):
@@ -349,16 +334,16 @@ class MappingTest(TestCase):
         transducer = Transducer(mapping)
         assert transducer("?").output_string == "ʔ"
 
-    def test_invalid_regex(self):
+    def test_invalid_regex(self, caplog):
         rules = [{"in": "fo(o", "out": "bar"}]
-        with self.assertLogs(LOGGER, level="ERROR"):
-            with self.assertRaises(exceptions.MalformedMapping) as cm:
+        with caplog.at_level("ERROR", logger=LOGGER.name):
+            with raises(exceptions.MalformedMapping) as cm:
                 _ = Mapping(rules=rules)
-        assert "regex" in cm.exception.message
+        assert "regex" in cm.value.message
 
     def test_invalid_rules_json(self):
         rules = [{"in": "a"}, {"out": "c"}]
-        with self.assertRaises(ValidationError):
+        with raises(ValidationError):
             Mapping(rules=rules)
 
     def test_invalid_rules_csv(self):
@@ -367,7 +352,7 @@ class MappingTest(TestCase):
         )
         tf.write("good-in,good-out\n\ngood-in-no-out\n")
         tf.close()
-        with self.assertRaises(exceptions.MalformedMapping):
+        with raises(exceptions.MalformedMapping):
             Mapping(rules_path=tf.name)
         os.unlink(tf.name)
 
@@ -377,9 +362,9 @@ class MappingTest(TestCase):
         )
         tf.write("good-in,good-out\n\ngood-in-no-out\n")
         tf.close()
-        with self.assertRaises(exceptions.IncorrectFileType) as cm:
+        with raises(exceptions.IncorrectFileType) as cm:
             Mapping(rules_path=tf.name)
-        assert "not a valid mapping filetype" in str(cm.exception)
+        assert "not a valid mapping filetype" in str(cm.value)
         os.unlink(tf.name)
 
     def test_extend_and_deduplicate(self):
@@ -394,14 +379,13 @@ class MappingTest(TestCase):
         mapping1.deduplicate()
         assert mapping1.rules == dedup_ref.rules
 
-    def test_g2p_studio_csv(self):
+    def test_g2p_studio_csv(self, caplog):
         # Ensure that a single CSV file from Studio works properly
-        with self.assertLogs(LOGGER, level="WARNING"):  # silence "" input warnings
-            mapping = Mapping(
-                rules_path=os.path.join(
-                    os.path.dirname(public_data), "mappings", "g2p_studio.csv"
-                )
+        mapping = Mapping(
+            rules_path=os.path.join(
+                os.path.dirname(public_data), "mappings", "g2p_studio.csv"
             )
+        )
         transducer = Transducer(mapping)
         assert (
             transducer("Jouni haluaa juoda kahvia").output_string
@@ -428,21 +412,20 @@ class MappingTest(TestCase):
         ) as fh:
             tf.write(fh.read())
         tf.close()
-        with self.assertLogs(LOGGER, level="WARNING"):  # silence "" input warnings
-            mapping = Mapping(rules_path=tf.name)
+        mapping = Mapping(rules_path=tf.name)
         transducer = Transducer(mapping)
         assert transducer("tee on herkullista").output_string == "teː on herkullistɑ"
         os.unlink(tf.name)
 
     def test_no_reprocess(self):
         """Ensure that attempting to reprocess a mapping is an error."""
-        with self.assertRaises(AssertionError):
+        with raises(AssertionError):
             self.test_mapping_norm.process_model_specs()
-        with self.assertRaises(ValidationError):
+        with raises(ValidationError):
             _ = Mapping(
                 rules=[{"in": "a", "out": "b", "match_pattern": re.compile("XOR OTA")}]
             )
-        with self.assertRaises(ValidationError):
+        with raises(ValidationError):
             _ = Mapping(
                 rules=[
                     {
