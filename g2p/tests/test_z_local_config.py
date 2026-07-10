@@ -16,14 +16,14 @@ We accomplish that in two ways:
 
 import json
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
-from unittest import TestCase
 
 import yaml
 from click.testing import CliRunner
-from pytest import main
+from pytest import fixture, main, raises
 
 from g2p import exceptions
 from g2p.cli import convert, generate_mapping
@@ -31,14 +31,16 @@ from g2p.mappings import Mapping
 from g2p.mappings.utils import normalize
 from g2p.tests.public import PUBLIC_DIR
 
+MAPPINGS_DIR = Path(PUBLIC_DIR) / "mappings"
 
-class LocalConfigTest(TestCase):
-    def setUp(self):
+
+class TestLocalConfig:
+    @fixture(autouse=True)
+    def setup(self):
         self.runner = CliRunner()
-        self.mappings_dir = Path(PUBLIC_DIR) / "mappings"
 
     def test_local_config(self) -> None:
-        config_path = str(self.mappings_dir / "test.yaml")
+        config_path = str(MAPPINGS_DIR / "test.yaml")
         result = self.runner.invoke(
             convert,
             [
@@ -49,7 +51,7 @@ class LocalConfigTest(TestCase):
                 config_path,
             ],
         )
-        self.assertIn("aaaa", result.stdout)
+        assert "aaaa" in result.stdout
         result = self.runner.invoke(
             convert,
             [
@@ -60,7 +62,7 @@ class LocalConfigTest(TestCase):
                 config_path,
             ],
         )
-        self.assertIn("ɑ", result.stdout)
+        assert "ɑ" in result.stdout
 
     def test_case_insensitive_tokenizer(self) -> None:
         # Unit testing for https://github.com/ReadAlongs/Studio/issues/40
@@ -70,12 +72,12 @@ class LocalConfigTest(TestCase):
 
         # This test incidentally exercises passing --config a config file with
         # only one mapping in it, without the top-level "mappings:" list.
-        tok_config = str(self.mappings_dir / "tokenize_punct_config-g2p.yaml")
+        tok_config = str(MAPPINGS_DIR / "tokenize_punct_config-g2p.yaml")
         results = self.runner.invoke(
             convert, ["--tok", "--config", tok_config, "AAA-BBB", "tok-in", "tok-out"]
         )
-        self.assertEqual(results.exit_code, 0)
-        self.assertIn("aac_dbb", results.output)
+        assert results.exit_code == 0
+        assert "aac_dbb" in results.output
 
         # While "AAA-BBB" gets tokenized as [word("AAA-BBB")], since "A-B" is
         # in the inventory, "D-C" gets tokenized as [word("D"), non-word("-"),
@@ -84,8 +86,8 @@ class LocalConfigTest(TestCase):
         results = self.runner.invoke(
             convert, ["--tok", "--config", tok_config, "D-C", "tok-in", "tok-out"]
         )
-        self.assertEqual(results.exit_code, 0)
-        self.assertIn("d_end-c", results.output)
+        assert results.exit_code == 0
+        assert "d_end-c" in results.output
 
     def test_null_mapping(self) -> None:
         """Empty lines in a mapping should just get ignored"""
@@ -93,16 +95,16 @@ class LocalConfigTest(TestCase):
         # cause the next rule to not get its match pattern created, and raise
         # an exception later. The null.csv mapping has such an empty rule,
         # which should get ignored, with the next rule, d->e, still working.
-        null_config = str(self.mappings_dir / "null_config-g2p.yaml")
+        null_config = str(MAPPINGS_DIR / "null_config-g2p.yaml")
         results = self.runner.invoke(
             convert, ["--config", null_config, "x-ad-x", "null-in", "null-out"]
         )
-        self.assertEqual(results.exit_code, 0)
-        self.assertIn("x-be-x", results.output)
+        assert results.exit_code == 0
+        assert "x-be-x" in results.output
 
     def test_case_feeding_mapping(self) -> None:
         """Exercise the mapping using case to prevent feeding on in/out but not context"""
-        case_feeding_config = str(self.mappings_dir / "case-feed" / "config-g2p.yaml")
+        case_feeding_config = str(MAPPINGS_DIR / "case-feed" / "config-g2p.yaml")
         results = self.runner.invoke(
             convert,
             [
@@ -115,8 +117,8 @@ class LocalConfigTest(TestCase):
             ],
         )
         # print(results.output)
-        self.assertEqual(results.exit_code, 0)
-        self.assertIn("ke-antinetin", results.output)
+        assert results.exit_code == 0
+        assert "ke-antinetin" in results.output
 
     def test_missing_files(self) -> None:
         """Nice error messages when the mapping file or abbreviations file are missing"""
@@ -127,9 +129,9 @@ class LocalConfigTest(TestCase):
             results = self.runner.invoke(
                 convert, ["--config", config_file, "a", "b", "c"]
             )
-            self.assertNotEqual(results.exit_code, 0)
-            self.assertIn(
-                "No such file or directory", results.output + str(results.exception)
+            assert results.exit_code != 0
+            assert "No such file or directory" in results.output + str(
+                results.exception
             )
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -151,10 +153,9 @@ class LocalConfigTest(TestCase):
             results = self.runner.invoke(
                 convert, ["--config", config_file, "a", "b", "c"]
             )
-            self.assertNotEqual(results.exit_code, 0)
-            self.assertIn(
-                "No such file or directory",
-                results.output + str(results.exception),
+            assert results.exit_code != 0
+            assert "No such file or directory" in results.output + str(
+                results.exception
             )
 
     def test_empty_rules(self) -> None:
@@ -164,17 +165,16 @@ class LocalConfigTest(TestCase):
                 pass
             with open(config_file, "w", encoding="utf8") as f:
                 yaml.dump({"mappings": [{"rules_path": "empty.csv"}]}, f)
-            with self.assertRaises(exceptions.MalformedMapping) as e:
+            with raises(exceptions.MalformedMapping) as e:
                 # This is a deep pydantic exception, we should raise MalformedMapping
                 Mapping.load_mapping_from_path(config_file)
-            self.assertIn("empty.csv does not contain any rules", str(e.exception))
+            assert "empty.csv does not contain any rules" in str(e.value)
             results = self.runner.invoke(
                 convert, ["--config", config_file, "a", "b", "c"]
             )
-            self.assertNotEqual(results.exit_code, 0)
-            self.assertIn(
-                "empty.csv does not contain any rules",
-                results.output + str(results.exception),
+            assert results.exit_code != 0
+            assert "empty.csv does not contain any rules" in results.output + str(
+                results.exception
             )
 
     def test_generate_mapping(self) -> None:
@@ -193,14 +193,14 @@ class LocalConfigTest(TestCase):
         # factor out the repeated code to use it.
 
         # This first case has the side effect of loading gen-map_config-g2p.yaml
-        config_path = str(self.mappings_dir / "gen-map_config-g2p.yaml")
+        config_path = str(MAPPINGS_DIR / "gen-map_config-g2p.yaml")
         result = self.runner.invoke(
             convert, ["uyoesnmklbdt", "gm2", "gm2-ipa", "--config", config_path]
         )
-        self.assertIn("uyɔɛsnmklbdt", result.stdout)
+        assert "uyɔɛsnmklbdt" in result.stdout
         # This second case confirms that gen-map_config-g2p.yaml is still loaded
         result = self.runner.invoke(convert, ["uyoesnmklbdt", "gm3a", "gm3-ipa"])
-        self.assertIn("uyoesnmklbdt", result.stdout)
+        assert "uyoesnmklbdt" in result.stdout
 
         # Now we do the real tests
         with tempfile.TemporaryDirectory() as output_dir_s:
@@ -213,39 +213,39 @@ class LocalConfigTest(TestCase):
                 generate_mapping,
                 ["--from", "gm1", "--to", "gm2", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm1-ipa_to_gm2-ipa.json") as f:
+            assert result.exit_code == 0
+            with open(MAPPINGS_DIR / "gm1-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm1-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
             # 2 mappings in to 1 mapping out
             result = self.runner.invoke(
                 generate_mapping,
                 ["--from", "gm3", "--to", "gm2", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm3-ipa_to_gm2-ipa.json") as f:
+            assert result.exit_code == 0
+            with open(MAPPINGS_DIR / "gm3-ipa_to_gm2-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm3-ipa_to_gm2-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
             # 1 mapping in to 2 mappings out
             result = self.runner.invoke(
                 generate_mapping,
                 ["--from", "gm2", "--to", "gm3", "--out-dir", output_dir_s],
             )
-            self.assertEqual(result.exit_code, 0)
-            with open(self.mappings_dir / "gm2-ipa_to_gm3-ipa.json") as f:
+            assert result.exit_code == 0
+            with open(MAPPINGS_DIR / "gm2-ipa_to_gm3-ipa.json") as f:
                 ref = json.load(f)
             with open(output_dir / "gm2-ipa_to_gm3-ipa.json") as f:
                 output = json.load(f)
-            self.assertEqual(output, ref)
+            assert output == ref
 
     def test_compose_NFC_NFD(self) -> None:
-        config_path = str(self.mappings_dir / "compose.yaml")
+        config_path = str(MAPPINGS_DIR / "compose.yaml")
         result = self.runner.invoke(
             convert,
             [
@@ -259,11 +259,9 @@ class LocalConfigTest(TestCase):
                 "-e",
             ],
         )
-        self.assertEqual(result.exit_code, 0)
-        self.assertIn("[[(0, 0), (1, 0)], [(0, 0), (0, 1)]]", result.output)
-        self.assertIn(
-            "[[('e', 'ò'), ('́', 'ò')], [('ò', 'u'), ('ò', '̀')]]", result.output
-        )
+        assert result.exit_code == 0
+        assert "[[(0, 0), (1, 0)], [(0, 0), (0, 1)]]" in result.output
+        assert "[[('e', 'ò'), ('́', 'ò')], [('ò', 'u'), ('ò', '̀')]]" in result.output
 
         result = self.runner.invoke(
             convert,
@@ -278,21 +276,21 @@ class LocalConfigTest(TestCase):
                 "-e",
             ],
         )
-        self.assertEqual(result.exit_code, 0)
-        self.assertIn("[[(0, 0)], [(0, 0), (0, 1)]]", result.output)
-        self.assertIn("[[('é', 'ò')], [('ò', 'u'), ('ò', '̀')]]", result.output)
+        assert result.exit_code == 0
+        assert "[[(0, 0)], [(0, 0), (0, 1)]]" in result.output
+        assert "[[('é', 'ò')], [('ò', 'u'), ('ò', '̀')]]" in result.output
 
     def test_nofeed_indices(self) -> None:
-        config_path = str(self.mappings_dir / "nofeed-indices.yaml")
+        config_path = str(MAPPINGS_DIR / "nofeed-indices.yaml")
         args = ("nofeed-indices-in", "nofeed-indices-out")
         result = self.runner.invoke(convert, ["ab", *args, "--config", config_path])
-        self.assertIn("ced", result.stdout)
+        assert "ced" in result.stdout
         result = self.runner.invoke(convert, ["abft", *args, "-d"])
-        self.assertIn("cedft", result.stdout)
+        assert "cedft" in result.stdout
         result = self.runner.invoke(convert, ["deft", *args, "-d"])
-        self.assertIn("ghit", result.stdout)
+        assert "ghit" in result.stdout
         result = self.runner.invoke(convert, ["aātaāabtaā", *args, "-e"])
-        self.assertIn("aʼataʼacedtaʼa", result.stdout)
+        assert "aʼataʼacedtaʼa" in result.stdout
 
     def test_invalid_abbrev_path(self) -> None:
         config = """
@@ -306,38 +304,28 @@ class LocalConfigTest(TestCase):
             # type bool is not valid
             with open(tmpdir / "invalid.yaml", "w", encoding="utf8") as fh:
                 fh.write(config.format("true"))
-            with self.assertRaises(Exception) as e:
+            with raises(Exception) as e:
                 # Currently raise a deep pydantic exception, exceptions.MalformedMapping would be better
                 Mapping.load_mapping_from_path(tmpdir / "invalid.yaml")
-            message = str(e.exception)
-            self.assertRegex(
-                message, r"(?s)abbreviations_path.*Input is not a valid path"
+            assert re.search(
+                r"(?s)abbreviations_path.*Input is not a valid path", str(e.value)
             )
-            # This fails because we don't raise MalformedMapping
-            # self.assertRegex(
-            #     message, r"Problem in config file:.*invalid.yaml"
-            # )
 
             # type float is not valid
             with open(tmpdir / "invalid.yaml", "w", encoding="utf8") as fh:
                 fh.write(config.format("1.0"))
-            with self.assertRaises(Exception):
+            with raises(Exception) as e:
                 # Currently raise a deep pydantic exception, exceptions.MalformedMapping would be better
                 Mapping.load_mapping_from_path(tmpdir / "invalid.yaml")
-            message = str(e.exception)
-            self.assertRegex(
-                message, r"(?s)abbreviations_path.*Input is not a valid path"
+            assert re.search(
+                r"(?s)abbreviations_path.*Input is not a valid path", str(e.value)
             )
-            # This fails because we don't raise MalformedMapping
-            # self.assertRegex(
-            #     message, r"Problem in config file:.*invalid.yaml"
-            # )
 
             # non-existent file
             with open(tmpdir / "invalid.yaml", "w", encoding="utf8") as fh:
                 fh.write(config.format("file_not_found.csv"))
             # This is super unfriendly to the user, but that's what happens now.
-            with self.assertRaises(FileNotFoundError):
+            with raises(FileNotFoundError):
                 Mapping.load_mapping_from_path(tmpdir / "invalid.yaml")
 
 
