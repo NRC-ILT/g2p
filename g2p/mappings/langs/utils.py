@@ -177,15 +177,31 @@ def cache_langs(
 
 
 def write_json_gz(path: str, data: Any):
+    """Write data into a .json.gz compressed file.
+
+    If the file exists but the contents have not changed, do not rewrite it: gzip output
+    is no longer stable with Python 3.14 starting to replace zlib by the faster zlib-ng,
+    which produces equivalently valid -- but not identical!!! -- compressed output.
+
+    See https://www.man.com/technology/faster-python for more info.
+    """
+    contents = json.dumps(
+        data,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        sort_keys=True,
+    ).encode("utf-8")
+
+    if Path(path).exists():
+        with gzip.open(path, "rb") as f:
+            old_contents = f.read()
+        if contents == old_contents:
+            LOGGER.info(f"{path} already up to date.")
+            return
+
     with gzip.GzipFile(path, "wb", mtime=0) as zipfile:
-        zipfile.write(
-            json.dumps(
-                data,
-                separators=(",", ":"),
-                ensure_ascii=False,
-                sort_keys=True,
-            ).encode("utf-8")
-        )
+        zipfile.write(contents)
+    LOGGER.info(f"{path} updated.")
 
 
 def network_to_echart(outfile: Optional[str] = None, layout: bool = False):
@@ -217,5 +233,5 @@ def network_to_echart(outfile: Optional[str] = None, layout: bool = False):
             newline="\n",
         ) as f:
             f.write(json.dumps({"nodes": nodes, "edges": edges}) + "\n")
-        LOGGER.info("Wrote network nodes and edges to static file.")
+        LOGGER.info(f"Wrote network nodes and edges to static file {outfile}.")
     return nodes, edges

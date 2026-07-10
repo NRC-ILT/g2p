@@ -3,6 +3,7 @@
 """Test Mapping utility functions"""
 
 import doctest
+import gzip
 import os
 import re
 import sys
@@ -18,6 +19,7 @@ from g2p import get_arpabet_langs
 from g2p._version import VERSION, version_tuple
 from g2p.log import LOGGER
 from g2p.mappings import Mapping, utils
+from g2p.mappings.langs.utils import write_json_gz
 from g2p.mappings.utils import RULE_ORDERING_ENUM, Rule
 from g2p.tests.public import PUBLIC_DIR
 
@@ -349,6 +351,35 @@ class TestUtils:
         with raises(KeyError):
             with warns(DeprecationWarning):
                 _ = t2["bad_key"]
+
+
+def test_write_json_gz(tmp_path, caplog):
+    # write_json_gz should not overwrite a file that exist and is up to date
+    data = {"a": "b", "c": 1, "d": True}
+    file = tmp_path / "foo.json.gz"
+    write_json_gz(file, data)
+
+    # Contents are the same -- do not overwrite
+    with caplog.at_level("INFO", logger=LOGGER.name):
+        write_json_gz(file, data)
+    assert "already up to date" in caplog.text
+    caplog.clear()
+
+    # Contents changed -- overwrite
+    data["e"] = 42
+    with caplog.at_level("INFO", logger=LOGGER.name):
+        write_json_gz(file, data)
+    assert "updated" in caplog.text
+    caplog.clear()
+
+    # Compression changed, but not contents -- do no overwrite
+    with gzip.open(file, "rb") as f:
+        contents = f.read()
+    with gzip.GzipFile(file, "wb", compresslevel=1) as f:
+        f.write(contents)
+    with caplog.at_level("INFO", logger=LOGGER.name):
+        write_json_gz(file, data)
+    assert "already up to date" in caplog.text
 
 
 if __name__ == "__main__":
