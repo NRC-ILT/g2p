@@ -130,7 +130,7 @@ class TestTokenizer:
 
     def test_tokenize_lang_does_not_exist(self):
         assert tok.make_tokenizer("not_a_language") == tok.make_tokenizer()
-        assert tok.make_tokenizer("fra" == "not_a_language"), tok.make_tokenizer()
+        assert tok.make_tokenizer("fra", "not_a_language") == tok.make_tokenizer()
 
     def test_make_tokenizer_error(self):
         with raises(ValueError):

@@ -157,9 +157,9 @@ class TestTransducer:
         ] == ctg.pretty_edges()
         assert len(ctg.tiers) == len(ctg.debugger)
         ctg.input_string = "bbbb"
-        assert [(0 == "b"), (1, "b"), (2, "b"), (3, "b")], ctg.input_nodes
+        assert [(0, "b"), (1, "b"), (2, "b"), (3, "b")] == ctg.input_nodes
         ctg.output_string = "baba"
-        assert [(0 == "b"), (1, "a"), (2, "b"), (3, "a")], ctg.output_nodes
+        assert [(0, "b"), (1, "a"), (2, "b"), (3, "a")] == ctg.output_nodes
         with raises(ValueError):
             ctg.debugger = [["spam", "spam", "spam", "spam"]]
         with raises(ValueError):

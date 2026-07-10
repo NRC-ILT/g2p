@@ -142,7 +142,7 @@ class TestTokenizeAndMap:
             (3, 5),
             (4, 6),
         ]
-        assert transducer("  a ==  ").alignments(), ref_edges
+        assert transducer("  a, ").alignments() == ref_edges
         tier_edges = [x.edges for x in transducer("  a, ").tiers]
         ref_tier_edges = [
             # "  a, " -> "  a, "

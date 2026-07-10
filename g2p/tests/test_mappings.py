@@ -287,7 +287,7 @@ class TestMapping:
         transducer = Transducer(mapping)
         assert transducer("abb").output_string == "aaa"
         assert transducer("a").output_string == "a"
-        assert not (mapping.rule_ordering == RULE_ORDERING_ENUM.apply_longest_first)
+        assert mapping.rule_ordering != RULE_ORDERING_ENUM.apply_longest_first
         assert not mapping.case_sensitive
         assert mapping.escape_special
         assert mapping.norm_form == NORM_FORM_ENUM.NFD
