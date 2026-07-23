@@ -163,7 +163,7 @@ jobs:
         run: |
           SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` uv pip install -e .[test]
       - name: Run tests on Windows
-        run: python run_tests.py dev
+        run: pytest
       - name: Make sure the CLI outputs utf8 on Windows
         run: |
           # Warning: This is PowerShell syntax, not bash!
@@ -209,7 +209,5 @@ jobs:
           bin/post_compile
       - name: Launch the API
         run: ${RUNTIME_CMD} --bind localhost:5000 &
-      - name: Run the regular dev suite
-        run: python run_tests.py dev
-      - name: Run test-studio
-        run: python g2p/tests/test_studio.py
+      - name: Run the tests
+        run: pytest
