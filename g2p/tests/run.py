@@ -2,8 +2,7 @@
 
 """Organize tests into Test Suites
 
-Run with "python run.py <suite>" where <suite> can be all, dev, or a few other
-options (see run_tests() for the full list).
+Run with "python run.py <suite>" where <suite> can be all, dev, or slow.
 
 Add --describe to list the contents of the selected suite instead of running it.
 """
@@ -22,42 +21,10 @@ from g2p.log import LOGGER
 
 SUITES: Dict[str, List[str]] = {
     "all": [],  # empty list triggers complete test discovery
-    "dev": [],  # updated below this block
-    "api": ["test_api_resources", "test_api_v2"],
-    "integ": ["test_cli", "test_doctor", "test_doctor_expensive"],  # updated below
-    "langs": ["test_langs"],
-    "mappings": [
-        "test_fallback",
-        "test_create_mapping",
-        "test_mappings",
-        "test_network",
-        "test_utils",
-        "test_tokenizer",
-        "test_tokenize_and_map",
-        "test_check_ipa_arpabet",
-    ],
-    "trans": [
-        "test_indices",
-        "test_transducer",
-        "test_unidecode_transducer",
-        "test_lexicon_transducer",
-    ],
-    # Neural tests are excluded from dev and automatically skipped if neural
-    # dependencies are not installed, because they require torch and other heavy
-    # dependencies and the tests also require downloading large g2p models
-    "neural": ["test_neural"],
-    # Studio is also expensive and excluded from dev
-    "studio": ["test_studio"],
+    "dev": [],  # subtractive logic: dev = all - slow
+    "langs": ["test_langs"],  # kept here because part 7 of the 7-part blog mentions it
+    "slow": ["test_studio", "test_neural"],
 }
-SUITES["dev"] = sum(
-    [SUITES[suite] for suite in ("api", "integ", "langs", "trans", "mappings")],
-    start=[],
-)
-# LocalConfigTest has to get run last, to avoid interactions with other test
-# cases, since it has side effects on the global database
-SUITES["dev"] += ["test_z_local_config"]
-
-SUITES["integ"] += SUITES["api"]
 
 
 class PytestCollectorPlugin:
@@ -109,7 +76,7 @@ def run_tests(suite: Optional[str], describe=False, verbose=False) -> bool:
     """
     if not suite:
         LOGGER.info(
-            "No test suite specified, defaulting to 'dev', which skips the slowest tests."
+            "No test suite specified, defaulting to 'dev', which skips the slow tests."
         )
         suite = "dev"
 
@@ -117,9 +84,18 @@ def run_tests(suite: Optional[str], describe=False, verbose=False) -> bool:
         LOGGER.error("Please specify a test suite to run among: " + ", ".join(SUITES))
         return False
 
-    test_suite = SUITES[suite]
     tests_dir = Path(__file__).parent
-    test_suite_filenames = [str(tests_dir / f"{file}.py") for file in test_suite]
+    if suite == "dev":
+        expensive_files = [tests_dir / f"{file}.py" for file in SUITES["slow"]]
+        test_suite_filenames = [
+            str(file)
+            for file in tests_dir.glob("test*.py")
+            if file not in expensive_files
+        ]
+    else:
+        test_suite = SUITES[suite]
+        test_suite_filenames = [str(tests_dir / f"{file}.py") for file in test_suite]
+
     if describe:
         describe_suite(suite, test_suite_filenames)
         return True
