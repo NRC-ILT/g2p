@@ -277,7 +277,7 @@ mappings:
 Mappings are defined in either a CSV or json file. See [writing mapping files](#writing-mapping-files) for more info.
 5. Start a development shell with `hatch shell` (or install an editable version with `pip install -e .`) then update with `g2p update`
 6. Add some tests in `g2p/testspublic/data/<YourIsoCode>.psv`. Each line in the file will run a test with the following structure: `<in_lang>|<out_lang>|<input_string>|<expected_output>`
-7. Run `python3 run_tests.py langs` to make sure your tests pass.
+7. Run `pytest g2p/tests/test_langs.py` to make sure your tests pass.
 8. Make sure you have [checked all the boxes](https://github.com/nrc-ilt/g2p/blob/main/.github/pull_request_template.md) and make a [pull request]((https://github.com/nrc-ilt/g2p/pulls)!
 
 ### Adding a new language for support with ReadAlongs

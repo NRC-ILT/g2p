@@ -142,6 +142,9 @@ include = ["/g2p"]
 [tool.hatch.env]
 requires = ["hatch-pip-compile"]
 
+[tool.hatch.envs.default]
+features = ["dev"]
+
 [tool.hatch.envs.api]
 features = ["api"]
 
@@ -171,9 +174,8 @@ python = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
 serve-cov = "coverage run run_studio.py"
-test = "python run_tests.py dev"
-test-cov = "coverage run run_tests.py dev"
-test-studio = "python g2p/tests/test_studio.py"
+test = "pytest"
+test-cov = "coverage run pytest"
 cov-report = ["- coverage combine", "coverage report"]
 cov = ["test-cov", "cov-report"]
 

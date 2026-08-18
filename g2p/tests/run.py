@@ -2,16 +2,20 @@
 
 """Organize tests into Test Suites
 
-Run with "python run.py <suite>" where <suite> can be all, dev, or a few other
-options (see run_tests() for the full list).
+Run with "python run.py <suite>" where <suite> can be all, dev, or slow.
 
 Add --describe to list the contents of the selected suite instead of running it.
+
+Note: this script is no longer the recommended way to run the tests -- instead,
+use pytest -- but it is still supported and should never be deprecated since it
+is mentioned in the 7-part blog post.
 """
 
 import argparse
 import io
 import sys
 from contextlib import redirect_stdout
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -20,44 +24,20 @@ import pytest
 # Unit tests
 from g2p.log import LOGGER
 
-SUITES: Dict[str, List[str]] = {
-    "all": [],  # empty list triggers complete test discovery
-    "dev": [],  # updated below this block
-    "api": ["test_api_resources", "test_api_v2"],
-    "integ": ["test_cli", "test_doctor", "test_doctor_expensive"],  # updated below
-    "langs": ["test_langs"],
-    "mappings": [
-        "test_fallback",
-        "test_create_mapping",
-        "test_mappings",
-        "test_network",
-        "test_utils",
-        "test_tokenizer",
-        "test_tokenize_and_map",
-        "test_check_ipa_arpabet",
-    ],
-    "trans": [
-        "test_indices",
-        "test_transducer",
-        "test_unidecode_transducer",
-        "test_lexicon_transducer",
-    ],
-    # Neural tests are excluded from dev and automatically skipped if neural
-    # dependencies are not installed, because they require torch and other heavy
-    # dependencies and the tests also require downloading large g2p models
-    "neural": ["test_neural"],
-    # Studio is also expensive and excluded from dev
-    "studio": ["test_studio"],
-}
-SUITES["dev"] = sum(
-    [SUITES[suite] for suite in ("api", "integ", "langs", "trans", "mappings")],
-    start=[],
-)
-# LocalConfigTest has to get run last, to avoid interactions with other test
-# cases, since it has side effects on the global database
-SUITES["dev"] += ["test_z_local_config"]
 
-SUITES["integ"] += SUITES["api"]
+@dataclass
+class Suite:
+    tests: List[str]
+    description: str
+
+
+SUITES: Dict[str, Suite] = {
+    "all": Suite([], "all tests, using pytest discovery"),  # empty list => discovery
+    "dev": Suite([], "all but the slow tests"),  # subtractive logic: dev = all - slow
+    # "langs" required because part 7 of the 7-part blog mentions it
+    "langs": Suite(["test_langs"], "language mapping tests"),
+    "slow": Suite(["test_studio", "test_neural"], "slow tests"),
+}
 
 
 class PytestCollectorPlugin:
@@ -108,18 +88,26 @@ def run_tests(suite: Optional[str], describe=False, verbose=False) -> bool:
     Returns: Bool: True iff success
     """
     if not suite:
-        LOGGER.info(
-            "No test suite specified, defaulting to 'dev', which skips the slowest tests."
-        )
         suite = "dev"
 
     if suite not in SUITES:
         LOGGER.error("Please specify a test suite to run among: " + ", ".join(SUITES))
         return False
 
-    test_suite = SUITES[suite]
+    LOGGER.info(f"Running suite '{suite}': {SUITES[suite].description}")
+
     tests_dir = Path(__file__).parent
-    test_suite_filenames = [str(tests_dir / f"{file}.py") for file in test_suite]
+    if suite == "dev":
+        expensive_files = [tests_dir / f"{file}.py" for file in SUITES["slow"].tests]
+        test_suite_filenames = [
+            str(file)
+            for file in tests_dir.glob("test*.py")
+            if file not in expensive_files
+        ]
+    else:
+        test_suite = SUITES[suite].tests
+        test_suite_filenames = [str(tests_dir / f"{file}.py") for file in test_suite]
+
     if describe:
         describe_suite(suite, test_suite_filenames)
         return True
@@ -129,7 +117,13 @@ def run_tests(suite: Optional[str], describe=False, verbose=False) -> bool:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run g2p test suites.")
+    parser = argparse.ArgumentParser(
+        description="Run g2p test suites.\nNote: while this script is still supported, we now recommend using pytest instead.\n\nSuites:\n"
+        + "\n".join(
+            " - " + name + ": " + suite.description for name, suite in SUITES.items()
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="verbose output")
     parser.add_argument(
         "--describe", action="store_true", help="describe the selected test suite"
