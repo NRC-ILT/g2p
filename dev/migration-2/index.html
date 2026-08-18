@@ -734,8 +734,8 @@ properties, which correspond to the names used in <code>config-g2p.yaml</code>.<
 <p>For example, you can access the <code>case_sensitive</code> flag using the
 property of the same name (note also that you can no longer construct
 a <code>Mapping</code> by simply passing the name of the file):</p>
-<div class="highlight"><pre><span></span><code><span class="n">mapping</span> <span class="o">=</span> <span class="n">Mapping</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="s2">&quot;path/to/some/config-g2p.yaml&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Case sensitive?&quot;</span><span class="p">,</span> <span class="n">mapping</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">mapping</span> <span class="o">=</span> <span class="n">Mapping</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="s2">"path/to/some/config-g2p.yaml"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Case sensitive?"</span><span class="p">,</span> <span class="n">mapping</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span>
 </code></pre></div>
 <p>To iterate over the rules in a mapping, you now use the <code>rules</code>
 property instead of the <code>mapping_data</code> field.  The rules themselves
@@ -743,10 +743,10 @@ now also use properties for access, which do not entirely correspond
 to the names used in the JSON/YAML definition, because <code>in</code>, for example,
 is a reserved word in Python.  So for instance you would make this
 change:</p>
-<div class="highlight"><pre><span></span><code><span class="gd">- for rule in mapping[&quot;mapping_data&quot;]:</span>
-<span class="gd">-     print(&quot;Rule maps&quot;, rule[&quot;in&quot;], &quot;to&quot;, rule[&quot;out&quot;])</span>
+<div class="highlight"><pre><span></span><code><span class="gd">- for rule in mapping["mapping_data"]:</span>
+<span class="gd">-     print("Rule maps", rule["in"], "to", rule["out"])</span>
 <span class="gi">+ for rule in mapping.rules:</span>
-<span class="gi">+     print(&quot;Rule maps&quot;, rule.rule_input, &quot;to&quot;, rule.rule_output)</span>
+<span class="gi">+     print("Rule maps", rule.rule_input, "to", rule.rule_output)</span>
 </code></pre></div>
 <blockquote>
 <p><strong>NOTE</strong>: These are not public APIs, and are subject to further

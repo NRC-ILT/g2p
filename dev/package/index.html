@@ -858,26 +858,26 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">g2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_g2p</span>
 </code></pre></div>
 <p>Then, call it with an argument for <code>in_lang</code> and <code>out_lang</code>. Both must be strings equal to the name of a particular mapping.</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">transducer</span> <span class="o">=</span> <span class="n">make_g2p</span><span class="p">(</span><span class="s2">&quot;dan&quot;</span><span class="p">,</span> <span class="s2">&quot;eng-arpabet&quot;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">transducer</span><span class="p">(</span><span class="s2">&quot;hej&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">output_string</span>
-<span class="s1">&#39;HH EH Y&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">transducer</span> <span class="o">=</span> <span class="n">make_g2p</span><span class="p">(</span><span class="s2">"dan"</span><span class="p">,</span> <span class="s2">"eng-arpabet"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">transducer</span><span class="p">(</span><span class="s2">"hej"</span><span class="p">)</span><span class="o">.</span><span class="n">output_string</span>
+<span class="s1">'HH EH Y'</span>
 </code></pre></div>
 <p>There must be a valid path between the <code>in_lang</code> and <code>out_lang</code> in order for this to work. If you've edited a mapping or added a custom mapping, you must update g2p to include it: <code>g2p update</code></p>
 <h2 id="make_tokenizer"><code>make_tokenizer</code><a class="headerlink" href="#make_tokenizer" title="Permanent link">&para;</a></h2>
 <p>Basic usage for the language-aware tokenizer:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">g2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_tokenizer</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">&quot;dan&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">&quot;Åh, hvordan har du det, Åbenrå?&quot;</span><span class="p">):</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">"dan"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">"Åh, hvordan har du det, Åbenrå?"</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">is_word</span>
         <span class="n">word</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">interword_punctuation_and_spaces</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span>
 </code></pre></div>
 <p>Note that selecting the tokenizer language is important to make sure punctuation-like letters are handled correctly. For example <code>:</code> and <code>'</code> are punctuation in English but they will be part of the word tokens in Kanien'kéha (moh):</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">&quot;moh&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">&quot;Kanien&#39;kéha&quot;</span><span class="p">))</span>
-<span class="p">[{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot;Kanien&#39;kéha&quot;</span><span class="p">,</span> <span class="s1">&#39;is_word&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">&quot;eng&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">&quot;Kanien&#39;kéha&quot;</span><span class="p">))</span>
-<span class="p">[{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Kanien&#39;</span><span class="p">,</span> <span class="s1">&#39;is_word&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;is_word&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;kéha&#39;</span><span class="p">,</span> <span class="s1">&#39;is_word&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">"moh"</span><span class="p">)</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">"Kanien'kéha"</span><span class="p">))</span>
+<span class="p">[{</span><span class="s1">'text'</span><span class="p">:</span> <span class="s2">"Kanien'kéha"</span><span class="p">,</span> <span class="s1">'is_word'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">make_tokenizer</span><span class="p">(</span><span class="s2">"eng"</span><span class="p">)</span><span class="o">.</span><span class="n">tokenize_text</span><span class="p">(</span><span class="s2">"Kanien'kéha"</span><span class="p">))</span>
+<span class="p">[{</span><span class="s1">'text'</span><span class="p">:</span> <span class="s1">'Kanien'</span><span class="p">,</span> <span class="s1">'is_word'</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="p">{</span><span class="s1">'text'</span><span class="p">:</span> <span class="s2">"'"</span><span class="p">,</span> <span class="s1">'is_word'</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span> <span class="p">{</span><span class="s1">'text'</span><span class="p">:</span> <span class="s1">'kéha'</span><span class="p">,</span> <span class="s1">'is_word'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]</span>
 </code></pre></div>
 <h2 id="a-look-under-the-hood">A look under the hood<a class="headerlink" href="#a-look-under-the-hood" title="Permanent link">&para;</a></h2>
 <p>A Mapping object is a list of defined rules. A <code>Rule</code> has the following permitted fields:</p>
@@ -923,7 +923,7 @@
 
 
 <h4 id="g2p.mappings.Rule.rule_input" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">rule_input</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">rule_input</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">'in'</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -946,7 +946,7 @@
 
 
 <h4 id="g2p.mappings.Rule.rule_output" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">rule_output</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">rule_output</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s1">'out'</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -969,7 +969,7 @@
 
 
 <h4 id="g2p.mappings.Rule.context_before" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">context_before</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
+            <code class="highlight language-python"><span class="n">context_before</span> <span class="o">=</span> <span class="s1">''</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -992,7 +992,7 @@
 
 
 <h4 id="g2p.mappings.Rule.context_after" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">context_after</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></code>
+            <code class="highlight language-python"><span class="n">context_after</span> <span class="o">=</span> <span class="s1">''</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
