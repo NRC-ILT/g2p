@@ -251,6 +251,8 @@ This repo follows the [Contributor Covenant](http://contributor-covenant.org/ver
 
 Have a look at [Contributing.md](Contributing.md) for help using our standardized formatting conventions and pre-commit hooks.
 
+For maintainers only: [Maintaining.md](Maintaining.md) documents how to publish g2p.
+
 ### Adding a new mapping
 
 In order to add a new mapping, you have to follow the following steps.
