@@ -1,0 +1,869 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../package/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../favicon-32x32.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Command Line - Gᵢ2Pᵢ Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#command-line-interface" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://nrc-ilt.github.io/g2p/" title="Gᵢ2Pᵢ Documentation" class="md-header__button md-logo" aria-label="Gᵢ2Pᵢ Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gᵢ2Pᵢ Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Command Line
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://nrc-ilt.github.io/g2p/" title="Gᵢ2Pᵢ Documentation" class="md-nav__button md-logo" aria-label="Gᵢ2Pᵢ Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gᵢ2Pᵢ Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the g2p studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from g2p 1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="command-line-interface">Command line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h1>
+<p>There is a command line interface bundled with g2p that allows both basic and advanced functionality to be accessed from your command line. After <a href="../installation/">installing g2p</a>, you can get information about how to use the command line by running <code>g2p --help</code></p>
+<h1 id="g2p">g2p<a class="headerlink" href="#g2p" title="Permanent link">&para;</a></h1>
+<p>Management script for G2P</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p [OPTIONS] COMMAND [ARGS]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --version   Show the version and exit.
+  -h, --help  Show this message and exit.
+</code></pre></div>
+<h2 id="convert">convert<a class="headerlink" href="#convert" title="Permanent link">&para;</a></h2>
+<p>Convert INPUT_TEXT through g2p mapping(s) from IN_LANG to OUT_LANG.</p>
+<p>Visit http://g2p-studio.herokuapp.com/api/v1/langs for a list of languages.</p>
+<p>There must be a path from IN_LANG to OUT_LANG, possibly via some intermediates.
+For example, mapping from fra to eng-arpabet will successively apply
+fra-&gt;fra-ipa, fra-ipa-&gt;eng-ipa and eng-ipa-&gt;eng-arpabet.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p convert [OPTIONS] INPUT_TEXT IN_LANG OUT_LANG
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --config FILE                   A path to a mapping configuration file to
+                                  use
+  -t, --tok / --no-tok            Tokenize INPUT_TEXT before converting.
+                                  Default is --tok, specify --no-tok to turn
+                                  off.
+  --tok-lang TEXT                 Override the tokenizing language. Implies
+                                  --tok.
+  -n, --neural / --no-neural      Allow neural mappings if available. Requires
+                                  installation of optional neural dependencies
+                                  (pip install g2p[neural])
+  -c, --check / --no-check        Check IPA outputs against panphon and/or
+                                  eng-arpabet output against ARPABET
+  -f, --file                      Read input from plain-text file INPUT_TEXT.
+  -d, --debugger / --no-debugger  Show all the conversion steps applied.
+  -e, --pretty-edges              Show the traduction graph in a pretty,
+                                  plain-text format.
+  -a, --substring-alignments      Show the minimal monotonic substring
+                                  alignments.
+  -h, --help                      Show this message and exit.
+</code></pre></div>
+<h2 id="doctor">doctor<a class="headerlink" href="#doctor" title="Permanent link">&para;</a></h2>
+<p>Check for common errors in mappings.</p>
+<p>There should eventually be more checks here, but doctor currently checks for:</p>
+<ol>
+<li>Characters that are in IPA mappings but are not recognized by panphon library.</li>
+</ol>
+<p>You can list available mappings with --list-all or --list-ipa, or by visiting
+http://g2p-studio.herokuapp.com/api/v1/langs .</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p doctor [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  -m, --mapping TEXT  Check specified IPA mapping(s) (default: check all IPA
+                      mappings).
+  --list-ipa          List IPA mappings that can be specified
+  --list-all          List all mappings that can be specified
+  -h, --help          Show this message and exit.
+</code></pre></div>
+<h2 id="generate-mapping">generate-mapping<a class="headerlink" href="#generate-mapping" title="Permanent link">&para;</a></h2>
+<p>Generate a new mapping from existing mappings in the g2p system.</p>
+<p>This command has different modes of operation.</p>
+<p>Standard mode:</p>
+<p>g2p generate-mapping [--dummy|--ipa] IN_LANG [OUT_LANG]</p>
+<p>For specified IN_LANG, generate a mapping from IN_LANG-ipa to eng-ipa,
+or from IN_LANG-ipa to a dummy minimalist phone inventory. This assumes
+the mapping IN_LANG -&gt; IN_LANG-ipa exists and creates a mapping from its
+output inventory.</p>
+<p>To generate a mapping from IN_LANG-ipa to eng-ipa from a mapping
+following a different patterns, e.g., from crl-equiv -&gt; crl-ipa, specify
+both IN_LANG (crl-equiv in this example) and OUT_LANG (crl-ipa in this
+example).</p>
+<p>Sample usage:
+    Generate Algonquin IPA to English IPA from alq -&gt; alq-ipa:
+        g2p generate-mapping --ipa alq
+    Generate Mohawk IPA to English IPA from moh-equiv -&gt; moh-ipa:
+        g2p generate-mapping --ipa moh-equiv moh-ipa
+    Generate Michif IPA to English IPA from the union of crg-dv -&gt; crg-ipa
+    and crg-tmd -&gt; crg-ipa:
+        g2p generate-mapping --ipa --merge crg-dv:crg-tmd crg-ipa</p>
+<p>List the dummy inventory used by --dummy:</p>
+<p>g2p generate-mapping --list-dummy</p>
+<p>From/to IPA mode:</p>
+<p>g2p generate-mapping --from FROM_L1 --to TO_L1
+  g2p generate-mapping --from FROM_L1:FROM_L2:... --to TO_L1:TO_L2:...</p>
+<p>Generate an IPA mapping from the union of FROM_L1-ipa, FROM-L2-ipa, etc to
+the union of TO_L1-ipa, TO-L2-ipa, etc. One or more from/to language
+code(s) can be specified in colon- or comma-separated lists. Note, by default
+we use Panphon's weighted_feature_edit_distance, but you can change this with
+the --distance argument</p>
+<p>Sample usage:
+    Generate a mapping from kwk-ipa to moh-ipa based on all mappings into
+    kwk-ipa and moh-ipa:
+        g2p generate-mapping --from kwk --to moh
+    Generate a mapping from eng-ipa to crg-ipa based only on crg-dv -&gt; crg-ipa:
+        g2p generate-mapping --from eng --to crg-dv_to_crg-ipa
+    Generate a mapping from kwk-ipa to moh-ipa+crg-ipa+eng-ipa based on
+    all mappings into kwk-ipa (from side) and the union of all mappings
+    into moh-ipa and crg-ipa plus eng-ipa_to_eng-arpabet (to side):
+        g2p generate-mapping --from kwk --to moh:crg:eng</p>
+<p>Full syntax for specifying FROM_Ln and TO_Ln:</p>
+<pre><code>lang (i.e., 3-letter code):
+ - If there is only one mapping into lang-ipa, "lang" refers to the
+   output of that mapping, e.g., "fra" means "fra_to_fra-ipa[out]".
+ - If there are several mappings into lang-ipa, "lang" refers to the
+   union of the outputs of those mappings, e.g., "moh" means the union
+   of "moh-equiv_to_moh-ipa[out]" and "moh-festival_to_moh-ipa[out]".
+ - It is an error if there are no mappings into lang-ipa.
+ - Only mappings from non-IPA to IPA are considered (i.e., IPA-to-IPA
+   mappings created by this command will not be included: use the
+   longer syntax below if you want to use them).
+ - Special case: "eng" refers to "eng-ipa_to_eng-arpabet[in]".
+
+in-lang_to_out-lang[[in]|[out]]:
+ - This expanded syntax is used to avoid the union when it is not
+   desired, e.g., "moh-equiv_to_moh-ipa" refers only to
+   "moh-equiv_to_moh-ipa,out" rather than the union "moh" represents.
+ - If out-lang is IPA, the output inventory is used; else if in-lang
+   is IPA, the input inventory is used; it is an error if neither
+   language is IPA.
+ - Specify "[in]" or "[out]" to override the above default.
+ - "_to_" is the joiner used to specify "the mapping from 'in-lang' to
+   'out-lang'" in the g2p network, regardless of the name of the file
+   it is stored in.
+</code></pre>
+<p>If you just modified or created the mappings from which the new mapping is
+to be generated, don't forget to call "g2p update" first, so that "g2p
+generate-mapping" can see the latest version.</p>
+<p>Call "g2p update" again after calling "g2p generate-mapping" to compile
+the newly generated mapping and make it available.</p>
+<p>Note: exactly one of --ipa, --dummy, --from/--to, or --list-dummy is
+required.</p>
+<p>You can list available mappings with "g2p doctor --list-ipa", or by
+visiting http://g2p-studio.herokuapp.com/api/v1/langs .</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p generate-mapping [OPTIONS] [IN_LANG] [OUT_LANG]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --distance [weighted_feature_edit_distance|hamming_feature_edit_distance|feature_edit_distance|dolgo_prime_distance|fast_levenshtein_distance|levenshtein_distance]
+  --merge / --no-merge            Merge multiple mappings together, in which
+                                  case IN_LANG is a colon-seperated list and
+                                  OUT_LANG is required.
+  --ipa / --no-ipa                Generate mapping from LANG-ipa to eng-ipa.
+  --dummy / --no-dummy            Generate dummy fallback mapping to
+                                  minimalist phone inventory.
+  --list-dummy                    List the dummy phone inventory.
+  --from TEXT                     Colon- or comma-separated list of "from"
+                                  languages in from/to mode
+  --to TEXT                       Colon- or comma-separated list of "to"
+                                  languages in from/to mode
+  --out-dir DIRECTORY             Output results in DIRECTORY instead of the
+                                  global "generated" directory.
+  -h, --help                      Show this message and exit.
+</code></pre></div>
+<h2 id="scan">scan<a class="headerlink" href="#scan" title="Permanent link">&para;</a></h2>
+<p>Scan a document for non target language characters.</p>
+<p>Displays the set of un-mapped characters in a document.
+Accounts for case sensitivity in the configuration.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p scan [OPTIONS] LANG PATH
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  -h, --help  Show this message and exit.
+</code></pre></div>
+<h2 id="show-mappings">show-mappings<a class="headerlink" href="#show-mappings" title="Permanent link">&para;</a></h2>
+<p>Show cached mappings, as last updated by "g2p update".</p>
+<p>Given two langs, mappings on all paths from LANG to LANG2 are displayed.</p>
+<p>If only one lang is given, all mappings to or from LANG, and from its descendants, are displayed.</p>
+<p>With no lang, all cached mappings are shown.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p show-mappings [OPTIONS] [LANG] [LANG2]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  -v, --verbose  Display mapping configs and all rules too.
+  --csv          Output mappings in CSV format.
+  -h, --help     Show this message and exit.
+</code></pre></div>
+<h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
+<p>Update cached language files.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p update [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  -o, --out-dir DIRECTORY  Output results in DIRECTORY instead of the
+                           installed directory
+                           (/home/runner/work/g2p/g2p/g2p/mappings/langs).
+  -i, --in-dir DIRECTORY   Scan DIRECTORY for mappings instead of the
+                           installed directory
+                           (/home/runner/work/g2p/g2p/g2p/mappings/langs).
+  -h, --help               Show this message and exit.
+</code></pre></div>
+<h2 id="update-schema">update-schema<a class="headerlink" href="#update-schema" title="Permanent link">&para;</a></h2>
+<p>Generate a schema for the model configuration.</p>
+<p>This should be done every time the model changes in a way that affects the schema.
+Changes to the schema should result in a minor version bump.
+But not every minor or major version bump requires a schema update.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>g2p update-schema [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  -o, --out-dir DIRECTORY  Output results in DIRECTORY instead of the
+                           installed directory (/home/runner/work/g2p/g2p/g2p/
+                           mappings/langs/../.schema).
+  -h, --help               Show this message and exit.
+</code></pre></div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+<h2 id="__comments">Comments</h2>
+<!-- Insert generated snippet here -->
+<script src="https://giscus.app/client.js" data-repo="roedoejet/g2p" data-repo-id="MDEwOlJlcG9zaXRvcnkxODU0NzczMDA=" data-category="Q&A" data-category-id="DIC_kwDOCw4otM4CZIZp" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="1"
+    data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
+</script>
+<!-- Synchronize Giscus theme with palette -->
+<script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    /* Set palette on initial load */
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+        var theme = palette.color.scheme === "slate" ? "dark" : "light"
+        giscus.setAttribute("data-theme", theme)
+    }
+
+    /* Register event handlers after documented loaded */
+    document.addEventListener("DOMContentLoaded", function() {
+        var ref = document.querySelector("[data-md-component=palette]")
+        ref.addEventListener("change", function() {
+            var palette = __md_get("__palette")
+            if (palette && typeof palette.color === "object") {
+                var theme = palette.color.scheme === "slate" ? "dark" : "light"
+
+                /* Instruct Giscus to change theme */
+                var frame = document.querySelector(".giscus-frame")
+                frame.contentWindow.postMessage({
+                        giscus: {
+                            setConfig: {
+                                theme
+                            }
+                        }
+                    },
+                    "https://giscus.app"
+                )
+            }
+        })
+    })
+</script>
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../package/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Package">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Package
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.select", "announce.dismiss", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
