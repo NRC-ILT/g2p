@@ -3,6 +3,9 @@ on:
   pull_request:
   push:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: true
   schedule:
     # Every Monday morning so the weekly caches are refreshed and we exercise
     # the effect of newly published versions of our dependencies.
@@ -175,6 +178,8 @@ jobs:
     runs-on: ubuntu-22.04 # https://devcenter.heroku.com/articles/heroku-22-stack
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Read the Heroku run time env and cmd
         run: |
           echo "PYTHON_VERSION=$(cat runtime.txt | sed 's/python-//')" >> $GITHUB_ENV
