@@ -175,3 +175,7 @@ Then you can run all the test suites by simply invoking `pytest`:
     pytest
 
 You can also run `./run_tests.py` to run most of the tests, skipping the slow ones.
+
+## Publishing
+
+For maintainers only: [Maintaining.md](Maintaining.md) documents how to publish g2p.
