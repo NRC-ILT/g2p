@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: check-json
@@ -8,16 +8,17 @@ repos:
       - id: trailing-whitespace
         exclude: \.svg$
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+    rev: 9.0.1
     hooks:
       - id: isort
         args: [--profile=black]
   - repo: https://github.com/psf/black
-    rev: 24.8.0
+    rev: 26.5.1
     hooks:
       - id: black
+        args: [--target-version=py39]
   - repo: https://github.com/pycqa/flake8
-    rev: 7.1.2
+    rev: 7.3.0
     hooks:
       - id: flake8
   - repo: local
@@ -28,7 +29,7 @@ repos:
         language: pygrep
         types: [python]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.1
+    rev: v2.3.1
     hooks:
       - id: mypy
         args: [--check-untyped-defs, --install-types]
