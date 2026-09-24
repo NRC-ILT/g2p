@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-from unittest import TestCase
 
 from pytest import main
 
@@ -11,7 +10,7 @@ from g2p.mappings.utils import normalize
 from g2p.transducer import Transducer
 
 
-class UnidecodeTransducerTest(TestCase):
+class UnidecodeTransducerTest:
     def test_unidecode_mapping(self):
         m = Mapping(type="unidecode")
         assert m.rules == []
