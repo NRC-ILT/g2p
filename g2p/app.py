@@ -12,7 +12,6 @@ You can also spin up the app server grade (on Linux, not Windows) with gunicorn:
 
 Once spun up, the application will be visible at
 http://localhost:5000/ and the API at http://localhost:5000/api/v1/docs
-
 """
 
 import os

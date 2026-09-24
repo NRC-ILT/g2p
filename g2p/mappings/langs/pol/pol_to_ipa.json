@@ -12,7 +12,7 @@
   { "in": "dzi", "out": "d͡ʑ", "context_after": "[aeouąęó]", "comment": "Before a vowel, <dzi> represents /d͡ʑ/" },
 
   { "in": "rz",  "out": "ʃ",  "context_before": "p|t|k|f|s|ś|sz|c|ć|cz|ch|h",  "comment": "<rz> is devoiced to /ʃ/ after a voiceless consonant" },
-  
+
   { "in": "pi",  "out": "pʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /p/ before vowel-initial <i>" },
   { "in": "bi",  "out": "bʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /b/ before vowel-initial <i>" },
   { "in": "mi",  "out": "mʲ", "context_after": "[aeouąęó]", "comment": "Palatalize /m/ before vowel-initial <i>" },

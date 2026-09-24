@@ -51,6 +51,30 @@ api = [
   "uvicorn",
   "jinja2",
 ]
+neural = [
+  "g2p[deep-phonemizer]",
+]
+deep-phonemizer = [
+  "torch>=2.6.0,<2.10",
+  "huggingface-hub>0.35.0",
+  "ilt-deep-phonemizer>=0.0.23",
+]
+# "prod" is a bit special and cannot depend on other features,
+# because if it depends on `g2p[api]` then we end up with
+# `g2p==SOMEVERSION` in requirements.txt and we DO NOT want that to
+# happen.
+# See https://github.com/jazzband/pip-tools/issues/2002
+# See https://github.com/juftin/hatch-pip-compile/issues/78
+prod = ["gunicorn>=22.0.0"]
+
+# cannot put g2p[prod] here because that would break windows compat
+all = ["g2p[neural]", "g2p[api]"]
+
+[dependency-groups]
+dev = [
+  {include-group = "test"},
+  {include-group = "lint"},
+]
 test = [
   "g2p[api]",
   "coverage[toml]>=6.5",
@@ -64,19 +88,11 @@ test = [
   "httpx2",  # for testing with starlette>=1.2
   "aiohttp",  # required by socketio used in test_studio.py
 ]
-dev = [
-  "g2p[test]",
+lint = [
   "gitlint-core>=0.17.0",
   "mypy>=1.8.0",
   "prek",
 ]
-# This one is a bit special and cannot depend on other features,
-# because if it depends on `g2p[api]` then we end up with
-# `g2p==SOMEVERSION` in requirements.txt and we DO NOT want that to
-# happen.
-# See https://github.com/jazzband/pip-tools/issues/2002
-# See https://github.com/juftin/hatch-pip-compile/issues/78
-prod = ["gunicorn>=22.0.0"]
 docs = [
   "mkdocs>=1.5.2",
   "mkdocs-click>=0.8.0",
@@ -84,17 +100,6 @@ docs = [
   "mkdocstrings[python]>=0.22.0",
   "mike>=1.1.2",
 ]
-neural = [
-  "g2p[deep-phonemizer]",
-]
-deep-phonemizer = [
-  "torch>=2.6.0,<2.10",
-  "huggingface-hub>0.35.0",
-  "ilt-deep-phonemizer>=0.0.23",
-]
-
-# cannot put g2p[prod] here because that would break windows compat
-all = ["g2p[dev]", "g2p[docs]", "g2p[neural]"]
 
 [project.scripts]
 g2p = "g2p.cli:cli"

@@ -1,7 +1,7 @@
 """REST API for G2P index-preserving grapheme-to-phoneme conversion using FastAPI.
 
 You can run the API app for development purposes on any platform with:
-    pip install uvicorn fastapi
+    pip install -e ".[api]"
     DEVELOPMENT=1 uvicorn g2p.api_v2:api --reload --port 5000
 - The --reload switch will watch for changes under the directory where it's
   running and reload the code whenever it changes.
@@ -17,13 +17,12 @@ in your environment variables.  This is usually done through an
 environment variable file (or in a dashboard) and will depend on your
 hosting environment.
 
-You can also spin up the API server grade (on Linux, not Windows) with gunicorn:
-    pip install -r requirements.api.txt
+You can also spin up the API server grade (on Linux or MacOS, not Windows) with gunicorn:
+    pip install -r requirements.txt
     gunicorn -b 127.0.0.1:5000 -w 4 -k uvicorn.workers.UvicornWorker g2p.api_v2:api
 
 Once spun up, the API will be visible at
 http://localhost:5000/docs
-
 """
 
 import os
