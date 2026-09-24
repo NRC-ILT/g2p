@@ -28,7 +28,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e ".[dev]"
+pip install --group dev -e .
 prek install
 gitlint install-hook
 ```
@@ -81,7 +81,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e ".[dev]"
+pip install --group dev -e .
 prek install
 ```
 
@@ -156,7 +156,7 @@ If you have a pre-existing virtual environment (sandbox), you can also
 install the required packages with `pip`:
 
 ```sh
-pip install -e ".[dev]"
+pip install --group dev -e .
 gitlint install-hook
 ```
 
@@ -168,7 +168,7 @@ gitlint install-hook
 
 Testing requires our "dev" dependencies:
 
-    pip install -e ".[dev]"
+    pip install --group dev -e .
 
 Then you can run all the test suites by simply invoking `pytest`:
 
