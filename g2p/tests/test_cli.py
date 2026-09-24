@@ -542,13 +542,11 @@ class TestCli:
         assert len(re.findall(r"→", results.output)) == 3
         # including descendants
         assert "eng-arpabet" in results.output
-        fra_output = dedent(
-            """\
+        fra_output = dedent("""\
             1: fra → fra-ipa  (French to IPA)
             2: fra-ipa → eng-ipa  (French IPA to English IPA)
             3: eng-ipa → eng-arpabet  (English IPA to Arpabet)
-            """
-        )
+            """)
         assert fra_output in results.output
 
         # Topological ordering for one arg gives same result from fra and fra-ipa

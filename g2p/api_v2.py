@@ -70,7 +70,9 @@ else:
 # If DEVELOPMENT or ORIGIN are not specified then same-origin only
 if middleware_args:
     api.add_middleware(
-        CORSMiddleware, allow_methods=["GET", "POST", "OPTIONS"], **middleware_args
+        CORSMiddleware,
+        allow_methods=["GET", "POST", "OPTIONS"],
+        **middleware_args,  # type: ignore
     )
 
 # All possible language codes

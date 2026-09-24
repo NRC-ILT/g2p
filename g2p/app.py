@@ -100,7 +100,7 @@ def shade_colour(colour, percent, r=0, g=0, b=0):
 
 
 def contrasting_text_color(hex_str):
-    (R, G, B) = (hex_str[1:3], hex_str[3:5], hex_str[5:])
+    R, G, B = (hex_str[1:3], hex_str[3:5], hex_str[5:])
     return (
         "#000"
         if 1 - (int(R, 16) * 0.299 + int(G, 16) * 0.587 + int(B, 16) * 0.114) / 255

@@ -73,19 +73,15 @@ def reload_db():
     # We update all structures in place, so that another module having done from
     # g2p.mappings.langs import VAR will see the udpates without any code changes.
 
-    global _LANGS
     _LANGS.clear()
     _LANGS.update(load_langs())
 
-    global LANGS_NETWORK
     LANGS_NETWORK.clear()
     new_langs_network = load_network()
     LANGS_NETWORK.update(new_langs_network.edges, new_langs_network.nodes)
 
-    global LANGS_AVAILABLE
     LANGS_AVAILABLE.clear()
     LANGS_AVAILABLE.extend(get_available_languages(_LANGS))
 
-    global _MAPPINGS_AVAILABLE
     _MAPPINGS_AVAILABLE.clear()
     _MAPPINGS_AVAILABLE.extend(get_available_mappings(_LANGS))

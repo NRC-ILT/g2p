@@ -259,7 +259,10 @@ class TestUtils:
 
     def test_normalize_to_NFC_with_indices(self):
         assert utils.normalize_with_indices("e\u0301", "NFC") == ("é", [(0, 0), (1, 0)])
-        assert utils.normalize_with_indices("ò\u0317", "NFC") == ("ò̗", [(0, 0), (1, 1)])
+        assert utils.normalize_with_indices("ò\u0317", "NFC") == (
+            "ò̗",
+            [(0, 0), (1, 1)],
+        )
         assert utils.normalize_with_indices("\u014d\u0301", "NFC") == (
             "\u1e53",
             [(0, 0), (1, 0)],
@@ -311,7 +314,7 @@ class TestUtils:
         try:
             with open(filename) as f:
                 pretend_version = f.read().strip()
-            (major, minor, *_rest) = version_tuple
+            major, minor, *_rest = version_tuple
             major_minor = f"{major}.{minor}"
             assert (
                 major_minor == pretend_version
