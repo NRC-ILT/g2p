@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-""" Checks all data resources give 200s
-"""
+"""Checks all data resources give 200s"""
 
 import json
 import os

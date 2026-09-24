@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Test Mapping langs utility functions and their use in g2p convert --check """
+"""Test Mapping langs utility functions and their use in g2p convert --check"""
 
 import sys
 

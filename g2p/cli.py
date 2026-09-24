@@ -735,7 +735,7 @@ def update_schema(out_dir):
         return
 
     # We shall not change the schema for patches, so only include major/minor version
-    (major, minor, *_rest) = g2p._version.version_tuple
+    major, minor, *_rest = g2p._version.version_tuple
     major_minor = f"{major}.{minor}"
 
     # Determine path
@@ -757,8 +757,7 @@ def update_schema(out_dir):
             print(f"Schema {schema_path} is already up to date.")
         else:
             print(
-                dedent(
-                    f"""
+                dedent(f"""
                     Schema {schema_path}
                     exists for version {major_minor} but is not up to date.  If it was already published to
                     the SchemaStore (see
@@ -766,8 +765,7 @@ def update_schema(out_dir):
                     then you must bump the minor or major version number of g2p and generate the
                     schema again.  If not and you want to overwrite it, please delete the existing
                     schema and try again.
-                    """
-                ),
+                    """),
                 file=sys.stderr,
             )
             raise click.UsageError("Schema already exists but is not up to date.")

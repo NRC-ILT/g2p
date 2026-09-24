@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-    Unittests for index preservation
+Unittests for index preservation
 """
 
 import sys
