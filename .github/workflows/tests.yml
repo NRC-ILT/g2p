@@ -44,7 +44,7 @@ jobs:
           enable-cache: true
       - name: Install dependencies
         run: |
-          SETUPTOOLS_SCM_PRETEND_VERSION=$(cat .SETUPTOOLS_SCM_PRETEND_VERSION) uv pip install -e .[test] licensecheck
+          SETUPTOOLS_SCM_PRETEND_VERSION=$(cat .SETUPTOOLS_SCM_PRETEND_VERSION) uv pip install --group test -e . licensecheck
       - run: uv pip list
       - run: uv pip freeze
       - name: Check licenses
@@ -164,7 +164,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` uv pip install -e .[test]
+          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` uv pip install --group test -e .
       - name: Run tests on Windows
         run: pytest
       - name: Make sure the CLI outputs utf8 on Windows
@@ -197,7 +197,7 @@ jobs:
         id: weekno
       - name: Install test dependencies
         run: |
-          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` pip install -e .[test]
+          SETUPTOOLS_SCM_PRETEND_VERSION=`cat .SETUPTOOLS_SCM_PRETEND_VERSION` pip install --group test -e .
       - name: Cache Playwright binaries
         uses: actions/cache@v5
         id: playwright-cache
