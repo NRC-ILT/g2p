@@ -25,18 +25,10 @@ Basic Usage:
     LANGS, LANG_NAMES = get_arpabet_langs()
 """
 
-import sys
 from typing import Dict, Optional, Tuple, Union
 
 from g2p.exceptions import InvalidLanguageCode, NeuralDependencyError, NoPath
 from g2p.shared_types import BaseTokenizer, BaseTransducer, Token
-
-if sys.version_info < (3, 9):  # pragma: no cover
-    sys.exit(
-        "Python 3.9 or more recent is required by g2p.\n"
-        f"You are using Python {sys.version}.\n"
-        "Please use a newer version of Python."
-    )
 
 _g2p_cache: Dict[Tuple[str, str, bool, bool, int], BaseTransducer] = {}
 
