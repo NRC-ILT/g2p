@@ -51,10 +51,7 @@ class PytestCollectorPlugin:
 def list_tests(suite: List[str]):
     plugin = PytestCollectorPlugin()
     pytest_args = ["--collect-only", *suite, "-q"]
-    if sys.version_info >= (3, 10):
-        with redirect_stdout(io.StringIO()):  # broken with py 3.8/3.9...
-            pytest.main(pytest_args, plugins=[plugin])
-    else:
+    with redirect_stdout(io.StringIO()):
         pytest.main(pytest_args, plugins=[plugin])
     # print("===========\n", o.getvalue(), "\n================")
     return plugin.collected
