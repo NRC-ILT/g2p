@@ -169,14 +169,14 @@ pip-compile-verbose = false
 serve = "gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:5000"
 
 [tool.hatch.envs.test]
-groups = ["test"]
+features = ["neural"]
+dependency-groups = ["test"]
 
 [tool.hatch.envs.hatch-test]
 default-args = ["g2p/tests"]
-features = ["neural"]
-groups = ["test"]
+dependency-groups = ["test"]
 
-[[tool.hatch.envs.test.matrix]]
+[[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
 
 [tool.hatch.envs.test.scripts]
@@ -235,7 +235,10 @@ disable = [
   "no-else-return",
 ]
 
-[tool.pytest]
+[tool.pytest.ini_options]
+asyncio_mode="auto"
+asyncio_default_fixture_loop_scope="function"
+testpaths = ["g2p/tests"]
 filterwarnings = [
     "ignore:.*Module already imported so cannot be rewritten; anyio.*",
 ]
