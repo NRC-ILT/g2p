@@ -713,3 +713,21 @@ mappings:
     rule_ordering: apply-longest-first
     rules_path: pol-ipa_to_eng-ipa.json
     type: mapping
+  - authors:
+      - Generated 2026-11-02 17:21:29.275769
+      - Optimized by Eric Joanis to remove compositional redundancies
+    case_equivalencies: {}
+    case_sensitive: false
+    display_name: yua-ipa IPA to eng-ipa IPA
+    escape_special: false
+    in_lang: yua-ipa
+    language_name: yua-ipa
+    norm_form: NFD
+    out_delimiter: ''
+    out_lang: eng-ipa
+    preserve_case: false
+    prevent_feeding: true
+    reverse: false
+    rule_ordering: apply-longest-first
+    rules_path: yua-ipa_to_eng-ipa.json
+    type: mapping

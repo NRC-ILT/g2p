@@ -1,0 +1,15 @@
+<<: &shared
+  language_name: Yucatec Maya
+mappings:
+  - display_name: Yucatec Maya to IPA
+    in_lang: yua
+    out_lang: yua-ipa
+    authors:
+      - Eric Joanis
+    type: mapping
+    rules_path: yua_to_ipa.csv
+    prevent_feeding: false
+    rule_ordering: as-written
+    case_sensitive: false
+    norm_form: NFD
+    <<: *shared
