@@ -34,4 +34,4 @@ repos:
       - id: mypy
         args: [--check-untyped-defs, --install-types]
         additional_dependencies:
-          [fastapi, pep440, pydantic, starlette, uvicorn, pip, pytest]
+          [fastapi, pep440, pydantic, starlette, uvicorn, pip, pytest, types-regex, types-PyYAML, types-openpyxl]

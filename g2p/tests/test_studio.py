@@ -3,7 +3,7 @@
 """
 Test suite for the g2p-studio web app.
 
-Requirements: python 3.8 and `test` dependencies
+Requirements: python 3.10+ and `test` dependencies
 
 Before running this test suite, launch the g2p-studio server:
 minimal dev mode:
