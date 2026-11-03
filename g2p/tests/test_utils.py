@@ -96,6 +96,19 @@ class TestUtils:
         for pattern in patterns:
             assert len(re.split(lookbehind_pattern, pattern[0])) - 1 == pattern[1]
 
+    def test_fixed_width_preserves_duplicate_alternatives(self):
+        # A duplicated same-length alternative must not drop the final
+        # length-group. "x|x|yy" previously produced "((?<=yy))" (the "x"
+        # context was dropped) and "a|a" produced "()" (lookbehind erased).
+        lookbehind = utils.create_fixed_width_lookbehind("x|x|yy")
+        assert re.search(lookbehind + "k", "xk")
+        assert re.search(lookbehind + "k", "yyk")
+        assert not re.search(lookbehind + "k", "zk")
+
+        lookbehind = utils.create_fixed_width_lookbehind("a|a")
+        assert re.search(lookbehind + "b", "ab")
+        assert not re.search(lookbehind + "b", "zb")
+
     def test_load_mapping(self, caplog):
         with caplog.at_level("WARNING", logger=LOGGER.name):
             Mapping.load_mapping_from_path(
