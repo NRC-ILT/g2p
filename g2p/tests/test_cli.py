@@ -8,6 +8,7 @@ import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
+from random import sample
 from textwrap import dedent
 from unittest import mock
 
@@ -221,6 +222,16 @@ class TestCli:
     def test_convert(self):
         """Running all g2p convert test cases found in g2p/tests/public/data"""
         langs_to_test = load_public_test_data()
+        if os.environ.get("HATCH_ENV_ACTIVE") is not None:
+            sample_ratio = 10  # in hatch matrix testing, take a 10% sample
+            langs_to_test = [
+                langs_to_test[i]
+                for i in sorted(
+                    sample(
+                        range(len(langs_to_test)), k=len(langs_to_test) // sample_ratio
+                    )
+                )
+            ]
         error_count = 0
         first_failed_test = None
 

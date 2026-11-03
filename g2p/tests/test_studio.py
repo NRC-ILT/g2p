@@ -12,6 +12,7 @@ or robust server mode (*nix only, gunicorn does not work on Windows):
     gunicorn --worker-class uvicorn.workers.UvicornWorker -w 1 g2p.app:APP --bind 0.0.0.0:5000 --daemon
 """
 
+import os
 import sys
 import time
 from datetime import datetime
@@ -134,13 +135,16 @@ class TestStudio:
 
     async def test_langs(self):
         langs_to_test = load_public_test_data()
-        # Doing the whole test set takes a long time, so let's use a 10% random sample,
+        # Doing the whole test set takes a long time, so let's use a 5% random sample,
         # knowing that all cases always get exercised in test_cli.py and test_langs.py.
-        # 10% is enough to catch a sudden drift where the studio might stop being campatible.
+        # 5% is enough to catch a sudden drift where the studio might stop being campatible.
+        sample_ratio = 20  # we sample 1/sample_ratio records
+        if os.environ.get("HATCH_ENV_ACTIVE") is not None:
+            sample_ratio = 100  # take a smaller sample when matrix testing in hatch
         langs_to_test = [
             langs_to_test[i]
             for i in sorted(
-                sample(range(len(langs_to_test)), k=len(langs_to_test) // 10)
+                sample(range(len(langs_to_test)), k=len(langs_to_test) // sample_ratio)
             )
         ]
         # Make sure we test at least one lexicon-based example
