@@ -417,6 +417,33 @@ class TestMapping:
         assert transducer("tee on herkullista").output_string == "teː on herkullistɑ"
         os.unlink(tf.name)
 
+    def test_abbreviation_lookbehind_keeps_single_char_context(self):
+        """Regression test for a dropped length-group in fixed-width lookbehinds.
+
+        When an abbreviation's alternatives, sorted by length, end with a
+        single-character token that duplicates an earlier same-length token
+        (e.g. a CONSONANT list ending in "...,b" after an earlier "b"), the
+        final length-group used to be silently dropped. A context_before built
+        from that abbreviation then only matched the *multi-character* tokens.
+
+        This mirrors the German deu->deu-ipa case where "Katze" kept its schwa
+        because the "ə -> e / CONSONANT _" rule never fired after single
+        consonants: the single-character half of CONSONANT was dropped from the
+        lookbehind.
+        """
+        mapping = Mapping(
+            abbreviations={"CONS": ["sch", "b", "c", "b"]},
+            rules=[{"in": "ə", "out": "e", "context_before": "CONS"}],
+        )
+        transducer = Transducer(mapping)
+        # Single-character consonant context: dropped on main, restored here.
+        assert transducer("bə").output_string == "be"
+        assert transducer("cə").output_string == "ce"
+        # Multi-character context was always kept, before and after the fix.
+        assert transducer("schə").output_string == "sche"
+        # A non-consonant context must never trigger the rule.
+        assert transducer("aə").output_string == "aə"
+
     def test_no_reprocess(self):
         """Ensure that attempting to reprocess a mapping is an error."""
         with raises(AssertionError):
