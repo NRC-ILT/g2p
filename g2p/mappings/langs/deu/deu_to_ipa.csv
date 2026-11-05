@@ -37,14 +37,12 @@ e,ɛː,r,
 e,ɛ,,r
 e,eː,\b,\b
 e,ə,,\b
-e,e,CONSONANT,
-ə,e,CONSONANT,
 dɛr,deːɐ̯,,\b
 ɛr,ɐ̯,,\b
 f,f,,
 ig,ɪkʰ,t,\b
 ig,ɪç,,\b
-ig,ɪç,CONSONANT,
+ig,ɪç,,CONSONANT
 gl,kl,
 g,kʰ,,\b
 g,ɡ,,
@@ -72,7 +70,6 @@ on,ɔn,,
 oo,oː,,
 oo,ʊ,,\b
 o,oː,,\b
-o,ɔ,CONSONANT,r
 o,ɔ,,CONSONANT
 o,o,,
 öh,øː,,
@@ -80,7 +77,6 @@ o,o,,
 ön,œn,,\b
 ö,œ,,DOUBLECONSONANT
 ö,øː,,\b
-ö,øː,CONSONANT,CONSONANT
 ö,øː,,CONSONANT
 ö,œ,,
 ph,f,,

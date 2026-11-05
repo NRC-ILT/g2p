@@ -1,6 +1,6 @@
-VOWEL,a,e,i,o,u,ä,ö,ü,ɛ,ɪ,ʊ,ɔ,œ,y,yː,uː,iː,eː,aː,ɛː,øː,œː,ɔː,,,,,,,,,,,,,,,,,
-CONSONANT,p,b,t,d,k,g,f,s,h,v,z,sch,ch,ng,r,l,m,n,p,b,t,d,k,ɡ,f,s,h,v,z,ʃ,ç,χ,ŋ,ʁ,l,m,n,pʰ,tʰ,kʰ
-DOUBLECONSONANT,bb,dd,ff,gg,ll,mm,nn,pp,rr,ss,tt,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-FRONT,i,e,ä,ü,ɪ,ɛ,y,yː,iː,eː,ɛː,ö,øː,œ,œː,,,,,,,,,,,,,,,,,,,,,,,,,
-BACK,u,o,,ʊ,ɔ,,uː,oː,ɔː,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-MIDDLE,a,aː,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+VOWEL,a,e,i,o,u,ä,ö,ü,ɛ,ɪ,ʊ,ɔ,œ,y,yː,uː,iː,eː,aː,ɛː,øː,œː,ɔː
+CONSONANT,p,b,t,d,k,g,f,s,h,v,z,sch,ch,ng,r,l,m,n,ɡ,ʃ,ç,χ,ŋ,ʁ,pʰ,tʰ,kʰ
+DOUBLECONSONANT,bb,dd,ff,gg,ll,mm,nn,pp,rr,ss,tt
+FRONT,i,e,ä,ü,ɪ,ɛ,y,yː,iː,eː,ɛː,ö,øː,œ,œː
+BACK,u,o,ʊ,ɔ,uː,oː,ɔː
+MIDDLE,a,aː
