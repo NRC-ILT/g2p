@@ -453,8 +453,12 @@ def pattern_to_fixed_width_lookbehinds(match) -> str:
             current_len = item_length
             all_lookbehinds.append(current_list)
             current_list = [item]
-        if pattern.index(item) == len(pattern) - 1:
-            all_lookbehinds.append(current_list)
+    # Flush the final length-group once. The previous `pattern.index(item) ==
+    # len(pattern) - 1` check used list.index, which returns the *first*
+    # occurrence, so when the last element duplicated an earlier same-length
+    # token the final group was never appended -- silently dropping those
+    # alternatives (or producing an empty "()" that erased the lookbehind).
+    all_lookbehinds.append(current_list)
     all_lookbehinds_joined_by_length = [
         f"(?<={'|'.join(items)})" for items in all_lookbehinds
     ]
