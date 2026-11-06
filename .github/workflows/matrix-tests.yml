@@ -1,4 +1,4 @@
-name: Run full matrix Tests before Releases
+name: Matrix testing
 on:
   workflow_call:
   workflow_dispatch:
@@ -8,40 +8,43 @@ on:
 permissions:
   contents: read
 jobs:
-  pre-release-matrix-test:
+  matrix-test:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip
-          SETUPTOOLS_SCM_PRETEND_VERSION=$(cat .SETUPTOOLS_SCM_PRETEND_VERSION) pip install --group test -e .
-      - name: Run tests
-        run: pytest
 
-      # Neural tests, with huggingface models cached
+      - uses: actions/setup-python@v6
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+            3.14
+            3.15
+
       - name: Get current week number
         shell: bash
         run: echo "WEEK_NUMBER=$(date -u +%Y-%V)" >> $GITHUB_OUTPUT
         id: weekno
-      - uses: actions/cache@v5
-        if: matrix.python-version != '3.15'
+      - name: Caching of HuggingFace models for neural tests
+        uses: actions/cache@v5
         with:
           key: g2p-neural-${{ steps.weekno.outputs.WEEK_NUMBER }}
           path: ~/.cache/huggingface
-      - run: pip install -e .[neural]
-        if: matrix.python-version != '3.15'
-      - run: pytest g2p/tests/test_neural.py
-        if: matrix.python-version != '3.15'
+
+      - name: Install uv and thereby enable caching its cache in CI
+        uses: astral-sh/setup-uv@v7
+
+      - name: Set pretend version for g2p
+        shell: bash
+        run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=$(cat .SETUPTOOLS_SCM_PRETEND_VERSION)" >> $GITHUB_ENV
+
+      - name: Run matrix testing using hatch as configured in pyproject.toml
+        run: uvx hatch test -a

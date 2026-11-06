@@ -179,6 +179,16 @@ dependency-groups = ["test"]
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
 
+# The neural tests need torch<2.10, which is not available for Python 3.15
+# neural override configured with the help of Claude Opus 5.5
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
+suite = ["neural"]
+
+[tool.hatch.envs.hatch-test.overrides]
+matrix.suite.features = [{ value = "neural", if = ["neural"] }]
+matrix.suite.default-args = { value = ["g2p/tests/test_neural.py"], if = ["neural"] }
+
 [tool.hatch.envs.test.scripts]
 serve-cov = "coverage run run_studio.py"
 test = "pytest"
