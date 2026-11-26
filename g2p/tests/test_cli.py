@@ -554,9 +554,9 @@ class TestCli:
         # including descendants
         assert "eng-arpabet" in results.output
         fra_output = dedent("""\
-            1: fra → fra-ipa  (French to IPA)
-            2: fra-ipa → eng-ipa  (French IPA to English IPA)
-            3: eng-ipa → eng-arpabet  (English IPA to Arpabet)
+            1: fra → fra-ipa  (French to IPA) [mapping]
+            2: fra-ipa → eng-ipa  (French IPA to English IPA) [mapping]
+            3: eng-ipa → eng-arpabet  (English IPA to Arpabet) [mapping]
             """)
         assert fra_output in results.output
 
@@ -564,6 +564,19 @@ class TestCli:
         results = self.runner.invoke(show_mappings, ["fra"])
         assert results.exit_code == 0
         assert fra_output in results.output
+
+        # Issue #501: when multiple mappings share an (in_lang, out_lang) pair
+        # (e.g. the lexicon and neural variants of eng → eng-ipa), both must
+        # appear in the output with their type annotation so they are
+        # distinguishable rather than collapsed to a duplicate-looking line.
+        results = self.runner.invoke(show_mappings, ["eng"])
+        assert results.exit_code == 0
+        eng_eng_ipa_lines = [
+            line for line in results.output.splitlines() if "eng → eng-ipa" in line
+        ]
+        assert len(eng_eng_ipa_lines) == 2, eng_eng_ipa_lines
+        assert any("[lexicon]" in line for line in eng_eng_ipa_lines)
+        assert any("[neural]" in line for line in eng_eng_ipa_lines)
 
         # Two conencted args = that mapping
         results = self.runner.invoke(show_mappings, ["fra", "fra-ipa", "--verbose"])
