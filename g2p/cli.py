@@ -860,7 +860,7 @@ def show_mappings(lang, lang2, verbose, csv):
     With no lang, all cached mappings are shown.
     """
     # Defer expensive imports
-    from g2p.mappings import MAPPINGS_AVAILABLE, Mapping
+    from g2p.mappings import MAPPINGS_AVAILABLE
     from g2p.mappings.langs import LANGS_NETWORK
     from g2p.transducer import CompositeTransducer, Transducer
 
@@ -885,7 +885,7 @@ def show_mappings(lang, lang2, verbose, csv):
             )
         descendants = LANGS_NETWORK.descendants(lang)
         mappings = [
-            Mapping.find_mapping(in_lang=m.in_lang, out_lang=m.out_lang)
+            m
             for m in MAPPINGS_AVAILABLE
             if m.in_lang == lang or m.out_lang == lang or m.in_lang in descendants
         ]
@@ -906,11 +906,7 @@ def show_mappings(lang, lang2, verbose, csv):
         mappings = sorted(mappings, key=ordering_for_one_lang)
 
     else:
-        mappings = [
-            Mapping.find_mapping(in_lang=m.in_lang, out_lang=m.out_lang)
-            for m in MAPPINGS_AVAILABLE
-        ]
-        mappings = sorted(mappings, key=lambda m: (m.in_lang, m.out_lang))
+        mappings = sorted(MAPPINGS_AVAILABLE, key=lambda m: (m.in_lang, m.out_lang))
 
     file_type = "csv" if csv else "json"
     if verbose:
@@ -927,4 +923,8 @@ def show_mappings(lang, lang2, verbose, csv):
             print()
     else:
         for i, m in enumerate(mappings):
-            print(f"{i+1}: {m.in_lang} → {m.out_lang}  ({m.display_name})")
+            mapping_type = m.type.value if m.type is not None else "mapping"
+            print(
+                f"{i+1}: {m.in_lang} → {m.out_lang}  "
+                f"({m.display_name}) [{mapping_type}]"
+            )
